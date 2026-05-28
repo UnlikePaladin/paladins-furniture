@@ -12,8 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -30,16 +30,16 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
         view.putInt("sinkTimer", sinkTimer);
         view.putBoolean("isFilling", isFilling);
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
-        sinkTimer = view.getInt("sinkTimer", 0);
-        isFilling = view.getBoolean("isFilling", false);
+    protected void loadAdditional(ValueInput view) {
+        sinkTimer = view.getIntOr("sinkTimer", 0);
+        isFilling = view.getBooleanOr("isFilling", false);
         super.loadAdditional(view);
     }
 

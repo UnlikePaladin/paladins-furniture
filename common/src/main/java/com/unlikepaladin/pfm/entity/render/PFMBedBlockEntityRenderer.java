@@ -30,6 +30,8 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import org.joml.Vector3f;
+
 import java.util.Set;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity> {
@@ -119,10 +121,10 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
     public void getExtents(Set<Vector3f> vertices) {
         PoseStack matrixStack = new PoseStack();
         setTransforms(matrixStack, false);
-        this.bedHead.getRootPart().getExtentsForGui(matrixStack, vertices);
+        this.bedHead.root().getExtentsForGui(matrixStack, vertices);
         matrixStack.setIdentity();
         setTransforms(matrixStack, true);
-        this.bedFoot.getRootPart().getExtentsForGui(matrixStack, vertices);
+        this.bedFoot.root().getExtentsForGui(matrixStack, vertices);
     }
 
     private static void setTransforms(PoseStack matrices, boolean isFoot) {

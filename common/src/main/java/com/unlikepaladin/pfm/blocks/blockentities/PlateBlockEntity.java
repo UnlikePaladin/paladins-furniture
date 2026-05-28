@@ -13,11 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.NbtWriteView;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.Clearable;
-import net.minecraft.util.ErrorReporter;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -29,15 +29,15 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
+    protected void loadAdditional(ValueInput view) {
         super.loadAdditional(view);
         this.itemInPlate.clear();
         ContainerHelper.loadAllItems(view, this.itemInPlate);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        this.saveInitialChunkData(nbt);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         ContainerHelper.saveAllItems(view, this.itemInPlate);
     }
 

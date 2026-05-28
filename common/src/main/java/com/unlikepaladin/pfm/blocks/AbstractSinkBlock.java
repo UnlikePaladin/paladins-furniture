@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.entity.CollisionEvent;
+import net.minecraft.world.entity.InsideBlockEffectType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -210,7 +210,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
         if (world instanceof ServerLevel serverWorld) {
             BlockPos blockPos = pos.immutable();
-            handler.addPreCallback(CollisionEvent.EXTINGUISH, (collidedEntity) -> {
+            handler.runBefore(InsideBlockEffectType.EXTINGUISH, (collidedEntity) -> {
                 if (collidedEntity.isOnFire() && collidedEntity.mayInteract(serverWorld, blockPos)) {
                     this.onFireCollision(state, world, blockPos);
                 }
@@ -218,7 +218,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
             });
         }
 
-        handler.addEvent(CollisionEvent.EXTINGUISH);
+        handler.apply(InsideBlockEffectType.EXTINGUISH);
     }
 
     @Override

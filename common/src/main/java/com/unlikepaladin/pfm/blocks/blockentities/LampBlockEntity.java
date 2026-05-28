@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
@@ -33,10 +33,10 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    protected void readData(ReadView view) {
-        this.color = DyeColor.byId(view.getString("color", "white"), DyeColor.WHITE);
-        view.getOptionalString("variant").ifPresent((variantName) -> {
-            WoodVariant woodVariant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName));
+    protected void loadAdditional(ValueInput view) {
+        this.color = DyeColor.byName(view.getStringOr("color", "white"), DyeColor.WHITE);
+        view.getString("variant").ifPresent((variantName) -> {
+            WoodVariant woodVariant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName));
             if (woodVariant != null)
                 this.variant = woodVariant;
             else {
@@ -44,13 +44,13 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
                 this.variant = WoodVariantRegistry.OAK;
             }
         });
-        super.readData(view);
+        super.loadAdditional(view);
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        view.putString("color", color.asString());
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        view.putString("color", color.getName());
         view.putString("variant", variant.getIdentifier().toString());
     }
 
@@ -76,10 +76,10 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public void removeComponentsFromTag(WriteView view) {
+    public void removeComponentsFromTag(ValueOutput view) {
         super.removeComponentsFromTag(view);
-        view.remove("color");
-        view.remove("variant");
+        view.discard("color");
+        view.discard("variant");
     }
 
     public CompoundTag writeColorAndVariant(CompoundTag nbt) {

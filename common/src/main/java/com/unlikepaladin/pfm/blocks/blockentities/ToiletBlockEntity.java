@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -25,14 +25,14 @@ public class ToiletBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
         view.putInt("flushTimer", flushTimer);
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
-        flushTimer = view.getInt("flushTimer", 0);
+    protected void loadAdditional(ValueInput view) {
+        flushTimer = view.getIntOr("flushTimer", 0);
         super.loadAdditional(view);
     }
 

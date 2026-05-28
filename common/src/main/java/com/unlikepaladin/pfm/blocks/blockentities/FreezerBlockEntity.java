@@ -38,8 +38,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
@@ -57,7 +57,7 @@ import java.util.Map;
 
 public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
     private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
-    private static final Codec<Map<RegistryKey<Recipe<?>>, Integer>> CODEC = Codec.unboundedMap(Recipe.KEY_CODEC, Codec.INT);
+    private static final Codec<Map<ResourceKey<Recipe<?>>, Integer>> CODEC = Codec.unboundedMap(Recipe.KEY_CODEC, Codec.INT);
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -333,26 +333,26 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readData(view, this.inventory);
-        this.fuelTime = view.getShort("FuelTimeLeft", (short)0);
-        this.freezeTime = view.getShort("FreezeTime", (short) 0);
-        this.freezeTimeTotal = view.getShort("FreezeTimeTotal", (short) 0);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(view, this.inventory);
+        this.fuelTime = view.getShortOr("FuelTimeLeft", (short)0);
+        this.freezeTime = view.getShortOr("FreezeTime", (short) 0);
+        this.freezeTimeTotal = view.getShortOr("FreezeTimeTotal", (short) 0);
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         this.recipesUsed.clear();
         this.recipesUsed.putAll(view.read("RecipesUsed", CODEC).orElse(Map.of()));
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        Inventories.writeData(view, this.inventory);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        ContainerHelper.saveAllItems(view, this.inventory);
         view.putShort("FuelTimeLeft", (short)this.fuelTime);
         view.putShort("FreezeTime", (short)this.freezeTime);
         view.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        view.put("RecipesUsed", CODEC, this.recipesUsed);
+        view.store("RecipesUsed", CODEC, this.recipesUsed);
     }
 
 

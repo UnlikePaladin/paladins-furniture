@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.IronFreezerBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;

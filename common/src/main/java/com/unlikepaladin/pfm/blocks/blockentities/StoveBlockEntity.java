@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -41,6 +42,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -123,43 +126,43 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
+    protected void loadAdditional(ValueInput view) {
         super.loadAdditional(view);
         int[] is;
         this.itemsBeingCooked.clear();
         readData(view, this.itemsBeingCooked);
-        is = view.getOptionalIntArray("CookingTimes").orElse(new int[0]);
+        is = view.getIntArray("CookingTimes").orElse(new int[0]);
         System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        is = view.getOptionalIntArray("CookingTotalTimes").orElse(new int[0]);
+        is = view.getIntArray("CookingTotalTimes").orElse(new int[0]);
         System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
         writeData(view, this.itemsBeingCooked, true);
         view.putIntArray("CookingTimes", this.cookingTimes);
         view.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
     }
 
-    public static void writeData(WriteView view, DefaultedList<ItemStack> stacks, boolean setIfEmpty) {
-        WriteView.ListAppender<StackWithSlot> listAppender = view.getListAppender("CookTopItems", StackWithSlot.CODEC);
+    public static void writeData(ValueOutput view, NonNullList<ItemStack> stacks, boolean setIfEmpty) {
+        ValueOutput.TypedOutputList<ItemStackWithSlot> listAppender = view.list("CookTopItems", ItemStackWithSlot.CODEC);
 
         for (int i = 0; i < stacks.size(); i++) {
             ItemStack itemStack = stacks.get(i);
             if (!itemStack.isEmpty()) {
-                listAppender.add(new StackWithSlot(i, itemStack));
+                listAppender.add(new ItemStackWithSlot(i, itemStack));
             }
         }
 
         if (listAppender.isEmpty() && !setIfEmpty) {
-            view.remove("CookTopItems");
+            view.discard("CookTopItems");
         }
     }
 
-    public static void readData(ReadView view, DefaultedList<ItemStack> stacks) {
-        for (StackWithSlot stackWithSlot : view.getTypedListView("CookTopItems", StackWithSlot.CODEC)) {
-            if (stackWithSlot.isValidSlot(stacks.size())) {
+    public static void readData(ValueInput view, NonNullList<ItemStack> stacks) {
+        for (ItemStackWithSlot stackWithSlot : view.listOrEmpty("CookTopItems", ItemStackWithSlot.CODEC)) {
+            if (stackWithSlot.isValidInContainer(stacks.size())) {
                 stacks.set(stackWithSlot.slot(), stackWithSlot.stack());
             }
         }

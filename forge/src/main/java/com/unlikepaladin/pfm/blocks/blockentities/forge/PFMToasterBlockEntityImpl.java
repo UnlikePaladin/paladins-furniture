@@ -10,6 +10,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,15 +42,15 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-       this.loadAdditional(tag, holders);
-        this.readData(tag);
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
+        super.handleUpdateTag(tag, holders);
+        this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView data, HolderLookup.Provider registryLookup) {
+    public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, data, registryLookup);
         this.getItems().clear();
-        ContainerHelper.loadAllItems(data, this.items, registryLookup);
+        ContainerHelper.loadAllItems(data, this.items);
     }
 }

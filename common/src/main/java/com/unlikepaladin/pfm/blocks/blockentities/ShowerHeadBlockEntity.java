@@ -11,8 +11,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -26,19 +26,19 @@ public class ShowerHeadBlockEntity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return super.getUpdateTag(registryLookup);
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         view.putBoolean("isOpen", isOpen);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        isOpen = view.getBoolean("isOpen", false);
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        isOpen = view.getBooleanOr("isOpen", false);
+        super.loadAdditional(view);
     }
 
     public boolean isOpen() {
@@ -99,12 +99,6 @@ public class ShowerHeadBlockEntity extends BlockEntity {
             world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
             world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
         }
-    }
-
-    protected CompoundTag saveInitialChunkData(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.toInitialChunkDataNbt(registryLookup);
-        nbt.putBoolean("isOpen", isOpen);
-        return nbt;
     }
 
     @ExpectPlatform

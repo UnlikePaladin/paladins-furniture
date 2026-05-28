@@ -73,10 +73,10 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
 
         Predicate<Direction> anyPredicate = d -> false;
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
-        (getTemplateBakedModels().get(4)).emitQuads(context, anyPredicate);
         (getTemplateBakedModels().get(2)).emitQuads(context, anyPredicate);
         (getTemplateBakedModels().get(5)).emitQuads(context, anyPredicate);
         context.popTransform();
+        (getTemplateBakedModels().get(4)).emitQuads(context, anyPredicate);
     }
 
     static List<TextureAtlasSprite> oakSprite = new ArrayList<>();

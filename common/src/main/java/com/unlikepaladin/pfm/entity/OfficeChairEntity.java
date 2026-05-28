@@ -21,8 +21,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.InteractionHand;
@@ -127,15 +127,15 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     }
 
     @Override
-    public void writeCustomData(WriteView nbt) {
-        super.writeCustomData(nbt);
-        nbt.put("Color", DyeColor.INDEX_CODEC, this.getPFMColor());
+    public void addAdditionalSaveData(ValueOutput nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.store("Color", DyeColor.LEGACY_ID_CODEC, this.getPFMColor());
     }
 
     @Override
-    public void readAdditionalSaveData(ReadView nbt) {
+    public void readAdditionalSaveData(ValueInput nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setPFMColor(nbt.read("Color", DyeColor.INDEX_CODEC).orElse(DyeColor.WHITE));
+        this.setPFMColor(nbt.read("Color", DyeColor.LEGACY_ID_CODEC).orElse(DyeColor.WHITE));
     }
 
     @Override

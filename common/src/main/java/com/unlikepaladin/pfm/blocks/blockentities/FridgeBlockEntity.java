@@ -20,8 +20,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.core.NonNullList;
@@ -100,19 +100,19 @@ public class FridgeBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.readLootTable(view)) {
-            Inventories.readData(view, this.inventory);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(view)) {
+            ContainerHelper.loadAllItems(view, this.inventory);
         }
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        if (!this.writeLootTable(view)) {
-            Inventories.writeData(view, this.inventory);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        if (!this.trySaveLootTable(view)) {
+            ContainerHelper.saveAllItems(view, this.inventory);
         }
     }
     String blockname = this.getBlockState().getBlock().getDescriptionId();

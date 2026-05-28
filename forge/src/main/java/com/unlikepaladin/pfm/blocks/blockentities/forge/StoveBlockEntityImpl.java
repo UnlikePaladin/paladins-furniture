@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -38,15 +39,15 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, HolderLookup.Provider holders) {
-        this.loadAdditional(tag, holders);
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
         super.handleUpdateTag(tag, holders);
+        this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
+    public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
         this.itemsBeingCooked.clear();
-        ContainerHelper.loadAllItems(data, this.itemsBeingCooked, lookup);
+        ContainerHelper.loadAllItems(data, this.itemsBeingCooked);
         super.onDataPacket(connection, data, lookup);
     }
 

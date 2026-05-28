@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -37,16 +37,16 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
-        this.readData(input);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadAdditional(input);
         super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readData(valueInput, this.inventory);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(valueInput, this.inventory);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends TrashcanBlockEntity> getFactory() {

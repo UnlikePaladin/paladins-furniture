@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
@@ -35,7 +35,7 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderType renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         List<BlockModelPart> quads = new ArrayList<>();
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {

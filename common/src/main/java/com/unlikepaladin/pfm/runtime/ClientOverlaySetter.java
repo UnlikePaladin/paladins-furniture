@@ -9,7 +9,6 @@ import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.FogParameters;
 
 public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
@@ -34,7 +33,7 @@ public class ClientOverlaySetter {
         RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(framebuffer.getColorTexture(), 0, framebuffer.getDepthTexture(), 1.0);
 
         client.gameRenderer.render(client.getDeltaTracker(), shouldTick(client));
-        if (!client.getWindow().hasZeroWidthOrHeight())
+        if (!client.getWindow().isMinimized())
             client.getMainRenderTarget().blitToScreen();
 
         if (((PFMMinecraftClientAcccessor)client).getFrameCapturer() != null) {

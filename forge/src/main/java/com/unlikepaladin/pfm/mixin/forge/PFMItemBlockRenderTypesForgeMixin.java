@@ -5,11 +5,10 @@ import com.unlikepaladin.pfm.blocks.DynamicRenderLayerInterface;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraftforge.client.ChunkRenderTypeSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,14 +27,14 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
             forRemoval = true,
             since = "1.19"
     )
-    public static Collection<BlockRenderLayer> getRenderLayers(BlockState state) {
+    public static Collection<ChunkSectionLayer> getRenderLayers(BlockState state) {
         throw new AssertionError();
     }
 
     @Unique
-    private static final Map<BlockState, Collection<BlockRenderLayer>> pfm$renderLayers = new HashMap<>();
+    private static final Map<BlockState, Collection<ChunkSectionLayer>> pfm$renderLayers = new HashMap<>();
     @Inject(method = "getRenderLayers", at = @At("TAIL"), cancellable = true, remap = false)
-    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<Collection<BlockRenderLayer>> cir) {
+    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<Collection<ChunkSectionLayer>> cir) {
         if (state.getBlock().getDescriptionId().contains("pfm")) {
             if (pfm$renderLayers.containsKey(state)) {
                 cir.setReturnValue(pfm$renderLayers.get(state));
@@ -45,11 +44,11 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
             if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    Collection<BlockRenderLayer> baseRenderTypes = getRenderLayers(variant.getBaseBlock().defaultBlockState());
-                    Collection<BlockRenderLayer> currentRenderTypes = cir.getReturnValue();
+                    Collection<ChunkSectionLayer> baseRenderTypes = getRenderLayers(variant.getBaseBlock().defaultBlockState());
+                    Collection<ChunkSectionLayer> currentRenderTypes = cir.getReturnValue();
 
                     // Combine the render types using union
-                    Collection<BlockRenderLayer> combinedRenderTypes = new ArrayList<>(baseRenderTypes);
+                    Collection<ChunkSectionLayer> combinedRenderTypes = new ArrayList<>(baseRenderTypes);
                     combinedRenderTypes.addAll(currentRenderTypes);
 
                     // Prioritize cutout and translucent over solid

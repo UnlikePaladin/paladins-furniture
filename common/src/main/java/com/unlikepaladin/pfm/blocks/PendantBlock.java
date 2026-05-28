@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;

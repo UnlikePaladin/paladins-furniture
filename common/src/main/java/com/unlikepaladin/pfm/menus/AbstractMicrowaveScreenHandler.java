@@ -51,7 +51,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu {
         this.container = container;
         container.startOpen(playerInventory.player);
         this.dataAccess = dataAccess;
-        this.level = playerInventory.player.getCommandSenderWorld();
+        this.level = playerInventory.player.level();
         this.recipePropertySet = this.level.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT);
         this.addSlot(new SizeableSlot(playerInventory.player, container, 0, 78, 40));
 

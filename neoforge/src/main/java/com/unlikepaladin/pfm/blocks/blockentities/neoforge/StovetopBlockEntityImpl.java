@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,12 +30,12 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
+    public void handleUpdateTag(ValueInput input) {
         this.loadAdditional(input);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
         this.itemsBeingCooked.clear();
         ContainerHelper.loadAllItems(valueInput, this.itemsBeingCooked);

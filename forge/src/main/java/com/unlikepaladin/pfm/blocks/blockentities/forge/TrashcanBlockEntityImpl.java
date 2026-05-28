@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -37,13 +37,13 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
         super.handleUpdateTag(tag, holders);
         this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView data, HolderLookup.Provider lookup) {
+    public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider lookup) {
         super.onDataPacket(net, data, lookup);
         this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(data, this.inventory);

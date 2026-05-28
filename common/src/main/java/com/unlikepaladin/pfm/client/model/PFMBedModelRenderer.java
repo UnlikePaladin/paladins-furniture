@@ -37,7 +37,7 @@ public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
 
     @Override
     public void getExtents(Set<Vector3f> vertices) {
-        this.blockEntityRenderer.getExtentsForGui(vertices);
+        this.blockEntityRenderer.getExtents(vertices);
     }
 
     @Environment(EnvType.CLIENT)

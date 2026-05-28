@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
@@ -38,14 +38,14 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
+    public void handleUpdateTag(ValueInput input) {
         super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
-        this.color = DyeColor.byId(valueInput.getString("color", "white"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(valueInput.getString("variant", "minecraft:oak")));
+        this.color = DyeColor.byName(valueInput.getStringOr("color", "white"), DyeColor.WHITE);
+        this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(valueInput.getStringOr("variant", "minecraft:oak")));
     }
 }

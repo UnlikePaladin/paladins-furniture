@@ -12,8 +12,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,16 +53,16 @@ public class BathtubBlockEntity extends BedBlockEntity {
 
     @Override
     protected void loadAdditional(ValueInput view) {
-        fillTimer = view.getInt("tubTimer", 0);
-        isFilling = view.getBoolean("isTubFilling", false);
+        fillTimer = view.getIntOr("tubTimer", 0);
+        isFilling = view.getBooleanOr("isTubFilling", false);
         super.loadAdditional(view);
     }
 
     @Override
     protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
-        nbt.putInt("tubTimer", fillTimer);
-        nbt.putBoolean("isTubFilling", isFilling);
+        view.putInt("tubTimer", fillTimer);
+        view.putBoolean("isTubFilling", isFilling);
     }
 
     public void setFillTimer(int fillTimer) {

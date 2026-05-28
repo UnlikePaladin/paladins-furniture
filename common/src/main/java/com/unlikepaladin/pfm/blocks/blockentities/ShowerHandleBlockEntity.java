@@ -8,8 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
         if (this.showerOffset != null) {
             view.putLong("showerHead", this.showerOffset.asLong());
@@ -30,10 +30,10 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        view.getOptionalLong("showerHead").ifPresent(
-                aLong -> this.showerOffset = BlockPos.fromLong(aLong));
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        view.getLong("showerHead").ifPresent(
+                aLong -> this.showerOffset = BlockPos.of(aLong));
     }
 
     public void setState(boolean open)

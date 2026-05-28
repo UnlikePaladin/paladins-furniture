@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,16 +43,16 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-        this.loadAdditional(tag, holders);
-        this.readData(tag);
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
+        super.handleUpdateTag(tag, holders);
+        this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(Connection connection, ReadView data, HolderLookup.Provider lookup) {
+    public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
         super.onDataPacket(connection, data, lookup);
         this.container = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        this.isActive = data.getBoolean("isActive", false);
+        this.isActive = data.getBooleanOr("isActive", false);
         ContainerHelper.loadAllItems(data, this.container);
     }
 

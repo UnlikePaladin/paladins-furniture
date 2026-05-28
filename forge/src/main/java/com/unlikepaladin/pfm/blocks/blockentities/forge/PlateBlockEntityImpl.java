@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -30,13 +31,13 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, HolderLookup.Provider holders) {
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
         super.handleUpdateTag(tag, holders);
-        this.readData(tag);
+        this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView data, HolderLookup.Provider registryLookup) {
+    public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, data, registryLookup);
         this.itemInPlate.clear();
         ContainerHelper.loadAllItems(data, this.itemInPlate);

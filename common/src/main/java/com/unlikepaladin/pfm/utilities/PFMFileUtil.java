@@ -3,8 +3,8 @@ package com.unlikepaladin.pfm.utilities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.math.ColorHelper;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.io.File;
@@ -79,7 +79,7 @@ public class PFMFileUtil {
     }
 
     public static int adjustColor(int argbColor) {
-        return (argbColor & -67108864) == 0 ? ColorHelper.fullAlpha(argbColor) : argbColor;
+        return (argbColor & -67108864) == 0 ? ARGB.opaque(argbColor) : argbColor;
     }
 
     @ExpectPlatform

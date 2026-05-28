@@ -25,20 +25,19 @@ import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -50,10 +49,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.text.TextCodecs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -337,38 +335,38 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        view.getOptionalReadView("ItemHandler").ifPresent((it) -> {
-            Inventories.readData(it, this.container.getItems());
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        view.child("ItemHandler").ifPresent((it) -> {
+            ContainerHelper.loadAllItems(it, this.container.getItems());
         });
-        this.furnaceBurnTime = view.getShort("BurnTime", (short) 0);
-        this.currentItemBurnTime = view.getShort("CurrentItemBurnTime", (short) 0);
-        this.slotCookTime = view.getOptionalIntArray("CookTimes").orElse(new int[0]);
+        this.furnaceBurnTime = view.getShortOr("BurnTime", (short) 0);
+        this.currentItemBurnTime = view.getShortOr("CurrentItemBurnTime", (short) 0);
+        this.slotCookTime = view.getIntArray("CookTimes").orElse(new int[0]);
         if (this.slotCookTime.length != 9) {
             this.slotCookTime = new int[9];
         }
 
-        this.hasPowerUpgrade = view.getBoolean("HasPowerUpgrade", false);
-        this.energyStorage.setEnergy(view.getInt("EnergyStored", 0));
-        this.customName = view.read("CustomNameV2", TextCodecs.CODEC).orElse(null);
+        this.hasPowerUpgrade = view.getBooleanOr("HasPowerUpgrade", false);
+        this.energyStorage.setEnergy(view.getIntOr("EnergyStored", 0));
+        this.customName = view.read("CustomNameV2", ComponentSerialization.CODEC).orElse(null);
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        Inventories.writeData(view.get("ItemHandler"), this.container.getItems());
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        ContainerHelper.saveAllItems(view.child("ItemHandler"), this.container.getItems());
         view.putShort("BurnTime", (short)this.furnaceBurnTime);
         view.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
         view.putIntArray("CookTimes", ArrayUtils.clone(this.slotCookTime));
         view.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         view.putInt("EnergyStored", this.energyStorage.getEnergy());
-        view.putNullable("CustomNameV2", TextCodecs.CODEC, this.customName);
+        view.storeNullable("CustomNameV2", ComponentSerialization.CODEC, this.customName);
     }
 
     @Override
-    protected void writeUpdateTag(WriteView view) {
-        this.writeData(view);
+    protected void writeUpdateTag(ValueOutput view) {
+        this.saveAdditional(view);
         super.writeUpdateTag(view);
     }
 

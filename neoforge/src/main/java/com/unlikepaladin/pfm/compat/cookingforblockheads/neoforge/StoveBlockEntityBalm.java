@@ -21,20 +21,19 @@ import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
 import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -50,6 +49,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -332,37 +333,37 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
+    protected void loadAdditional(ValueInput view) {
         super.loadAdditional(view);
-        view.getOptionalReadView("ItemHandler").ifPresent((it) -> {
-            Inventories.readData(it, this.container.getItems());
+        view.child("ItemHandler").ifPresent((it) -> {
+            ContainerHelper.loadAllItems(it, this.container.getItems());
         });
-        this.furnaceBurnTime = view.getShort("BurnTime", (short) 0);
-        this.currentItemBurnTime = view.getShort("CurrentItemBurnTime", (short) 0);
-        this.slotCookTime = view.getOptionalIntArray("CookTimes").orElse(new int[0]);
+        this.furnaceBurnTime = view.getShortOr("BurnTime", (short) 0);
+        this.currentItemBurnTime = view.getShortOr("CurrentItemBurnTime", (short) 0);
+        this.slotCookTime = view.getIntArray("CookTimes").orElse(new int[0]);
         if (this.slotCookTime.length != 9) {
             this.slotCookTime = new int[9];
         }
 
-        this.hasPowerUpgrade = view.getBoolean("HasPowerUpgrade", false);
-        this.energyStorage.setEnergy(view.getInt("EnergyStored", 0));
-        this.customName = view.read("CustomNameV2", TextCodecs.CODEC).orElse(null);
+        this.hasPowerUpgrade = view.getBooleanOr("HasPowerUpgrade", false);
+        this.energyStorage.setEnergy(view.getIntOr("EnergyStored", 0));
+        this.customName = view.read("CustomNameV2", ComponentSerialization.CODEC).orElse(null);
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
-        Inventories.writeData(view.get("ItemHandler"), this.container.getItems());
+        ContainerHelper.saveAllItems(view.child("ItemHandler"), this.container.getItems());
         view.putShort("BurnTime", (short)this.furnaceBurnTime);
         view.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
         view.putIntArray("CookTimes", ArrayUtils.clone(this.slotCookTime));
         view.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         view.putInt("EnergyStored", this.energyStorage.getEnergy());
-        view.putNullable("CustomNameV2", TextCodecs.CODEC, this.customName);
+        view.storeNullable("CustomNameV2", ComponentSerialization.CODEC, this.customName);
     }
 
     @Override
-    protected void writeUpdateTag(WriteView view) {
+    protected void writeUpdateTag(ValueOutput view) {
         this.saveAdditional(view);
         super.writeUpdateTag(view);
     }
@@ -475,11 +476,11 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        return writeWithoutMetadata(provider);
+        return saveWithoutMetadata(provider);
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
+    public void handleUpdateTag(ValueInput input) {
         this.loadAdditional(input);
         super.handleUpdateTag(input);
     }

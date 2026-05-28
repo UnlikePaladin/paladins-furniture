@@ -12,6 +12,8 @@ import net.minecraft.nbt.LongTag;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.List;
 
@@ -24,16 +26,16 @@ public class LightSwitchBlockEntity extends BlockEntity {
 
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        WriteView.ListAppender<Long> listAppender = view.getListAppender("Items", Codec.LONG);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        ValueOutput.TypedOutputList<Long> listAppender = view.list("Items", Codec.LONG);
         lights.forEach(blockPos -> listAppender.add(blockPos.asLong()));
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        view.getOptionalTypedListView("lights", Codec.LONG).ifPresent((longs) -> {
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        view.list("lights", Codec.LONG).ifPresent((longs) -> {
             lights.clear();
             longs.forEach(this::addLight);
         });

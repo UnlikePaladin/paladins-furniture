@@ -43,7 +43,6 @@ import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.render.model.SimpleModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;

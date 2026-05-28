@@ -24,15 +24,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.resources.ResourceLocation;
@@ -50,7 +49,7 @@ import java.util.Optional;
 public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder {
     public boolean isActive = false;
     private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
-    private static final Codec<Map<Identifier, Integer>> CODEC = Codec.unboundedMap(Identifier.CODEC, Codec.INT);
+    private static final Codec<Map<ResourceLocation, Integer>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT);
 
     public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.MICROWAVE_BLOCK_ENTITY, pos, state);
@@ -175,25 +174,25 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.container = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(view, this.container);
-        this.cookTime = view.getShort("CookTime", (short)0);
-        this.cookTimeTotal = view.getShort("CookTimeTotal", (short)0);
-        this.isActive = view.getBoolean("isActive", false);
+        this.cookTime = view.getShortOr("CookTime", (short)0);
+        this.cookTimeTotal = view.getShortOr("CookTimeTotal", (short)0);
+        this.isActive = view.getBooleanOr("isActive", false);
         this.recipesUsed.clear();
         this.recipesUsed.putAll(view.read("RecipesUsed", CODEC).orElse(Map.of()));
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         view.putShort("CookTime", (short)this.cookTime);
         view.putShort("CookTimeTotal", (short)this.cookTimeTotal);
-        ContainerHelper.saveAllItems(view, this.inventory);
+        ContainerHelper.saveAllItems(view, this.container);
         view.putBoolean("isActive", this.isActive);
-        view.put("RecipesUsed", CODEC, this.recipesUsed);
+        view.store("RecipesUsed", CODEC, this.recipesUsed);
     }
 
     @Override

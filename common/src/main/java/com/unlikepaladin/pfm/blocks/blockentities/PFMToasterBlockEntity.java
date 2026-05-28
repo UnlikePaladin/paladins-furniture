@@ -31,8 +31,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
@@ -62,30 +62,30 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        items = DefaultedList.ofSize(2, ItemStack.EMPTY);
-        toastProgress = view.getInt("toastProgress", 0);
-        toasting = view.getBoolean("toasting", false);
-        smokeProgress = view.getInt("smokeProgress", 0);
-        smoking = view.getBoolean("smoking", false);
-        view.getOptionalString("lastUser").ifPresent((str) -> {
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        items = NonNullList.withSize(2, ItemStack.EMPTY);
+        toastProgress = view.getIntOr("toastProgress", 0);
+        toasting = view.getBooleanOr("toasting", false);
+        smokeProgress = view.getIntOr("smokeProgress", 0);
+        smoking = view.getBooleanOr("smoking", false);
+        view.getString("lastUser").ifPresent((str) -> {
             this.lastUser = UUID.fromString(str);
         });
-        Inventories.readData(view, items);
+        ContainerHelper.loadAllItems(view, items);
     }
 
     @Override
-    protected void writeData(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         view.putInt("toastProgress", toastProgress);
         view.putBoolean("toasting", toasting);
         view.putInt("smokeProgress", smokeProgress);
         view.putBoolean("smoking", smoking);
         if (this.lastUser == null) {
-            view.remove("lastUser");
+            view.discard("lastUser");
         } else view.putString("lastUser", this.lastUser.toString());
-        Inventories.writeData(view, items);
-        super.writeData(view);
+        ContainerHelper.saveAllItems(view, items);
+        super.saveAdditional(view);
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,16 +43,16 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
-        this.readData(input);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadAdditional(input);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView valueInput) {
-        super.onDataPacket(net, pkt, lookupProvider);
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
         this.container = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        this.isActive = valueInput.getBoolean("isActive", false);
-        ContainerHelper.loadAllItems(valueInputff, this.container, lookupProvider);
+        this.isActive = valueInput.getBooleanOr("isActive", false);
+        ContainerHelper.loadAllItems(valueInput, this.container);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends MicrowaveBlockEntity> getFactory() {

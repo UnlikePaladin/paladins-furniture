@@ -26,7 +26,7 @@ public class ToiletUsePacket {
             ServerPlayer player = ctx.getSender(); // the client that sent this packet
 
             BlockPos blockPos = msg.blockPos;
-            Level world = Objects.requireNonNull(player).getCommandSenderWorld();
+            Level world = Objects.requireNonNull(player).level();
             ctx.enqueueWork(() -> {
                 if (world.hasChunkAt(blockPos)) {
                     world.setBlockAndUpdate(blockPos, world.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));

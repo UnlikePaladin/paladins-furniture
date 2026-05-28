@@ -42,7 +42,7 @@ public class PFMModResourcePackCreatorMixin {
     private void addPFMResources(Consumer<Pack> consumer, CallbackInfo ci) {
         if (type == net.minecraft.server.packs.PackType.CLIENT_RESOURCES) {
             AbstractBakedModel.reloading = true;
-            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), Optional.empty());
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES), Optional.empty());
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
                 public PackResources openPrimary(PackLocationInfo info) {
@@ -59,7 +59,7 @@ public class PFMModResourcePackCreatorMixin {
             };
             consumer.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-asset-resources", Component.literal("PFM Assets"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, PackType.CLIENT_RESOURCES, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
         } else if (type == PackType.SERVER_DATA) {
-            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), Optional.empty());
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA), Optional.empty());
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
                 public PackResources openPrimary(PackLocationInfo name) {

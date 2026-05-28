@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.storage.ReadView;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,13 +25,13 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return this.saveInitialChunkData(new CompoundTag(), registryLookup);
+        return this.saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView view) {
+    public void onDataPacket(Connection net, ValueInput view) {
         super.onDataPacket(net, view);
-        this.isOpen = view.getBoolean("isOpen", false);
+        this.isOpen = view.getBooleanOr("isOpen", false);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends ShowerHeadBlockEntity> getFactory() {

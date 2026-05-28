@@ -27,7 +27,7 @@ public class MicrowaveActivePacket {
             // Do stuffm
             BlockPos entityPos = msg.entityPos;
             boolean active = msg.active;
-            Level world = Objects.requireNonNull(player).getCommandSenderWorld();
+            Level world = Objects.requireNonNull(player).level();
             ctx.enqueueWork(() -> {
                 if (world.hasChunkAt(entityPos)) {
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(entityPos);

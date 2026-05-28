@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;

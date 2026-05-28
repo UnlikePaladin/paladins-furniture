@@ -28,6 +28,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -112,23 +114,23 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void loadAdditional(ReadView view) {
+    protected void loadAdditional(ValueInput view) {
         int[] is;
         super.loadAdditional(view);
         this.itemsBeingCooked.clear();
-        Inventories.readData(view, this.itemsBeingCooked);
-        is = view.getOptionalIntArray("CookingTimes").orElse(new int[0]);
+        ContainerHelper.loadAllItems(view, this.itemsBeingCooked);
+        is = view.getIntArray("CookingTimes").orElse(new int[0]);
         System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        is = view.getOptionalIntArray("CookingTotalTimes").orElse(new int[0]);
+        is = view.getIntArray("CookingTotalTimes").orElse(new int[0]);
         System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
     }
 
     @Override
-    protected void saveAdditional(WriteView view) {
+    protected void saveAdditional(ValueOutput view) {
         super.saveAdditional(view);
         view.putIntArray("CookingTimes", this.cookingTimes);
         view.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-        Inventories.writeData(view, this.itemsBeingCooked, true);
+        ContainerHelper.saveAllItems(view, this.itemsBeingCooked, true);
     }
 
     public ItemStack removeItemNoUpdate(int slot) {

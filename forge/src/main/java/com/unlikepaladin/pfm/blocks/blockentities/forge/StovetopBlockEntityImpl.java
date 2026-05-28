@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,15 +30,15 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, HolderLookup.Provider holders) {
-        this.loadAdditional(tag, holders);
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
+        this.loadAdditional(tag);
     }
 
     @Override
-    public void onDataPacket(Connection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
+    public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
         super.onDataPacket(connection, data, lookup);
         this.itemsBeingCooked.clear();
-        ContainerHelper.loadAllItems(pkt.getTag(), this.itemsBeingCooked);
+        ContainerHelper.loadAllItems(data, this.itemsBeingCooked);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends StovetopBlockEntity> getFactory() {

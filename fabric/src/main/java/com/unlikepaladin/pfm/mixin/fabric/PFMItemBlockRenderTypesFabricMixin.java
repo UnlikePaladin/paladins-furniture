@@ -7,7 +7,7 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -47,7 +47,7 @@ public abstract class PFMItemBlockRenderTypesFabricMixin {
             if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    ChunkSectionLayer parentLayer = getChunkRenderType(variant.getBaseBlock().getDefaultState());
+                    ChunkSectionLayer parentLayer = getChunkRenderType(variant.getBaseBlock().defaultBlockState());
                     ChunkSectionLayer selfLayer = cir.getReturnValue();
 
                     if (parentLayer != ChunkSectionLayer.SOLID) {

@@ -63,7 +63,7 @@ public class PFMItemModel<T> implements ItemModel {
 
     @Override
     public void update(ItemStackRenderState state, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext displayContext, @Nullable ClientLevel world, @Nullable LivingEntity user, int seed) {
-        state.addModelKey(this);
+        state.appendModelIdentityElement(this);
         BlockStateModel unwrapped = unwrapBlockStateModel(model.get());
         if (specialModelType != null) {
             ItemStackRenderState.LayerRenderState specialLayerRenderState = state.newLayer();
@@ -71,7 +71,7 @@ public class PFMItemModel<T> implements ItemModel {
                 ((AbstractBakedModel)unwrapped).itemDisplaySettings.applyToLayer(specialLayerRenderState, displayContext);
             }
             specialLayerRenderState.setupSpecialModel(this.specialModelType, this.specialModelType.extractArgument(stack));
-            state.addModelKey(specialLayerRenderState);
+            state.appendModelIdentityElement(specialLayerRenderState);
         }
 
         state.setAnimated();
@@ -99,8 +99,8 @@ public class PFMItemModel<T> implements ItemModel {
             tintCount = 2;
             tintsToUse = new ArrayList<>(tintCount);
 
-            tintsToUse.add(new Constant(0xffffff));
-            tintsToUse.add(new Constant(0xffffff));
+            tintsToUse.add(new Constant(0xffffffff));
+            tintsToUse.add(new Constant(0xffffffff));
         }
 
         int[] tintArray = layerRenderState.prepareTintLayers(tintCount);
@@ -111,14 +111,14 @@ public class PFMItemModel<T> implements ItemModel {
             } else {
                 tintArray[index] = PFMFileUtil.adjustColor(tintsToUse.get(index).calculate(stack, world, user));
             }
-            state.addModelKey(tintArray[index]);
+            state.appendModelIdentityElement(tintArray[index]);
         }
 
         setProperties(stack, state);
 
         RandomSource random = RandomSource.create(seed);
         // finally emit item quads
-        emitItemModelQuads(layerRenderState, model.get(), displayContext, random);
+        emitItemModelQuads(layerRenderState, unwrapped, displayContext, random);
     }
 
     @ExpectPlatform
@@ -126,13 +126,13 @@ public class PFMItemModel<T> implements ItemModel {
         throw new AssertionError();
     }
 
-    protected void setProperties(ItemStack stack, ItemRenderState state) {
+    protected void setProperties(ItemStack stack, ItemStackRenderState state) {
         BlockStateModel blockStateModel  = unwrapBlockStateModel(model.get());
         if (stack.getItem() instanceof BlockItem && blockStateModel instanceof PFMBakedModelSetPropertiesExtension) {
-            BlockState blockState = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
+            BlockState blockState = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
             ((PFMBakedModelSetPropertiesExtension) blockStateModel).setBlockStateProperty(blockState);
             state.appendModelIdentityElement(blockState);
-            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
+            if (stack.has(PFMComponents.VARIANT_COMPONENT)) {
                 VariantBase<?> variantBase = VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
                 ((PFMBakedModelSetPropertiesExtension) blockStateModel).setVariant(variantBase);
                 state.appendModelIdentityElement(variantBase);

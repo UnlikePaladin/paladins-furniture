@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
 import org.jetbrains.annotations.Nullable;
@@ -30,15 +31,15 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
+    public void handleUpdateTag(ValueInput input) {
         super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(Connection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
         this.itemInPlate.clear();
-        Inventories.readNbt(valueInput, this.itemInPlate);
+        ContainerHelper.loadAllItems(valueInput, this.itemInPlate);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {

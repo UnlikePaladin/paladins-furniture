@@ -6,7 +6,7 @@ import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
-import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -58,11 +58,11 @@ public class FreezingWidget extends BurningFire {
         if (getAnimationDuration() > 0) {
             int height = 14 - Mth.ceil((System.currentTimeMillis() / (animationDuration / 14) % 14d));
             //drawTexture(matrices, getX(), getY(), 1, 74, 14, 14 - height);
-            context.blit(RenderType::guiTextured, background, getX(), getY() +2, 56, 36,14, 14, 256, 256);
-            context.blit(RenderType::guiTextured, background, getX(), getY() + 14 - height, 176, 12 - height, 14, height, 256, 256);
+            context.blit(RenderPipelines.GUI_TEXTURED, background, getX(), getY() +2, 56, 36,14, 14, 256, 256);
+            context.blit(RenderPipelines.GUI_TEXTURED, background, getX(), getY() + 14 - height, 176, 12 - height, 14, height, 256, 256);
 
         } else {
-            context.blit(RenderType::guiTextured, background, getX(), getY(), 1, 74, 14, 14, 256, 256);
+            context.blit(RenderPipelines.GUI_TEXTURED, background, getX(), getY(), 1, 74, 14, 14, 256, 256);
         }
     }
 

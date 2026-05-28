@@ -40,7 +40,7 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
         this.container = container;
         container.startOpen(playerInventory.player);
         this.dataAccess = dataAccess;
-        this.level = playerInventory.player.getCommandSenderWorld();
+        this.level = playerInventory.player.level();
         this.recipePropertySet = this.level.recipeAccess().propertySet(RecipeTypes.FREEZING_INPUT);
         this.addSlot(new Slot(container, 0, 56, 17));
         this.addSlot(new FreezerFuelSlot(this, container, 1, 56, 53));

@@ -1,9 +1,8 @@
 package com.unlikepaladin.pfm.runtime.data.fabric;
 
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.mixin.fabric.PFMAbstractTagProvider$ObjectBuilderMixin;
 import net.minecraft.core.Registry;
-import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.data.tags.TagAppender;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
@@ -17,11 +16,11 @@ public class PFMTagProviderImpl {
         return new ObjectBuilder<T>(builder, t -> registry.getResourceKey(t).get(), modID);
     }
 
-    public static class ObjectBuilder<T> extends TagsProvider.TagAppender<T>  implements PFMTag<T> {
+    public static class ObjectBuilder<T> implements PFMTag<T>, TagAppender<ResourceKey<T>, T> {
         private final Function<T, ResourceKey<T>> valueToKey;
         private final TagBuilder tagBuilder;
         ObjectBuilder(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
-            super(arg);
+            super();
             this.valueToKey = function;
             this.tagBuilder = arg;
         }
@@ -37,31 +36,32 @@ public class PFMTagProviderImpl {
         @Override
         public PFMTag<T> addKey(ResourceKey<T>... keys) {
             for (ResourceKey<T> key : keys){
-                tagBuilder.add(key.getValue());
+                tagBuilder.addElement(key.location());
             }
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> add(RegistryKey<T> value) {
-            tagBuilder.add(value.getValue());
+        public TagAppender<ResourceKey<T>, T> add(ResourceKey<T> value) {
+            tagBuilder.addElement(value.location());
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addOptional(RegistryKey<T> value) {
-            return null;
-        }
-
-        @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addTag(TagKey tag) {
-            this.tagBuilder.addTag(tag.id());
+        public TagAppender<ResourceKey<T>, T> addOptional(ResourceKey<T> value) {
+            tagBuilder.addOptionalElement(value.location());
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addOptionalTag(TagKey tag) {
-            this.tagBuilder.addOptionalTag(tag.id());
+        public TagAppender<ResourceKey<T>, T> addTag(TagKey tag) {
+            this.tagBuilder.addTag(tag.location());
+            return this;
+        }
+
+        @Override
+        public TagAppender<ResourceKey<T>, T> addOptionalTag(TagKey tag) {
+            this.tagBuilder.addOptionalTag(tag.location());
             return this;
         }
 

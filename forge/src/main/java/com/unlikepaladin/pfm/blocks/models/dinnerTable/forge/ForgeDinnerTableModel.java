@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.dinnerTable.forge;
 import com.unlikepaladin.pfm.blocks.DinnerTableBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -52,7 +53,7 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderType renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BlockModelPart> baseQuads = new ArrayList<>();
