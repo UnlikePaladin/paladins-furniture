@@ -1,19 +1,17 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity {
     public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
@@ -22,30 +20,30 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = this.saveInitialChunkData(new NbtCompound());
-        Inventories.writeNbt(nbt, this.itemInPlate, true, registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag nbt = this.saveInitialChunkData(new CompoundTag());
+        ContainerHelper.saveAllItems(nbt, this.itemInPlate, true, registryLookup);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        this.loadAdditional(tag, registryLookup);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, pkt, registryLookup);
         this.itemInPlate.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemInPlate, registryLookup);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.itemInPlate, registryLookup);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {
         return PlateBlockEntityImpl::new;
     }
 }

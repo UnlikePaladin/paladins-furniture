@@ -8,6 +8,7 @@ out/
 output/
 bin/
 
+libs/other-deps
 .classpath
 .project
 .idea/
@@ -16,3 +17,4 @@ classes/
 .vscode
 .settings
 *.launch
+.DS_Store

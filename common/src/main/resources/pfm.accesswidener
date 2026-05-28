@@ -1,26 +1,26 @@
 accessWidener v1 named
 
-accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
-accessible class net/minecraft/data/tag/ValueLookupTagProvider$ObjectBuilder
-accessible class net/minecraft/data/DataCache$CachedDataWriter
-accessible class net/minecraft/data/DataCache$CachedData
-accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/minecraft/resource/featuretoggle/FeatureUniverse;
-accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
-mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
-accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J
-accessible	method	net/minecraft/recipe/SingleStackRecipe	result ()Lnet/minecraft/item/ItemStack;
-accessible method net/minecraft/block/entity/BlockEntityType <init> (Lnet/minecraft/block/entity/BlockEntityType$BlockEntityFactory;Ljava/util/Set;)V
-accessible field net/minecraft/block/entity/BedBlockEntity color Lnet/minecraft/util/DyeColor;
-mutable field net/minecraft/block/entity/BedBlockEntity color Lnet/minecraft/util/DyeColor;
-accessible field net/minecraft/client/render/item/model/ItemModelTypes ID_MAPPER Lnet/minecraft/util/dynamic/Codecs$IdMapper;
-accessible field net/minecraft/client/render/item/model/special/SpecialModelTypes ID_MAPPER Lnet/minecraft/util/dynamic/Codecs$IdMapper;
+accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
+accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
+accessible class net/minecraft/data/HashCache$CacheUpdater
+accessible class net/minecraft/data/HashCache$ProviderCache
+accessible field net/minecraft/world/flag/FeatureFlagSet universe Lnet/minecraft/world/flag/FeatureFlagUniverse;
+accessible field net/minecraft/world/flag/FeatureFlagSet mask J
+accessible field net/minecraft/world/flag/FeatureFlag mask J
+mutable field net/minecraft/world/flag/FeatureFlag mask J
+accessible method net/minecraft/world/item/crafting/SingleItemRecipe result ()Lnet/minecraft/world/item/ItemStack;
+accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
+accessible field net/minecraft/world/level/block/entity/BedBlockEntity color Lnet/minecraft/world/item/DyeColor;
+mutable field net/minecraft/world/level/block/entity/BedBlockEntity color Lnet/minecraft/world/item/DyeColor;
+accessible field net/minecraft/client/renderer/item/ItemModels ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
+accessible field net/minecraft/client/renderer/special/SpecialModelRenderers ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
 
-accessible method net/minecraft/client/gl/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
-accessible field net/minecraft/client/gl/RenderPipelines POSITION_TEX_COLOR_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-accessible class net/minecraft/client/texture/atlas/AtlasSource$SpriteRegion
-accessible class net/minecraft/client/render/model/ModelBaker$BakerImpl
+accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+accessible field net/minecraft/client/renderer/RenderPipelines GUI_TEXTURED_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
+accessible class net/minecraft/client/renderer/texture/atlas/SpriteSource$SpriteSupplier
+accessible class net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl
 
-accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder texture (Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
-accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder build (Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
+accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setTextureState (Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
+accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder createCompositeState (Z)Lnet/minecraft/client/renderer/RenderType$CompositeState;
 
-accessible class net/minecraft/client/render/model/BlockStatesLoader$LoadedBlockStateDefinition
+accessible class net/minecraft/client/resources/model/BlockStateModelLoader$LoadedBlockModelDefinition

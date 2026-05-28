@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.config.option;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Objects;
 
-public enum Side implements StringIdentifiable {
+public enum Side implements StringRepresentable {
     CLIENT("client"),
     SERVER("server");
 
@@ -20,7 +20,7 @@ public enum Side implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 }

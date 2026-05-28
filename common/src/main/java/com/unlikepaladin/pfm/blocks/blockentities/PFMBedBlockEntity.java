@@ -1,13 +1,13 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BedBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.BlockPos;
 
 public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitureBlockEntity<PFMBedBlockEntity> {
     public PFMBedBlockEntity(BlockPos pos, BlockState state, DyeColor color) {
@@ -29,8 +29,8 @@ public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitur
     }
 
     @Override
-    public NbtCompound writeColor(NbtCompound nbt) {
-        nbt.putString("color", getColor().asString());
+    public CompoundTag writeColor(CompoundTag nbt) {
+        nbt.putString("color", getColor().getSerializedName());
         return nbt;
     }
 
@@ -45,7 +45,7 @@ public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitur
     }
 
     @Override
-    public boolean supports(BlockState state) {
-        return getType().supports(state);
+    public boolean isValidBlockState(BlockState state) {
+        return getType().isValid(state);
     }
 }

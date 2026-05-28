@@ -6,8 +6,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
+
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -32,19 +33,19 @@ public class PaladinFurnitureModConfig {
 
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
-            checkForUpdates = new BooleanConfigOption(Text.translatable("pfm.option.checkForUpdates"), Text.translatable("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
-            shaderSolidFix = new BooleanConfigOption(Text.translatable("pfm.option.shaderSolidFix"), Text.translatable("pfm.option.shaderSolidFix.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            doChairsFacePlayer = new BooleanConfigOption(Text.translatable("pfm.option.chairsFacePlayer"), Text.translatable("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            foodPopsOffStove = new BooleanConfigOption(Text.translatable("pfm.option.foodPopsOffStove"), Text.translatable("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            countersOfDifferentMaterialsConnect = new BooleanConfigOption(Text.translatable("pfm.option.countersOfDifferentMaterialsConnect"), Text.translatable("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect"), Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            differentMirrorsConnect = new BooleanConfigOption(Text.translatable("pfm.option.differentMirrorsConnect"), Text.translatable("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            enableBook = new BooleanConfigOption(Text.translatable("pfm.option.enableBook"), Text.translatable("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            mobsSitOnChairs = new BooleanConfigOption(Text.translatable("pfm.option.mobsSitOnChairs"), Text.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            renderImmersivePortalsMirrors = new BooleanConfigOption(Text.translatable("pfm.option.renderImmersivePortalsMirrors"), Text.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
-            spawnImmersivePortalsMirror  = new BooleanConfigOption(Text.translatable("pfm.option.spawnImmersivePortalsMirror"), Text.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            disableGeneratingScreen  = new BooleanConfigOption(Text.translatable("pfm.option.disableGeneratingScreen"), Text.translatable("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            disableSinytraWarning  = new BooleanConfigOption(Text.translatable("pfm.option.disableSinytraWarning"), Text.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
+            checkForUpdates = new BooleanConfigOption(Component.translatable("pfm.option.checkForUpdates"), Component.translatable("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
+            shaderSolidFix = new BooleanConfigOption(Component.translatable("pfm.option.shaderSolidFix"), Component.translatable("pfm.option.shaderSolidFix.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            doChairsFacePlayer = new BooleanConfigOption(Component.translatable("pfm.option.chairsFacePlayer"), Component.translatable("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            foodPopsOffStove = new BooleanConfigOption(Component.translatable("pfm.option.foodPopsOffStove"), Component.translatable("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            countersOfDifferentMaterialsConnect = new BooleanConfigOption(Component.translatable("pfm.option.countersOfDifferentMaterialsConnect"), Component.translatable("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(Component.translatable("pfm.option.tablesOfDifferentMaterialsConnect"), Component.translatable("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            differentMirrorsConnect = new BooleanConfigOption(Component.translatable("pfm.option.differentMirrorsConnect"), Component.translatable("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            enableBook = new BooleanConfigOption(Component.translatable("pfm.option.enableBook"), Component.translatable("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            mobsSitOnChairs = new BooleanConfigOption(Component.translatable("pfm.option.mobsSitOnChairs"), Component.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            renderImmersivePortalsMirrors = new BooleanConfigOption(Component.translatable("pfm.option.renderImmersivePortalsMirrors"), Component.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
+            spawnImmersivePortalsMirror  = new BooleanConfigOption(Component.translatable("pfm.option.spawnImmersivePortalsMirror"), Component.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            disableGeneratingScreen  = new BooleanConfigOption(Component.translatable("pfm.option.disableGeneratingScreen"), Component.translatable("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            disableSinytraWarning  = new BooleanConfigOption(Component.translatable("pfm.option.disableSinytraWarning"), Component.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -55,7 +56,7 @@ public class PaladinFurnitureModConfig {
         configOptions.sort(Comparator.comparing(config1 -> config1.getCategory().substring(22).replace("_options", "")));
         Collections.reverse(configOptions);
         for (AbstractConfigOption configOption : configOptions) {
-            options.put(((TranslatableTextContent)configOption.getTitle().getContent()).getKey(), configOption);
+            options.put(((TranslatableContents)configOption.getTitle().getContents()).getKey(), configOption);
         }
     }
 

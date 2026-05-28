@@ -9,14 +9,22 @@ import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.Container;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.*;
 import java.util.function.Function;
@@ -45,7 +53,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
 
             @Override
             public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                 if (result != null)
                     return result;
 
@@ -62,7 +70,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 

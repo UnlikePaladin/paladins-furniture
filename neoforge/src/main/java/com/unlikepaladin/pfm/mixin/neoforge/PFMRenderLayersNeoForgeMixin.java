@@ -5,10 +5,10 @@ import com.unlikepaladin.pfm.blocks.DynamicRenderLayerInterface;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.RenderType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,44 +16,47 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Mixin(RenderLayers.class)
+@Mixin(ItemBlockRenderTypes.class)
 public abstract class PFMRenderLayersNeoForgeMixin {
+
     @Shadow
     @Deprecated
-    public static RenderLayer getBlockLayer(BlockState state) {
-        throw new AssertionError();
+    public static RenderType getChunkRenderType(BlockState arg) {
+        throw new UnsupportedOperationException("Implemented via mixin");
     }
 
     @Unique
-    private static final Map<BlockState, RenderLayer> pfm$renderLayers = new HashMap<>();
-    @Inject(method = "getBlockLayer", at = @At("TAIL"), cancellable = true)
-    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<RenderLayer> cir) {
+    private static final Map<BlockState, RenderType> pfm$renderLayers = new HashMap<>();
+    @Inject(method = "getChunkRenderType", at = @At("TAIL"), cancellable = true)
+    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<RenderType> cir) {
         if (state.getBlock() instanceof DynamicRenderLayerInterface) {
-            RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
+            RenderType renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
             if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
-                cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? RenderLayer.getSolid() : renderLayer);
+                cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? RenderType.solid() : renderLayer);
             else
                 cir.setReturnValue(renderLayer);
         }
 
-        if (state.getBlock().getTranslationKey().contains("pfm")) {
+        if (state.getBlock().getDescriptionId().contains("pfm")) {
             if (pfm$renderLayers.containsKey(state)) {
                 cir.setReturnValue(pfm$renderLayers.get(state));
                 return;
             }
-            if (MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state) instanceof AbstractBakedModel abstractBakedModel) {
+            if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    RenderLayer parentLayer = getBlockLayer(variant.getBaseBlock().getDefaultState());
-                    RenderLayer selfLayer = cir.getReturnValue();
+                    RenderType parentLayer = getChunkRenderType(variant.getBaseBlock().defaultBlockState());
+                    RenderType selfLayer = cir.getReturnValue();
 
-                    if (parentLayer != RenderLayer.getSolid()) {
+                    if (parentLayer != RenderType.solid()) {
                         cir.setReturnValue(parentLayer);
                         pfm$renderLayers.put(state, parentLayer);
-                    } else if (selfLayer != RenderLayer.getSolid()) {
+                    } else if (selfLayer != RenderType.solid()) {
                         cir.setReturnValue(selfLayer);
                         pfm$renderLayers.put(state, selfLayer);
                     } else {

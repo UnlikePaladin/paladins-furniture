@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.registry;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
 
 public class SoundRegistry {
     public static void registerSounds() {
@@ -12,7 +12,7 @@ public class SoundRegistry {
         register(SoundIDs.TOILET_USED_ID, SoundIDs.TOILET_USED_EVENT);
     }
     @ExpectPlatform
-    public static void register(Identifier identifier, SoundEvent event) {
+    public static void register(ResourceLocation identifier, SoundEvent event) {
         throw new RuntimeException();
     }
 }

@@ -12,45 +12,51 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public record UnbakedChairModernModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+public record UnbakedChairModernModel(Variant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedChairModernModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
-                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedChairModernModel::variant))
+                    instance.group(Variant.MAP_CODEC.forGetter(UnbakedChairModernModel::variant))
                             .apply(instance, UnbakedChairModernModel::new));
 
     public static final Codec<UnbakedChairModernModel> CODEC = MAP_CODEC.codec();
 
-    public static final Identifier[] CHAIR_MODERN_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern_tucked")
+    public static final ResourceLocation[] CHAIR_MODERN_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern_tucked")
     };
 
-    public static final Identifier CHAIR_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_modern");
-    public static final List<Identifier> CHAIR_MODERN_MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation CHAIR_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern");
+    public static final List<ResourceLocation> CHAIR_MODERN_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_modern"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair_modern"));
                 if (variant.hasStripped())
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair_modern"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_chair_modern"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_modern"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair_modern"));
             }
             add(CHAIR_MODEL_ID);
         }
     };
 
     @Override
-    public BlockStateModel bake(Baker baker) {
-        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(CHAIR_MODERN_PARTS_BASE[0]), baker.getModel(CHAIR_MODERN_PARTS_BASE[0]).getTextures());
+    public BlockStateModel bake(ModelBaker baker) {
+        ModelState settings = variant.modelState().asModelState();
+        ModelRenderProperties itemSettings = ModelRenderProperties.fromResolvedModel(baker, baker.getModel(CHAIR_MODERN_PARTS_BASE[0]), baker.getModel(CHAIR_MODERN_PARTS_BASE[0]).getTopTextureSlots());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(CHAIR_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(CHAIR_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().get(settings));
@@ -59,8 +65,8 @@ public record UnbakedChairModernModel(ModelVariant variant) implements PFMUnbake
             PFMRuntimeResources.modelCacheMap.put(CHAIR_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : CHAIR_MODERN_PARTS_BASE) {
-            bakedModelList.add(GeometryBakedModel.create(baker, modelPart, settings));
+        for (ResourceLocation modelPart : CHAIR_MODERN_PARTS_BASE) {
+            bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
         PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().put(settings, bakedModelList);
@@ -68,13 +74,13 @@ public record UnbakedChairModernModel(ModelVariant variant) implements PFMUnbake
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : CHAIR_MODERN_PARTS_BASE)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : CHAIR_MODERN_PARTS_BASE)
             resolver.markDependency(c);
     }
 

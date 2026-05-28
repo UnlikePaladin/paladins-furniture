@@ -1,17 +1,19 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.NonNullList;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     public TrashcanBlockEntityImpl(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity, BlockPos pos, BlockState state) {
@@ -24,31 +26,31 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
-        Inventories.writeNbt(nbt, this.inventory, registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag nbt = super.getUpdateTag(registryLookup);
+        ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        this.loadAdditional(tag, registryLookup);
         super.handleUpdateTag(tag, registryLookup);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, pkt, registryLookup);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(pkt.getNbt(), this.inventory, registryLookup);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.inventory, registryLookup);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends TrashcanBlockEntity> getFactory() {
         return TrashcanBlockEntityImpl::new;
     }
 

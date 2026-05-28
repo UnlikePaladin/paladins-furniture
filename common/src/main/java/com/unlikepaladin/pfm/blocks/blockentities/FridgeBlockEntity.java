@@ -3,69 +3,70 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 
 
-public class FridgeBlockEntity extends LootableContainerBlockEntity {
+public class FridgeBlockEntity extends RandomizableContainerBlockEntity {
     @Override
-    public int size() {
+    public int getContainerSize() {
             return 54;
         }
 
     public FridgeBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FRIDGE_BLOCK_ENTITY, pos, state);
     }
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(54, ItemStack.EMPTY);
+    private final ContainerOpenersCounter stateManager = new ContainerOpenersCounter() {
 
 
         @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        protected void onOpen(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof FridgeBlock) {
-                FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+                FridgeBlockEntity.this.playSound(state, SoundEvents.IRON_TRAPDOOR_OPEN);
                 FridgeBlockEntity.this.setOpen(state, true);
             }
         }
 
         @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        protected void onClose(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof FridgeBlock) {
-                FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+                FridgeBlockEntity.this.playSound(state, SoundEvents.IRON_TRAPDOOR_CLOSE);
                 FridgeBlockEntity.this.setOpen(state, false);
             }
         }
 
 
         @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+        protected void openerCountChanged(Level world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
 
         }
 
         @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
-                Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
+        protected boolean isOwnContainer(Player player) {
+            if (player.containerMenu instanceof ChestMenu) {
+                Container inventory = ((ChestMenu)player.containerMenu).getContainer();
                 return inventory == FridgeBlockEntity.this;
             }
             return false;
@@ -73,71 +74,71 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     };
 
     @Override
-    protected DefaultedList<ItemStack> getHeldStacks() {
+    protected NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     @Override
-    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
-        this.inventory = inventory;
+    protected void setItems(NonNullList<ItemStack> list) {
+        this.inventory = list;
     }
 
     @Override
-        public void onOpen(PlayerEntity player) {
-            if (!this.removed && !player.isSpectator()) {
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+        public void startOpen(Player player) {
+            if (!this.remove && !player.isSpectator()) {
+                this.stateManager.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
             }
         }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void stopOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.stateManager.decrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.readLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
+            ContainerHelper.loadAllItems(nbt, this.inventory, registryLookup);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        if (!this.writeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory, registryLookup);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        if (!this.trySaveLootTable(nbt)) {
+            ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
         }
     }
-    String blockname = this.getCachedState().getBlock().getTranslationKey();
+    String blockname = this.getBlockState().getBlock().getDescriptionId();
 
-    protected Text getContainerName() {
+    protected Component getDefaultName() {
         blockname = blockname.replace("block.pfm", "");
-        return Text.translatable("container.pfm" + blockname);
+        return Component.translatable("container.pfm" + blockname);
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(FridgeBlock.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.level.setBlock(this.getBlockPos(), state.setValue(FridgeBlock.OPEN, open), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return GenericContainerScreenHandler.createGeneric9x6(syncId, playerInventory, this);
+    protected ChestMenu createMenu(int containerId, Inventory playerInventory) {
+        return ChestMenu.sixRows(containerId, playerInventory, this);
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(FridgeBlock.FACING).getVector();
-        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
-        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
-        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+        Vec3i vec3i = state.getValue(FridgeBlock.FACING).getUnitVec3i();
+        double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends FridgeBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends FridgeBlockEntity> getFactory() {
         throw new AssertionError();
     }
 }

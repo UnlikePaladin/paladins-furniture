@@ -8,30 +8,32 @@ import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
-public record UnbakedBasicLampModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+public record UnbakedBasicLampModel(Variant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedBasicLampModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
-                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedBasicLampModel::variant))
+                    instance.group(Variant.MAP_CODEC.forGetter(UnbakedBasicLampModel::variant))
                             .apply(instance, UnbakedBasicLampModel::new));
 
     public static final Codec<UnbakedBasicLampModel> CODEC = MAP_CODEC.codec();
 
-    public static final List<Identifier> LAMP_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> LAMP_MODEL_IDS = new ArrayList<>() {
         {
             add(LAMP_MODEL_ID);
-            add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
+            add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
         }
     };
 
-    public static final Identifier LAMP_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/basic_lamp");
+    public static final ResourceLocation LAMP_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/basic_lamp");
 
-    public static Identifier getItemModelId() {
+    public static ResourceLocation getModelLocation() {
         return LAMP_MODEL_IDS.get(1);
     }
 
@@ -48,21 +50,21 @@ public record UnbakedBasicLampModel(ModelVariant variant) implements PFMUnbakedB
         add("block/basic_lamp/basic_lamp_light_bulb_on");
     }};
 
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : MODEL_PARTS_BASE) {
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : STATIC_PARTS) {
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
 
     @Override
-    public BlockStateModel bake(Baker baker){
-        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))), baker.getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))).getTextures());
+    public BlockStateModel bake(ModelBaker baker){
+        ModelState settings = variant.modelState().asModelState();
+        ModelRenderProperties itemSettings = ModelRenderProperties.fromResolvedModel(baker, baker.getModel(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))), baker.getModel(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))).getTopTextureSlots());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(LAMP_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().get(settings));
@@ -71,8 +73,8 @@ public record UnbakedBasicLampModel(ModelVariant variant) implements PFMUnbakedB
             PFMRuntimeResources.modelCacheMap.put(LAMP_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : ALL_MODEL_IDS) {
-            bakedModelList.add(GeometryBakedModel.create(baker, modelPart, settings));
+        for (ResourceLocation modelPart : ALL_MODEL_IDS) {
+            bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
         PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().put(settings, bakedModelList);
@@ -80,13 +82,13 @@ public record UnbakedBasicLampModel(ModelVariant variant) implements PFMUnbakedB
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : ALL_MODEL_IDS)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : ALL_MODEL_IDS)
             resolver.markDependency(c);
     }
 

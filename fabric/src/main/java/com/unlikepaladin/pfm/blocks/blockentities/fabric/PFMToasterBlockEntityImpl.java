@@ -2,17 +2,15 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableCompat;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity {
     public PFMToasterBlockEntityImpl(BlockPos pos, BlockState state) {
@@ -29,16 +27,16 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity {
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PFMToasterBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PFMToasterBlockEntity> getFactory() {
         return PFMToasterBlockEntityImpl::new;
     }
 }

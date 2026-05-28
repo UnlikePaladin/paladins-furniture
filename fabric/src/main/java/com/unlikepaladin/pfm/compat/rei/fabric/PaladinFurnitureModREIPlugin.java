@@ -11,14 +11,14 @@ import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.plugins.REICommonPlugin;
 import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
 import me.shedaniel.rei.plugin.client.displays.ClientsidedCraftingDisplay;
-import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class PaladinFurnitureModREIPlugin implements REICommonPlugin {
     @Override
     public void registerDisplays(ServerDisplayRegistry registry) {
-        FeatureSet set = PFMFileUtil.getCurrentServer().getSaveProperties().getEnabledFeatures();
+        FeatureFlagSet set = PFMFileUtil.getCurrentServer().getWorldData().enabledFeatures();
         registry.beginRecipeFiller(FurnitureRecipe.class).filterType(RecipeTypes.FURNITURE_RECIPE).fill(recipeEntry -> new FurnitureDisplay(recipeEntry, set));
         registry.beginRecipeFiller(FreezingRecipe.class).filterType(RecipeTypes.FREEZING_RECIPE).fill(FreezingDisplay::new);
     }

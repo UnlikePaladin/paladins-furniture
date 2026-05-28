@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
 import com.unlikepaladin.pfm.ducks.forge.PFMBakedModelManagerExtensions;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class ModelHelperImpl {
-    public static BlockStateModel getModelFromIdentifier(Identifier id) {
-        return ((PFMBakedModelManagerExtensions)MinecraftClient.getInstance().getBakedModelManager()).pfm_getModel(id);
+    public static BlockStateModel getModelFromIdentifier(ResourceLocation id) {
+        return ((PFMBakedModelManagerExtensions)Minecraft.getInstance().getModelManager()).pfm_getModel(id);
     }
 }

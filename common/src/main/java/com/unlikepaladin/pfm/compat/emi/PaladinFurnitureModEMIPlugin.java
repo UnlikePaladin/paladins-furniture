@@ -13,9 +13,9 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.resources.ResourceLocation;
 /*
 @EmiEntrypoint
 public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
@@ -28,9 +28,9 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     protected static EmiRecipeCategory FREEZER;
 
     public static EmiIngredient WORKBENCH_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
-    public static Identifier WORKBENCH_ID = Identifier.of("pfm:furniture");
+    public static ResourceLocation WORKBENCH_ID = ResourceLocation.parse("pfm:furniture");
     public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static Identifier FREEZER_ID = Identifier.of("pfm:freezer");
+    public static ResourceLocation FREEZER_ID = ResourceLocation.parse("pfm:freezer");
     @Override
     public void register(EmiRegistry registry) {
         FURNITURE  = new EmiRecipeCategory(WORKBENCH_ID, WORKBENCH_ICON, simplifiedRenderer(240, 240));
@@ -44,18 +44,18 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addRecipeHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
         registry.addRecipeHandler(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
-        for (RecipeEntry<FurnitureRecipe> recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE)) {
+        for (RecipeHolder<FurnitureRecipe> recipe : registry.recipeAccess().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE)) {
             registry.addRecipe(new EmiFurnitureRecipe(recipe));
         }
-        for (RecipeEntry<FreezingRecipe> recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE)) {
+        for (RecipeHolder<FreezingRecipe> recipe : registry.recipeAccess().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE)) {
             registry.addRecipe(new EmiFreezingRecipe(recipe));
         }
     }
 
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (context, x, y, delta) -> {
-            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            context.drawTexture(Identifier.of("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            context.blit(ResourceLocation.fromNamespaceAndPath("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
         };
     }
 }

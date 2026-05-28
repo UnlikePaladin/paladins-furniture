@@ -1,97 +1,99 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoubleBlockProperties;
-import net.minecraft.block.entity.BedBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.enums.BedPart;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BedBlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.LoadedEntityModels;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.resources.model.Material;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity> {
-    public PFMBedBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        this(ctx.getLoadedEntityModels());
+    public PFMBedBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+        this(ctx.getModelSet());
     }
 
-    public PFMBedBlockEntityRenderer(LoadedEntityModels models) {
-        this.bedHead = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_HEAD_LAYER), RenderLayer::getEntitySolid);
-        this.bedFoot = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_FOOT_LAYER), RenderLayer::getEntitySolid);
+    public PFMBedBlockEntityRenderer(EntityModelSet models) {
+        this.bedHead = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_HEAD_LAYER), RenderType::entitySolid);
+        this.bedFoot = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_FOOT_LAYER), RenderType::entitySolid);
     }
 
     private final Model bedHead;
     private final Model bedFoot;
 
-    public static TexturedModelData getFootTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.origin(8.0F, 24.0F, -8.0F));
+    public static LayerDefinition getFootTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition group = modelPartData.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(8.0F, 24.0F, -8.0F));
 
-        ModelPartData foot_r1 = group.addChild("foot_r1", ModelPartBuilder.create().uv(2, 24).cuboid(-8.0F, -11.0F, -8.0F, 16.0F, 13.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-8.0F, -1.0F, 11.0F, -1.5708F, 3.1416F, 0.0F));
-        return TexturedModelData.of(modelData, 64, 64);
+        PartDefinition foot_r1 = group.addOrReplaceChild("foot_r1", CubeListBuilder.create().texOffs(2, 24).addBox(-8.0F, -11.0F, -8.0F, 16.0F, 13.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-8.0F, -1.0F, 11.0F, -1.5708F, 3.1416F, 0.0F));
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
-    public static TexturedModelData getHeadTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.origin(8.0F, 24.0F, -8.0F));
+    public static LayerDefinition getHeadTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        PartDefinition group = modelPartData.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(8.0F, 24.0F, -8.0F));
 
-        ModelPartData head_r1 = group.addChild("head_r1", ModelPartBuilder.create().uv(2, 2).cuboid(-28.0F, -5.0F, -3.0F, 16.0F, 13.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-28.0F, -6.0F, 8.0F, -1.5708F, 3.1416F, 0.0F));
+        PartDefinition head_r1 = group.addOrReplaceChild("head_r1", CubeListBuilder.create().texOffs(2, 2).addBox(-28.0F, -5.0F, -3.0F, 16.0F, 13.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-28.0F, -6.0F, 8.0F, -1.5708F, 3.1416F, 0.0F));
 
-        ModelPartData pillow = group.addChild("pillow", ModelPartBuilder.create(), ModelTransform.origin(-28.0F, -5.0F, 8.0F));
+        PartDefinition pillow = group.addOrReplaceChild("pillow", CubeListBuilder.create(), PartPose.offset(-28.0F, -5.0F, 8.0F));
 
-        ModelPartData head_r2 = pillow.addChild("head_r2", ModelPartBuilder.create().uv(7, 5).mirrored().cuboid(-20.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new Dilation(0.0F)).mirrored(false)
-                .uv(7, 5).cuboid(-27.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 3.1416F, 0.0F));
-        return TexturedModelData.of(modelData, 64, 64);
+        PartDefinition head_r2 = pillow.addOrReplaceChild("head_r2", CubeListBuilder.create().texOffs(7, 5).mirror().addBox(-20.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+                .texOffs(7, 5).addBox(-27.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -1.5708F, 3.1416F, 0.0F));
+        return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
-    public void render(PFMBedBlockEntity bedBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, Vec3d cameraPos) {
-        SpriteIdentifier spriteIdentifier = bedBlockEntity != null ? TexturedRenderLayers.getBedTextureId(bedBlockEntity.getColor()) : TexturedRenderLayers.getBedTextureId(DyeColor.WHITE);
-        World world2 = bedBlockEntity != null ? bedBlockEntity.getWorld() :  null;
+    public void render(PFMBedBlockEntity bedBlockEntity, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j, Vec3 cameraPos) {
+        Material spriteIdentifier = bedBlockEntity != null ? Sheets.getBedMaterial(bedBlockEntity.getColor()) : Sheets.getBedMaterial(DyeColor.WHITE);
+        Level world2 = bedBlockEntity != null ? bedBlockEntity.getLevel() :  null;
         if (world2 != null) {
-            BlockState blockState = bedBlockEntity.getCachedState();
-            DoubleBlockProperties.PropertySource<BedBlockEntity> propertySource = DoubleBlockProperties.toPropertySource(BlockEntityType.BED, BedBlock::getBedPart, BedBlock::getOppositePartDirection, ChestBlock.FACING, blockState, world2, bedBlockEntity.getPos(), (world, pos) -> false);
-            int k = ((Int2IntFunction)propertySource.apply(new LightmapCoordinatesRetriever())).get(i);
-            renderPart(matrixStack, vertexConsumerProvider, blockState.get(BedBlock.PART) == BedPart.HEAD ? this.bedHead : this.bedFoot, blockState.get(BedBlock.FACING), spriteIdentifier, k, j, false);
+            BlockState blockState = bedBlockEntity.getBlockState();
+            DoubleBlockCombiner.NeighborCombineResult<BedBlockEntity> propertySource = DoubleBlockCombiner.combineWithNeigbour(BlockEntityType.BED, BedBlock::getBlockType, BedBlock::getConnectedDirection, ChestBlock.FACING, blockState, world2, bedBlockEntity.getBlockPos(), (world, pos) -> false);
+            int k = ((Int2IntFunction)propertySource.apply(new BrightnessCombiner())).get(i);
+            renderPart(matrixStack, vertexConsumerProvider, blockState.getValue(BedBlock.PART) == BedPart.HEAD ? this.bedHead : this.bedFoot, blockState.getValue(BedBlock.FACING), spriteIdentifier, k, j, false);
         } else {
-            matrixStack.push();
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(270.0f));
+            matrixStack.pushPose();
+            matrixStack.mulPose(Axis.YP.rotationDegrees(270.0f));
             matrixStack.translate(0.0,0,-2.0);
             renderPart(matrixStack, vertexConsumerProvider, this.bedHead, Direction.NORTH, spriteIdentifier, i, j, false);
             matrixStack.translate(0.0,0,1.0);
             renderPart(matrixStack, vertexConsumerProvider, this.bedFoot, Direction.NORTH, spriteIdentifier, i, j, true);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
     }
 
-    private void renderPart(MatrixStack matrix, VertexConsumerProvider vertexConsumers, Model part, Direction direction, SpriteIdentifier sprite, int light, int overlay, boolean isFoot) {
-        matrix.push();
-        matrix.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0f));
+    private void renderPart(PoseStack matrix, MultiBufferSource vertexConsumers, Model part, Direction direction, Material sprite, int light, int overlay, boolean isFoot) {
+        matrix.pushPose();
+        matrix.mulPose(Axis.XP.rotationDegrees(180.0f));
 
         matrix.translate(0.5, -1.5, 0);
-        matrix.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction.getPositiveHorizontalDegrees()));
+        matrix.mulPose(Axis.YP.rotationDegrees(direction.toYRot()));
         switch (direction) {
             case EAST: matrix.translate(-0.5, 0, 0); break;
             case WEST: matrix.translate(0.5, 0, 0); break;
@@ -99,19 +101,19 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
             case SOUTH: matrix.translate(0, 0, -0.5); break;
         }
 
-        VertexConsumer vertexConsumer = sprite.getVertexConsumer(vertexConsumers, RenderLayer::getEntitySolid);
-        part.render(matrix, vertexConsumer, light, overlay);
-        matrix.pop();
+        VertexConsumer vertexConsumer = sprite.buffer(vertexConsumers, RenderType::entitySolid);
+        part.renderToBuffer(matrix, vertexConsumer, light, overlay);
+        matrix.popPose();
     }
 
-    public void renderAsItem(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, SpriteIdentifier textureId) {
-        matrices.push();
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0f));
+    public void renderAsItem(PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, Material textureId) {
+        matrices.pushPose();
+        matrices.mulPose(Axis.YP.rotationDegrees(90.0f));
         matrices.translate(-1.0,0,1.0);
         this.renderPart(matrices, vertexConsumers, this.bedHead, Direction.SOUTH, textureId, light, overlay, false);
         matrices.translate(0.0,0,-1.0);
         this.renderPart(matrices, vertexConsumers, this.bedFoot, Direction.SOUTH, textureId, light, overlay, true);
-        matrices.pop();
+        matrices.popPose();
     }
 
 

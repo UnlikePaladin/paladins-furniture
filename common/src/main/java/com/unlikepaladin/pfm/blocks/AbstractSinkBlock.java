@@ -6,117 +6,121 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
-import net.minecraft.block.*;
-import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
-import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.checkType;
-import static net.minecraft.block.HorizontalFacingBlock.FACING;
+import static com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock.FACING;
+import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 
-public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements BlockEntityProvider {
-    public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
-    final CauldronBehavior.CauldronBehaviorMap behaviorMap;
+public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements EntityBlock {
+    public static final IntegerProperty LEVEL_4 = IntegerProperty.create("level", 0, 3);
+    final CauldronInteraction.InteractionMap behaviorMap;
     final Biome.Precipitation precipitation;
 
-    public AbstractSinkBlock(Settings settings, Biome.Precipitation precipitation, CauldronBehavior.CauldronBehaviorMap behaviorMap) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false), behaviorMap);
+    public AbstractSinkBlock(BlockBehaviour.Properties settings, Biome.Precipitation precipitation, CauldronInteraction.InteractionMap behaviorMap) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false), behaviorMap);
         this.behaviorMap = behaviorMap;
         this.precipitation = precipitation;
-        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
+        this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(LEVEL_4, 0));
 
         if (CODEC == null) {
             CODEC = RecordCodecBuilder.mapCodec((instance) -> {
                 return instance.group(Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter((block) -> {
                     return block.precipitation;
-                }), CauldronBehavior.CODEC.fieldOf("interactions").forGetter((block) -> {
+                }), CauldronInteraction.CODEC.fieldOf("interactions").forGetter((block) -> {
                     return block.behaviorMap;
-                }), createSettingsCodec()).apply(instance, (precipitation1, cauldronBehaviorMap, settings1) -> getSinkConstructor().apply(settings1, precipitation1, cauldronBehaviorMap));
+                }), propertiesCodec()).apply(instance, (precipitation1, cauldronBehaviorMap, settings1) -> getSinkConstructor().apply(settings1, precipitation1, cauldronBehaviorMap));
             });
         }
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(LEVEL_4);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        CauldronBehavior sinkBehavior = this.behaviorMap.map().get(itemStack.getItem());
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        CauldronInteraction sinkBehavior = this.behaviorMap.map().get(itemStack.getItem());
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (state.get(LEVEL_4) < 3) {
-            BlockPos sourcePos = pos.down().down();
+    protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (state.getValue(LEVEL_4) < 3) {
+            BlockPos sourcePos = pos.below().below();
             BlockState sourceState = world.getBlockState(sourcePos);
-            if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
-                if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
-                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false));
+            if (sourceState.getFluidState().getType() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
+                if (sourceState.getProperties().contains(BlockStateProperties.WATERLOGGED)) {
+                    world.setBlockAndUpdate(sourcePos, sourceState.setValue(BlockStateProperties.WATERLOGGED, false));
                 }
                 else {
-                    world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
+                    world.setBlockAndUpdate(sourcePos, Blocks.AIR.defaultBlockState());
                 }
                 SinkBlockEntity blockEntity = (SinkBlockEntity) world.getBlockEntity(pos);
                 if (blockEntity != null) {
                     blockEntity.setFilling(true);
                 }
-                world.setBlockState(pos, state.with(LEVEL_4, 3));
-                return ActionResult.SUCCESS;
+                world.setBlockAndUpdate(pos, state.setValue(LEVEL_4, 3));
+                return InteractionResult.SUCCESS;
             }
         }
-        return super.onUse(state, world, pos, player, hit);
+        return super.useWithoutItem(state, world, pos, player, hit);
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return state.get(LEVEL_4);
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        return state.getValue(LEVEL_4);
     }
 
     @Override
-    protected void fillFromDripstone(BlockState state, World world, BlockPos pos, Fluid fluid) {
+    protected void receiveStalactiteDrip(BlockState state, Level world, BlockPos pos, Fluid fluid) {
         if (this.isFull(state)) {
             return;
         }
-        world.setBlockState(pos, state.with(LEVEL_4, state.get(LEVEL_4) + 1));
-        world.syncWorldEvent(WorldEvents.POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON, pos, 0);
+        world.setBlockAndUpdate(pos, state.setValue(LEVEL_4, state.getValue(LEVEL_4) + 1));
+        world.levelEvent(LevelEvent.SOUND_DRIP_WATER_INTO_CAULDRON, pos, 0);
     }
 
-    protected static boolean canFillWithPrecipitation(World world, Biome.Precipitation precipitation) {
+    protected static boolean canFillWithPrecipitation(Level world, Biome.Precipitation precipitation) {
         if (precipitation == Biome.Precipitation.RAIN) {
             return world.getRandom().nextFloat() < 0.05f;
         }
@@ -127,111 +131,111 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntities.SINK_BLOCK_ENTITY, SinkBlockEntity::tick);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTicketHelper(type, BlockEntities.SINK_BLOCK_ENTITY, SinkBlockEntity::tick);
     }
 
     @Override
-    public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_4) == 3 || precipitation != this.precipitation) {
+    public void handlePrecipitation(BlockState state, Level world, BlockPos pos, Biome.Precipitation precipitation) {
+        if (!canFillWithPrecipitation(world, precipitation) || state.getValue(LEVEL_4) == 3 || precipitation != this.precipitation) {
             return;
         }
-        world.setBlockState(pos, state.cycle(LEVEL_4));
+        world.setBlockAndUpdate(pos, state.cycle(LEVEL_4));
     }
 
-    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
+    public static void spawnParticles(Direction facing, Level world, BlockPos pos) {
+        if (world.isClientSide) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.SOUTH){
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.NORTH){
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
             }
             else {
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
             }
         }
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return SinkBlockEntity.getFactory().create(pos, state);
     }
 
     @Override
-    protected double getFluidHeight(BlockState state) {
-        return (6.0 + (double) state.get(LEVEL_4).intValue() * 3.0) / 16.0;
+    protected double getContentHeight(BlockState state) {
+        return (6.0 + (double) state.getValue(LEVEL_4).intValue() * 3.0) / 16.0;
     }
 
     @Override
-    protected boolean canBeFilledByDripstone(Fluid fluid) {
+    protected boolean canReceiveStalactiteDrip(Fluid fluid) {
         return fluid == Fluids.WATER && this.precipitation == Biome.Precipitation.RAIN;
     }
 
     @Override
     public boolean isFull(BlockState state) {
-        return state.get(LEVEL_4) == 3;
+        return state.getValue(LEVEL_4) == 3;
     }
 
-    public static void decrementFluidLevel(BlockState state, World world, BlockPos pos) {
-        int i = state.get(LEVEL_4) - 1;
-        world.setBlockState(pos, state.with(LEVEL_4, i));
+    public static void decrementFluidLevel(BlockState state, Level world, BlockPos pos) {
+        int i = state.getValue(LEVEL_4) - 1;
+        world.setBlockAndUpdate(pos, state.setValue(LEVEL_4, i));
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
-    protected void onFireCollision(BlockState state, World world, BlockPos pos) {
-        if (state.get(LEVEL_4) > 0)
+    protected void onFireCollision(BlockState state, Level world, BlockPos pos) {
+        if (state.getValue(LEVEL_4) > 0)
             AbstractSinkBlock.decrementFluidLevel(state, world, pos);
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
-        if (world instanceof ServerWorld serverWorld && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
-            entity.extinguish();
-            if (entity.canModifyAt(serverWorld, pos)) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler) {
+        if (!world.isClientSide && entity.isOnFire() && this.isEntityInsideContent(state, pos, entity)) {
+            entity.clearFire();
+            if (entity.mayInteract((ServerLevel) world, pos)) {
                 this.onFireCollision(state, world, pos);
             }
         }
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     public static MapCodec<AbstractSinkBlock> CODEC = null;
 
     @Override
-    protected MapCodec<? extends AbstractCauldronBlock> getCodec() {
+    protected MapCodec<? extends AbstractCauldronBlock> codec() {
         return CODEC;
     }
 
-    public abstract Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor();
+    public abstract Function3<Properties, Biome.Precipitation, CauldronInteraction.InteractionMap, AbstractSinkBlock> getSinkConstructor();
 }

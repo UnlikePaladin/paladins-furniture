@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
@@ -11,23 +12,26 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import de.androidpit.colorthief.ColorThief;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.data.TextureMap;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.texture.*;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.registry.Registries;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
@@ -38,51 +42,45 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ModelHelper {
-    public static List<Sprite> OAK_SPRITES_PLANKS_TO_REPLACE = null;
-    public static List<Sprite> getOakPlankLogSprites() {
+    public static List<TextureAtlasSprite> OAK_SPRITES_PLANKS_TO_REPLACE = null;
+    public static List<TextureAtlasSprite> getOakPlankLogSprites() {
         if (OAK_SPRITES_PLANKS_TO_REPLACE == null) {
-            SpriteIdentifier planksId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_planks"));
-            SpriteIdentifier logId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log"));
-            OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(planksId.getSprite(), logId.getSprite());
+            Material planksId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_planks"));
+            Material logId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_log"));
+            OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(planksId.sprite(), logId.sprite());
         }
         return OAK_SPRITES_PLANKS_TO_REPLACE;
     }
-    public static List<Sprite> OAK_SPRITES_BED_TO_REPLACE = null;
-    public static List<Sprite> getOakBedSprites() {
+    public static List<TextureAtlasSprite> OAK_SPRITES_BED_TO_REPLACE = null;
+    public static List<TextureAtlasSprite> getOakBedSprites() {
         if (OAK_SPRITES_BED_TO_REPLACE == null) {
-            SpriteIdentifier planksId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_planks"));
-            SpriteIdentifier bedId = TexturedRenderLayers.getBedTextureId(DyeColor.RED);
-            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(planksId.getSprite(), bedId.getSprite());
+            Material planksId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_planks"));
+            Material bedId = Sheets.getBedMaterial(DyeColor.RED);
+            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(planksId.sprite(), bedId.sprite());
         }
         return OAK_SPRITES_BED_TO_REPLACE;
     }
-    public static List<Sprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
-    public static List<Sprite> getOakLogLogTopSprites() {
+    public static List<TextureAtlasSprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
+    public static List<TextureAtlasSprite> getOakLogLogTopSprites() {
         if (OAK_SPRITES_LOG_TOP_TO_REPLACE == null) {
-            SpriteIdentifier logId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log"));
-            SpriteIdentifier logTopId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log_top"));
-            OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(logId.getSprite(), logTopId.getSprite());
+            Material logId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_log"));
+            Material logTopId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_log_top"));
+            OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(logId.sprite(), logTopId.sprite());
         }
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }
 
-    public static Set<Identifier> GENERATED_TEXTURE_IDS = new HashSet<>();
+    public static Set<ResourceLocation> GENERATED_TEXTURE_IDS = new HashSet<>();
 
-    public static boolean containsIdentifier(Identifier[] modelIds, Identifier comparison) {
-        AtomicBoolean contains = new AtomicBoolean(false);
-        Arrays.stream(modelIds).forEach(identifier -> {
-            if (comparison.getPath().equals(identifier.getPath()) && comparison.getNamespace().equals(identifier.getNamespace())){
-                contains.set(true);
-            }
-        });
-        return contains.get();
+    public static boolean containsIdentifier(ResourceLocation[] modelIds, ResourceLocation comparison) {
+        return Arrays.stream(modelIds).anyMatch(identifier -> comparison.getPath().equals(identifier.getPath()) && comparison.getNamespace().equals(identifier.getNamespace()));
     }
 
-    public static void generateTexture(Sprite baseTexture, Sprite color, int colorCount, Identifier id) {
-        MinecraftClient.getInstance().execute(() -> {
+    public static void generateTexture(TextureAtlasSprite baseTexture, TextureAtlasSprite color, int colorCount, ResourceLocation id) {
+        Minecraft.getInstance().execute(() -> {
             if (GENERATED_TEXTURE_IDS.contains(id)) {
                 return;
             }
@@ -113,8 +111,8 @@ public class ModelHelper {
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     }
 
-    public static Identifier getTextureSpritePath(Identifier id) {
-        return Identifier.of(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
+    public static ResourceLocation getTextureSpritePath(ResourceLocation id) {
+        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
     }
 
     public static int[] convertPaletteToColorArray(int[][] palette) {
@@ -132,17 +130,17 @@ public class ModelHelper {
         return (r << 16) | (g << 8) | b;
     }
 
-    static Map<Pair<Identifier, Integer>, int[][]> paletteCache = new HashMap<>();
-    public static int[][] generatePalette(Sprite texture, int colorCount) {
+    static Map<Pair<ResourceLocation, Integer>, int[][]> paletteCache = new HashMap<>();
+    public static int[][] generatePalette(TextureAtlasSprite texture, int colorCount) {
         if (texture == null)
             return null;
-        else if (paletteCache.containsKey(Pair.of(texture.getContents().getId(), colorCount)))
-            return paletteCache.get(Pair.of(texture.getContents().getId(), colorCount));
+        else if (paletteCache.containsKey(Pair.of(texture.contents().name(), colorCount)))
+            return paletteCache.get(Pair.of(texture.contents().name(), colorCount));
 
         BufferedImage image = getSpriteBufferedImage(texture);
         int[][] palette = ColorThief.getPalette(image, colorCount, 5, false);
-        paletteCache.put(new Pair<>(texture.getContents().getId(), colorCount), palette);
-        String filename = texture.getContents().getId().getNamespace().replace("/", "") + "_" + texture.getContents().getId().getPath().replace("/", "") + "_original.png";
+        paletteCache.put(new Pair<>(texture.contents().name(), colorCount), palette);
+        String filename = texture.contents().name().getNamespace().replace("/", "") + "_" + texture.contents().name().getPath().replace("/", "") + "_original.png";
         //writeBufferedImageToFile(image, filename);
 
         //writePaletteToImage(palette, texture.getId().getNamespace().replace("/", "") + "_" + texture.getId().getPath().replace("/", "") + "_palette.png");
@@ -172,13 +170,13 @@ public class ModelHelper {
         }
     }
 
-    public static BufferedImage getSpriteBufferedImage(Sprite sprite) {
-        int width = sprite.getContents().getWidth();
-        int height = sprite.getContents().getHeight();
+    public static BufferedImage getSpriteBufferedImage(TextureAtlasSprite sprite) {
+        int width = sprite.contents().width();
+        int height = sprite.contents().height();
         // Upload the sprite to ensure underlying NativeImage data is present
-        AbstractTexture spriteAtlasTexture = MinecraftClient.getInstance().getTextureManager().getTexture(sprite.getAtlasId());
-        sprite.upload(spriteAtlasTexture.getGlTexture());
-        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
+        AbstractTexture spriteAtlasTexture = Minecraft.getInstance().getTextureManager().getTexture(sprite.atlasLocation());
+        sprite.uploadFirstFrame(spriteAtlasTexture.getTexture());
+        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.contents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
@@ -245,7 +243,7 @@ public class ModelHelper {
     }
 
 
-    public static BlockType getBlockType(Identifier identifier) {
+    public static BlockType getBlockType(ResourceLocation identifier) {
         if (identifier.getPath().contains("stripped_")) {
             return BlockType.STRIPPED_LOG;
         }
@@ -257,7 +255,7 @@ public class ModelHelper {
         return BlockType.BLOCK;
     }
 
-    public static VariantBase<?> getVariant(Identifier identifier) {
+    public static VariantBase<?> getVariant(ResourceLocation identifier) {
         VariantBase<?> var = getExtraCounterType(identifier);
         if (var == null) {
             var = getStoneType(identifier);
@@ -269,7 +267,7 @@ public class ModelHelper {
     }
 
     @Nullable
-    public static ExtraCounterVariant getExtraCounterType(Identifier identifier) {
+    public static ExtraCounterVariant getExtraCounterType(ResourceLocation identifier) {
         for (ExtraCounterVariant variant:
                 ExtraCounterVariant.values()) {
             if (identifier.getPath().contains(variant.getPath()) && getBlockType(identifier) == BlockType.BLOCK) {
@@ -280,7 +278,7 @@ public class ModelHelper {
     }
 
     @Nullable
-    public static StoneVariant getStoneType(Identifier identifier) {
+    public static StoneVariant getStoneType(ResourceLocation identifier) {
         for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
             if (identifier.getPath().contains(variant.getPath()) && getBlockType(identifier) == BlockType.BLOCK) {
                 return variant;
@@ -288,7 +286,7 @@ public class ModelHelper {
         }
         return null;
     }
-    public static WoodVariant getWoodType(Identifier identifier){
+    public static WoodVariant getWoodType(ResourceLocation identifier){
         WoodVariant selectedVariant = null;
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants())
             if (identifier.getPath().contains(woodVariant.identifier.getPath())) {
@@ -300,19 +298,19 @@ public class ModelHelper {
     }
 
     @ExpectPlatform
-    public static BlockStateModel getModelFromIdentifier(Identifier id) {
+    public static BlockStateModel getModelFromIdentifier(ResourceLocation id) {
         throw new AssertionError();
     }
 
-    public static DyeColor getColor(Identifier identifier) {
-        if (Registries.BLOCK.get(identifier) instanceof DyeableFurnitureBlock block) {
+    public static DyeColor getColor(ResourceLocation identifier) {
+        if (BuiltInRegistries.BLOCK.getValue(identifier) instanceof DyeableFurnitureBlock block) {
             return block.getPFMColor();
         }
         for (DyeColor color : DyeColor.values()) {
-            if (identifier.getPath().contains(color.getId())){
-                if (!identifier.getPath().contains("light") && color.getId().contains("light"))  {
+            if (identifier.getPath().contains(color.getName())){
+                if (!identifier.getPath().contains("light") && color.getName().contains("light"))  {
                     continue;
-                } else if (identifier.getPath().contains("light") && !color.getId().contains("light"))  {
+                } else if (identifier.getPath().contains("light") && !color.getName().contains("light"))  {
                     continue;
                 }
                 return color;
@@ -321,30 +319,30 @@ public class ModelHelper {
         return DyeColor.RED;
     }
 
-    public static Identifier getVanillaConcreteColor(Identifier identifier) {
+    public static ResourceLocation getVanillaConcreteColor(ResourceLocation identifier) {
         DyeColor color = getColor(identifier);
-        if (!identifier.getPath().contains(color.getId()))
-            return Identifier.of("minecraft", "block/white_concrete");
-        return Identifier.of("minecraft", "block/"+ color.getId() + "_concrete");
+        if (!identifier.getPath().contains(color.getName()))
+            return ResourceLocation.fromNamespaceAndPath("minecraft", "block/white_concrete");
+        return ResourceLocation.fromNamespaceAndPath("minecraft", "block/"+ color.getName() + "_concrete");
     }
 
     public static Block getWoolColor(String string) {
-        Block block = Registries.BLOCK.get(Identifier.of("minecraft", string+"_wool"));
+        Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", string+"_wool"));
         if (block != Blocks.AIR) {
             return block;
         }
         return Blocks.WHITE_WOOL;
     }
 
-    public static Identifier getTextureId(Block block) {
+    public static ResourceLocation getTextureId(Block block) {
         return getTextureId(block, "");
     }
-    public static final Map<Pair<String, String>, Pair<Identifier, Integer>> blockToTextureMap = new HashMap<>();
-    public static Identifier getTextureId(Block block, String postfix) {
+    public static final Map<Pair<String, String>, Pair<ResourceLocation, Integer>> blockToTextureMap = new HashMap<>();
+    public static ResourceLocation getTextureId(Block block, String postfix) {
         if (postfix.isEmpty())
             postfix = null;
         Pair<String, String> pair = new Pair<>(block.toString(), postfix);
-        if (blockToTextureMap.containsKey(pair) && (blockToTextureMap.get(pair).getFirst() != MissingSprite.getMissingSpriteId() || blockToTextureMap.get(pair).getSecond() > 3)) {
+        if (blockToTextureMap.containsKey(pair) && (blockToTextureMap.get(pair).getFirst() != MissingTextureAtlasSprite.getLocation() || blockToTextureMap.get(pair).getSecond() > 3)) {
             return blockToTextureMap.get(pair).getFirst();
         }
         int attemptNum = 1;
@@ -354,34 +352,34 @@ public class ModelHelper {
         if (postfix == null)
             postfix = "";
 
-        Identifier id;
+        ResourceLocation id;
         if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
-            BlockStateModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.NORTH);
+                List<BakedQuad> quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.NORTH);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().getContents().getId();
-                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                    id = quadList.get(0).sprite().contents().name();
+                    if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
                     }
                 }
             }
         } else if (postfix.equals("_top") && !PFMDataGenerator.areAssetsRunning()) {
-            BlockStateModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.UP);
+                List<BakedQuad> quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.UP);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().getContents().getId();
-                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                    id = quadList.get(0).sprite().contents().name();
+                    if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
                     }
                 }
-                quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.DOWN);
+                quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.DOWN);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().getContents().getId();
-                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                    id = quadList.get(0).sprite().contents().name();
+                    if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
                     }
@@ -389,67 +387,67 @@ public class ModelHelper {
             }
         }
 
-        if (idExists(TextureMap.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMap.getSubId(block, postfix);
+        if (idExists(TextureMapping.getBlockTexture(block, postfix), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, postfix);
         }
-        else if(idExists(getLogId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, postfix), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, postfix);
         }
-        else if (idExists(TextureMap.getId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMap.getId(block);
+        else if (idExists(TextureMapping.getBlockTexture(block), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block);
         }
-        else if (idExists(TextureMap.getSubId(block, "_side"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMap.getSubId(block, "_side");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_side"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block, "_side");
         }
-        else if (idExists(TextureMap.getSubId(block, "_side_1"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMap.getSubId(block, "_side_1");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_side_1"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block, "_side_1");
         }
-        else if (idExists(TextureMap.getSubId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMap.getSubId(block, "_bottom");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_bottom"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_bottom");
         }
-        else if (idExists(TextureMap.getSubId(block, "_top"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMap.getSubId(block, "_top");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_top"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_top");
         }
-        else if (idExists(TextureMap.getSubId(block, "_middle"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMap.getSubId(block, "_middle");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_middle"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_middle");
         }
-        else if(idExists(getPlankId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getPlankId(block), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getPlankId(block);
         }
-        else if(idExists(getLogId(block, "_side"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, "_side"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_side");
         }
-        else if(idExists(getLogId(block, "_side_1"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, "_side_1"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_side_1");
         }
-        else if(idExists(getLogId(block, "_top"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, "_top"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_top");
         }
-        else if(idExists(getLogId(block, "_middle"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, "_middle"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_middle");
         }
-        else if(idExists(getLogId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+        else if(idExists(getLogId(block, "_bottom"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_bottom");
         }
-        else if (Registries.BLOCK.getId(block).getNamespace().equals("quark")) {
-            id = TextureMap.getSubId(block, postfix);
+        else if (BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("quark")) {
+            id = TextureMapping.getBlockTexture(block, postfix);
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}, this is attempt {} at finding it", block, attemptNum);
-            id = MissingSprite.getMissingSpriteId();
+            id = MissingTextureAtlasSprite.getLocation();
         }
         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
         return id;
     }
 
     // For compatibility with Twilight Forest's Planks
-    public static Identifier getPlankId(Block block) {
-        Identifier identifier = Registries.BLOCK.getId(block);
+    public static ResourceLocation getPlankId(Block block) {
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         String namespace = identifier.getNamespace();
         String path = identifier.getPath().replace("luphie_", "");
         if (path.contains("planks")) {
             path = path.replace("_planks", "").replace("plank_", "");
-            Identifier id = Identifier.of(namespace, "block/" + path +"/planks");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path +"/planks");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id;
 
             path = "planks_" + path;
@@ -460,41 +458,41 @@ public class ModelHelper {
             if (namespace.equals("blue_skies")) {
                 path = "wood/" + path;
             }
-            id = Identifier.of(namespace, "block/" + path);
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
             path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood").replace("alpha_", "alpha_oak_").replace("flowering_pink", "flowerypink").replace("flowering_purple", "floweringpurple");
-            Identifier id2 = Identifier.of(namespace, "block/wood/" + path);
-            Identifier id3 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "planks");
-            Identifier id4 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "_planks");
-            Identifier id5 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "plankstext");
-            Identifier id6 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "plankretext");
-            Identifier id7 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "_planks0");
-            Identifier id8 = Identifier.of(namespace, "block/" + path.replace("planks_", "") + "_planks1");
+            ResourceLocation id2 = ResourceLocation.fromNamespaceAndPath(namespace, "block/wood/" + path);
+            ResourceLocation id3 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "planks");
+            ResourceLocation id4 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "_planks");
+            ResourceLocation id5 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "plankstext");
+            ResourceLocation id6 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "plankretext");
+            ResourceLocation id7 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "_planks0");
+            ResourceLocation id8 = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks_", "") + "_planks1");
 
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id;
-            else if (idExists(id2, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id2, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id2;
-            else if (idExists(id3, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id3, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id3;
-            else if (idExists(id4, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id4, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id4;
-            else if (idExists(id5, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id5, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id5;
-            else if (idExists(id6, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id6, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id6;
-            else if (idExists(id7, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id7, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id7;
-            else if (idExists(id8, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+            else if (idExists(id8, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id8;
             else
-                return Identifier.of(namespace, "block/wood/" + path+ "_0");
+                return ResourceLocation.fromNamespaceAndPath(namespace, "block/wood/" + path+ "_0");
         }
         else
-            return Identifier.of(namespace, "block/" + path);
+            return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
     }
 
-    public static Identifier getLogId(Block block, String postFix) {
-        Identifier identifier = Registries.BLOCK.getId(block);
+    public static ResourceLocation getLogId(Block block, String postFix) {
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         String namespace = identifier.getNamespace();
         String path = identifier.getPath().replace("luphie_", "");
         if (namespace.contains("luphieclutteredmod") && path.contains("flowering_log")) {
@@ -513,137 +511,137 @@ public class ModelHelper {
             if (!path.contains("_log")) {
                 path = path.replace("log", "_log");
             }
-            Identifier id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             path = path.replace("stem", "log").replace("log", "bark");
             path += postFix;
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
 
             path = path.replace("stripped", "striped");
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             path = path.replace("striped", "stripped");
             path = path.replace("bark", "log");
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             path = path.replace("stripped", "striped");
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
 
             path = path.contains("striped") ? "stripped_"+path.replace("_striped", "") : path;
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             path = path.replace("stripped", "striped");
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             String loc = identifier.getPath().contains("stripped") || identifier.getPath().contains("striped") ? "stripped_log" : "log";
             path = path.replace("striped_", "").replace(postFix, "").replace("_log", "");
 
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc + postFix);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc + postFix);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + postFix);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + postFix);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc + "/" + postFix.replace("_", ""));
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc + "/" + postFix.replace("_", ""));
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + "/" + postFix.replace("_", ""));
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + "/" + postFix.replace("_", ""));
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "/" + loc.replace("log", "stem"));
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "/" + loc.replace("log", "stem"));
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/stripped_" + path+ "_log");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/stripped_" + path+ "_log");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/stripped_" + path+ "_stem");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/stripped_" + path+ "_stem");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "_log_stripped");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "_log_stripped");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path+ "_stem_stripped");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path+ "_stem_stripped");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
         } else if (path.contains("reed")) {
             path = path.replace("nether_", "").replace("reed", "reeds");
-            Identifier id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
                 return id;
             }
             path += postFix;
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/" + path.replace("planks", "roof"));
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path.replace("planks", "roof"));
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
         }
         if (path.contains("alpha_") && namespace.contains("regions")) {
             path = !path.contains("alpha_oak") ? path.replace("alpha", "alpha_oak") : path;
-            Identifier id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
                 return id;
             }
             path += postFix;
-            id = Identifier.of(namespace, "block/" + path);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/alpha_oak_log" + postFix);
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/alpha_oak_log" + postFix);
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
-            id = Identifier.of(namespace, "block/alpha_oak_log");
-            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = ResourceLocation.fromNamespaceAndPath(namespace, "block/alpha_oak_log");
+            if (idExists(id, PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
         }
-        return Identifier.of(namespace, "block/" + path);
+        return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + path);
     }
 
-    private static final HashMap<Identifier, Boolean> idCacheMap = new HashMap<>();
-    public static boolean idExists(Identifier id, ResourceType resourceType, IdLocation idLocation) {
+    private static final HashMap<ResourceLocation, Boolean> idCacheMap = new HashMap<>();
+    public static boolean idExists(ResourceLocation id, PackType resourceType, IdLocation idLocation) {
         if (idCacheMap.containsKey(id)) {
             return idCacheMap.get(id);
         }
-        Identifier id2 = Identifier.of(id.getNamespace(), idLocation.asString() + "/" + id.getPath() + idLocation.getFileType());
+        ResourceLocation id2 = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), idLocation.getSerializedName() + "/" + id.getPath() + idLocation.getFileType());
         AtomicBoolean exists = new AtomicBoolean(false);
-        for (ResourcePack rp : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+        for (PackResources rp : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             if (exists.get())
                 break;
 
-            rp.findResources(resourceType, id2.getNamespace(), id2.getPath(), (identifier, supplier) -> {
+            rp.listResources(resourceType, id2.getNamespace(), id2.getPath(), (identifier, supplier) -> {
                 try {
                     supplier.get().read();
                     supplier.get().close();
@@ -657,7 +655,7 @@ public class ModelHelper {
         return exists.get();
     }
 
-    public enum IdLocation implements StringIdentifiable {
+    public enum IdLocation implements StringRepresentable {
         TEXTURES("textures", ".png"),
         MODELS("models"),
         BLOCKSTATES("blockstates"),
@@ -679,7 +677,7 @@ public class ModelHelper {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return name;
         }
 

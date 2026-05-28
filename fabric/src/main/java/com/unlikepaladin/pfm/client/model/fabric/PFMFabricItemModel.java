@@ -6,17 +6,17 @@ import com.unlikepaladin.pfm.data.materials.VariantHelper;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.mixin.fabric.PFMWrapperBlockstateModelAccessor;
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
-import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
-import net.minecraft.client.render.item.tint.TintSource;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public class PFMFabricItemModel<T> extends PFMItemModel<T>  {
-    public PFMFabricItemModel(Supplier<BlockStateModel> model, SpecialModelRenderer<T> specialModelType, List<TintSource> tints) {
+    public PFMFabricItemModel(Supplier<BlockStateModel> model, SpecialModelRenderer<T> specialModelType, List<ItemTintSource> tints) {
         super(model, specialModelType, tints);
     }
 
@@ -41,8 +41,8 @@ public class PFMFabricItemModel<T> extends PFMItemModel<T>  {
         BlockStateModel model1 = unwrapBlockStateModel(model.get());
 
         if (model1 != null && stack.getItem() instanceof BlockItem && model1 instanceof PFMBakedModelSetPropertiesExtension) {
-            ((PFMBakedModelSetPropertiesExtension) model1).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
-            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null)
+            ((PFMBakedModelSetPropertiesExtension) model1).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().defaultBlockState());
+            if (stack.has(PFMComponents.VARIANT_COMPONENT))
                 ((PFMBakedModelSetPropertiesExtension) model1).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
         }
     }

@@ -4,14 +4,16 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -20,22 +22,22 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeFreezerModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
-    public ForgeFreezerModel(ModelBakeSettings settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public ForgeFreezerModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderType renderType) {
         List<BlockModelPart> quads = new ArrayList<>();
         BlockState state = extraData.get(STATE);
         if (state != null) {
             Boolean hasFridge = extraData.get(HAS_FRIDGE_PROPERTY);
-            int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
+            int openOffset = state.getValue(FreezerBlock.OPEN) ? 2 : 0;
             if (Boolean.TRUE.equals(hasFridge)) {
                 quads.add(getTemplateBakedModels().get(1+openOffset));
             } else {
@@ -48,8 +50,8 @@ public class ForgeFreezerModel extends PFMForgeBakedModel {
     public static ModelProperty<Boolean> HAS_FRIDGE_PROPERTY = new ModelProperty<>();
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
-        boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+        boolean hasFridge = world.getBlockState(pos.below()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.below()).getBlock() instanceof IronFridgeBlock);
         ModelData.Builder builder = ModelData.builder();
         builder.with(HAS_FRIDGE_PROPERTY, hasFridge);
         builder.with(STATE, state);
@@ -57,7 +59,7 @@ public class ForgeFreezerModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         return List.of();
     }
 }
