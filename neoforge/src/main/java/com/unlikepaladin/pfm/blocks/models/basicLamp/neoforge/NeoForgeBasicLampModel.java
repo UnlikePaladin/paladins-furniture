@@ -9,34 +9,31 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Atlases;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicLampModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicLampBlock))
             return;
 
@@ -48,9 +45,9 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
             variant = ((LampBlockEntity) entity).getVariant();
         }
 
-        boolean up = world.getBlockState(pos.up()).getBlock() instanceof BasicLampBlock;
-        boolean down = world.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
-        int onOffset = state.get(Properties.LIT) ? 1 : 0;
+        boolean up = world.getBlockState(pos.above()).getBlock() instanceof BasicLampBlock;
+        boolean down = world.getBlockState(pos.below()).getBlock() instanceof BasicLampBlock;
+        int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;
 
         if (up && down) {
             quads.add(getTemplateBakedModels().get(1));
@@ -71,29 +68,29 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     }
 
 
-    static List<Sprite> oakSprite = new ArrayList<>();
-    static List<Sprite> getOakStrippedLogSprite() {
+    static List<TextureAtlasSprite> oakSprite = new ArrayList<>();
+    static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = ModelHelper.getSprite(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,  Identifier.of("minecraft:block/stripped_oak_log")));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/stripped_oak_log")));
         oakSprite.add(wood);
         return oakSprite;
     }
 
-    Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
-    List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
+    Map<WoodVariant, List<TextureAtlasSprite>> sprites = new HashMap<>();
+    List<TextureAtlasSprite> getVariantStrippedLogSprite(WoodVariant variant) {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        Sprite wood = ModelHelper.getSprite(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)));
-        List<Sprite> spriteList = new ArrayList<>();
+        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
+        List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
         return spriteList;
     }
 
     @Override
-    public Sprite particleIcon(BlockRenderView world, BlockPos pos, BlockState state) {
+    public TextureAtlasSprite particleIcon(BlockAndTintGetter world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof BasicLampBlock) {
             WoodVariant variant = WoodVariantRegistry.OAK;
             BlockEntity entity = world.getBlockEntity(pos);
@@ -106,7 +103,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         List<BakedQuad> quads = new ArrayList<>();
         WoodVariant variant = WoodVariantRegistry.OAK;
         if (this.variant != null) {
@@ -120,7 +117,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
 
     protected Map<Pair<VariantBase<?>, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
-    public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random) {
         Pair<VariantBase<?>, Direction> directionPair = new Pair<>(variant, face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);

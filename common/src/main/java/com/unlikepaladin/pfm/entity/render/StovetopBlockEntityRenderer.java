@@ -4,26 +4,23 @@ import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.item.ItemRenderState;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import com.mojang.math.Axis;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,20 +30,20 @@ import java.util.List;
 public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
         implements BlockEntityRenderer<T, StovetopBlockEntityRenderer.StovetopBlockEntityRenderState> {
     private static final float SCALE = 0.375f;
-    private final ItemModelManager itemModelManager;
+    private final ItemModelResolver itemModelManager;
 
-    public StovetopBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        itemModelManager = ctx.itemModelManager();
+    public StovetopBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+        itemModelManager = ctx.itemModelResolver();
     }
 
     @Override
-    public void render(StovetopBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(StovetopBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
         if (state != null) {
-            Direction direction = state.blockState.get(KitchenStovetopBlock.FACING);
+            Direction direction = state.blockState.getValue(KitchenStovetopBlock.FACING);
             for (int l = 0; l < state.itemRenderStates.size(); ++l) {
-                matrices.push();
-                Direction direction2 = Direction.fromHorizontalQuarterTurns((l + direction.getHorizontalQuarterTurns()) % 4);
-                float g = -direction2.getPositiveHorizontalDegrees();
+                matrices.pushPose();
+                Direction direction2 = Direction.from2DDataValue((l + direction.get2DDataValue()) % 4);
+                float g = -direction2.toYRot();
                 int rot = 180;
                 switch (direction) {
                     case NORTH:
@@ -61,13 +58,13 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
                     case EAST:
                         matrices.translate(0.55, 0.08, 0.5);
                 }
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot));
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
+                matrices.mulPose(Axis.YP.rotationDegrees(g));
+                matrices.mulPose(Axis.YP.rotationDegrees(rot));
+                matrices.mulPose(Axis.XP.rotationDegrees(90.0f));
                 matrices.translate(-0.1625, -0.1625, 0.0);
                 matrices.scale(0.355f, 0.355f, 0.355f);
-                state.itemRenderStates.get(l).render(matrices, queue, state.lightmapCoordinates, OverlayTexture.DEFAULT_UV, 0);
-                matrices.pop();
+                state.itemRenderStates.get(l).submit(matrices, queue, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                matrices.popPose();
             }
         }
     }
@@ -78,21 +75,21 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
     }
 
     @Override
-    public void updateRenderState(T blockEntity, StovetopBlockEntityRenderState state, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-        BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
-        state.blockState = blockEntity.getCachedState();
-        DefaultedList<ItemStack> itemList = blockEntity.getItemsBeingCooked();
+    public void extractRenderState(T blockEntity, StovetopBlockEntityRenderState state, float tickProgress, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.blockState = blockEntity.getBlockState();
+        NonNullList<ItemStack> itemList = blockEntity.getItemsBeingCooked();
         state.itemRenderStates = new ArrayList<>();
         for (ItemStack itemStack : itemList) {
-            ItemRenderState itemRenderState = new ItemRenderState();
-            itemModelManager.clearAndUpdate(itemRenderState, itemStack, ItemDisplayContext.FIXED, blockEntity.getWorld(), null, 0);
+            ItemStackRenderState itemRenderState = new ItemStackRenderState();
+            itemModelManager.updateForTopItem(itemRenderState, itemStack, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
             state.itemRenderStates.add(itemRenderState);
         }
     }
 
     public static class StovetopBlockEntityRenderState extends BlockEntityRenderState {
         public BlockState blockState;
-        public List<ItemRenderState> itemRenderStates;
+        public List<ItemStackRenderState> itemRenderStates;
     }
 
 }

@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.utilities;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.StringRepresentable;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class PFMFileUtil {
     }
 
     @ExpectPlatform
-    public static List<ResourcePack> getSubPacks(ResourcePack pack) {
+    public static List<PackResources> getSubPacks(PackResources pack) {
         throw new AssertionError();
     }
 
@@ -42,7 +42,7 @@ public class PFMFileUtil {
         throw new AssertionError();
     }
 
-    public enum ModLoader implements StringIdentifiable {
+    public enum ModLoader implements StringRepresentable {
         MINECRAFTFORGE("minecraftforge"),
         FABRIC("fabric"),
         NEOFORGE("neoforge"),
@@ -63,7 +63,7 @@ public class PFMFileUtil {
         }
 
         @Override
-        public String asString() {
+        public String getSerializedName() {
             return loader;
         }
     }
@@ -79,7 +79,7 @@ public class PFMFileUtil {
     }
 
     public static int adjustColor(int argbColor) {
-        return (argbColor & -67108864) == 0 ? ColorHelper.fullAlpha(argbColor) : argbColor;
+        return (argbColor & -67108864) == 0 ? ARGB.opaque(argbColor) : argbColor;
     }
 
     @ExpectPlatform

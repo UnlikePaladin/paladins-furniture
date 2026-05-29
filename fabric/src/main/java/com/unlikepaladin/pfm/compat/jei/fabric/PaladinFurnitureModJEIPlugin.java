@@ -17,13 +17,12 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.common.Internal;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CraftingRecipe;
-import net.minecraft.recipe.PreparedRecipes;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeMap;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,16 +37,16 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        PreparedRecipes clientSyncedRecipes = Internal.getClientSyncedRecipes();
+        RecipeMap clientSyncedRecipes = Internal.getClientSyncedRecipes();
 
-        if (clientSyncedRecipes.recipes().isEmpty()) {
+        if (clientSyncedRecipes.values().isEmpty()) {
             return;
         }
 
-        List<FreezingRecipe> freezingRecipes = clientSyncedRecipes.getAll(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());;
+        List<FreezingRecipe> freezingRecipes = clientSyncedRecipes.byType(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());;
         registration.addRecipes(PaladinFurnitureModJEI.FREEZING_RECIPE, freezingRecipes);
 
-        List<FurnitureRecipe> furnitureRecipes = clientSyncedRecipes.getAll(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());
+        List<FurnitureRecipe> furnitureRecipes = clientSyncedRecipes.byType(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());
         registration.addRecipes(PaladinFurnitureModJEI.FURNITURE_RECIPE, furnitureRecipes);
     }
 
@@ -69,12 +68,12 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (ingredient, context)
-                -> ingredient.get(PFMComponents.COLOR_COMPONENT).asString() + "_"+ingredient.get(PFMComponents.VARIANT_COMPONENT).toString());
+                -> ingredient.get(PFMComponents.COLOR_COMPONENT).getSerializedName() + "_"+ingredient.get(PFMComponents.VARIANT_COMPONENT).toString());
         registration.registerFromDataComponentTypes(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PFMComponents.COLOR_COMPONENT);
     }
 
     @Override
-    public Identifier getPluginUid() {
-        return Identifier.of(PaladinFurnitureMod.MOD_ID, "jei_plugin");
+    public ResourceLocation getPluginUid() {
+        return ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "jei_plugin");
     }
 }

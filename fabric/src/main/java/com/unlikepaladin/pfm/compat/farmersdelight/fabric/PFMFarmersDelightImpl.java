@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.compat.farmersdelight.PFMFarmersDelight;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import vectorwing.farmersdelight.FarmersDelight;
 
 import java.util.ArrayList;

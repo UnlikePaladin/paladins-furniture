@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
@@ -41,15 +40,13 @@ import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
-import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -89,10 +86,10 @@ public class PaladinFurnitureModClientForge {
         event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", PaladinFurnitureModClient.PFM_CATEGORY, GLFW.GLFW_KEY_U));
     }
 
-    public static KeyBinding registerKey(String name, KeyBinding.Category category, int keyCode) {
-        return new KeyBinding(
+    public static KeyMapping registerKey(String name, KeyMapping.Category category, int keyCode) {
+        return new KeyMapping(
                 name, // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 keyCode, // The keycode of the key
                 category // The translation key of the keybinding's category.
         );
@@ -138,95 +135,95 @@ public class PaladinFurnitureModClientForge {
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedHerringboneModel.ID, UnbakedHerringboneModel.MAP_CODEC);
     }
 
-    public static void registerExtraModels(Consumer<Identifier> event) {
-        for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
+    public static void registerExtraModels(Consumer<ResourceLocation> event) {
+        for (ResourceLocation id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedChairModel.CHAIR_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairModel.CHAIR_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedLadderModel.LADDER_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLadderModel.LADDER_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
-        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(event);
@@ -234,9 +231,10 @@ public class PaladinFurnitureModClientForge {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(event);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(event);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(event);
-        event.accept(Identifier.of("minecraft:block/cube_all"));
-        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+        event.accept(ResourceLocation.parse("minecraft:block/cube_all"));
+        for (ResourceLocation id : OfficeChairEntityRenderer.MODEL_IDS) {
             event.accept(id);
         }
+        event.accept(UnbakedBedModel.BED_MODEL_ID);
     }
 }

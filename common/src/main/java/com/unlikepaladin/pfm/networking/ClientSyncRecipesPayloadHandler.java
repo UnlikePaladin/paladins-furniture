@@ -2,18 +2,18 @@ package com.unlikepaladin.pfm.networking;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 
 import java.util.List;
 
 public class ClientSyncRecipesPayloadHandler {
     public static void handlePacket(List<FurnitureRecipe> recipes) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         client.execute(() -> {
-            ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            if (player != null && player.getEntityWorld() != null)
-                WorkbenchScreenHandler.setAllRecipes(player.getEntityWorld(), recipes);
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null && player.level() != null)
+                WorkbenchScreenHandler.setAllRecipes(player.level(), recipes);
         });
     }
 }

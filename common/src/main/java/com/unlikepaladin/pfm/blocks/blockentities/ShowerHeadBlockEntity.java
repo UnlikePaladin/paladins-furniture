@@ -3,20 +3,20 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 
 public class ShowerHeadBlockEntity extends BlockEntity {
     public ShowerHeadBlockEntity(BlockPos pos, BlockState state) {
@@ -25,20 +25,20 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     protected boolean isOpen = false;
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return super.toInitialChunkDataNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         view.putBoolean("isOpen", isOpen);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        isOpen = view.getBoolean("isOpen", false);
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        isOpen = view.getBooleanOr("isOpen", false);
+        super.loadAdditional(view);
     }
 
     public boolean isOpen() {
@@ -49,17 +49,17 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         this.isOpen = isOpen;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, ShowerHeadBlockEntity blockEntity) {
-        if (blockEntity.isOpen && world.isClient()) {
-            spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
+    public static void tick(Level world, BlockPos pos, BlockState state, ShowerHeadBlockEntity blockEntity) {
+        if (blockEntity.isOpen && world.isClientSide()) {
+            spawnParticles(blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), blockEntity.getLevel(), blockEntity.getBlockPos());
         }
         if (blockEntity.isOpen) {
-            world.playSound(null, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.1f, 8.0f);
+            world.playSound(null, pos, SoundEvents.WEATHER_RAIN, SoundSource.BLOCKS, 0.1f, 8.0f);
         }
     }
 
-    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient()) {
+    public static void spawnParticles(Direction facing, Level world, BlockPos pos) {
+        if (world.isClientSide()) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.WEST) {
                 addShowerParticles(world, pos, new float[]{0.55f, 0.2f, 0.5f}, new float[]{0.1f, 0f, 0.1f});
@@ -76,39 +76,33 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         }
     }
 
-    public static void addShowerParticles(World world, BlockPos pos, float[] offset, float[] difference) {
+    public static void addShowerParticles(Level world, BlockPos pos, float[] offset, float[] difference) {
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        Random rand = world.random;
+        RandomSource rand = world.random;
         if (rand.nextBoolean()) {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
         }
 
         if (rand.nextBoolean()) {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
        }
 
         if (rand.nextBoolean()) {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
-            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
         }
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.toInitialChunkDataNbt(registryLookup);
-        nbt.putBoolean("isOpen", isOpen);
-        return nbt;
-    }
-
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends ShowerHeadBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

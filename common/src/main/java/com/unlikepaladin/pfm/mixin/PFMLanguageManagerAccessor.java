@@ -1,17 +1,17 @@
 package com.unlikepaladin.pfm.mixin;
 
-import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.client.resource.language.LanguageManager;
+import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.client.resources.language.LanguageManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LanguageManager.class)
 public interface PFMLanguageManagerAccessor {
-    @Accessor("currentLanguageCode")
-    String getCurrentLanguageCode();
+    @Accessor("currentCode")
+    String getCurrentCode();
 
-    @Accessor("ENGLISH_US")
-    public static LanguageDefinition getEnglish_Us() {
+    @Accessor("DEFAULT_LANGUAGE")
+    public static LanguageInfo getEnglish_Us() {
         throw new AssertionError();
     }
 }

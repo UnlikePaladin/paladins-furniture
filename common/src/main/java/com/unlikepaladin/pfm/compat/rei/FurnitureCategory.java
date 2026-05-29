@@ -14,15 +14,16 @@ import me.shedaniel.rei.api.common.display.DisplayMerger;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
     public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
-    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
+    public static final Component TITLE = Component.translatable("rei.pfm.furniture");
 
     public CategoryIdentifier<? extends FurnitureDisplay> getCategoryIdentifier() {
         return FurnitureDisplay.IDENTIFIER;
@@ -34,7 +35,7 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 

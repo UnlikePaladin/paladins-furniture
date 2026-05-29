@@ -1,26 +1,19 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.recipe.book.RecipeBookType;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.ContainerData;
 
 public class FreezerScreenHandler extends AbstractFreezerScreenHandler {
-    public FreezerScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookType.FURNACE, syncId, playerInventory);
+    public FreezerScreenHandler(int containerId, Inventory playerInventory) {
+        super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookType.FURNACE, containerId, playerInventory);
     }
 
-    public FreezerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookType.FURNACE, syncId, playerInventory, inventory, propertyDelegate);
+    public FreezerScreenHandler(int containerId, Inventory playerInventory, Container inventory, ContainerData dataAccess) {
+        super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookType.FURNACE, containerId, playerInventory, inventory, dataAccess);
     }
 }
 

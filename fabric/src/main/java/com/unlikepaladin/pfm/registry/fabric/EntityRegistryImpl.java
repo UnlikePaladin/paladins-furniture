@@ -4,19 +4,19 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 public class EntityRegistryImpl {
-    public static void registerAttribute(EntityType<? extends LivingEntity> entityType, DefaultAttributeContainer.Builder builder) {
+    public static void registerAttribute(EntityType<? extends LivingEntity> entityType, AttributeSupplier.Builder builder) {
         FabricDefaultAttributeRegistry.register(entityType, builder);
     }
 
     public static void registerEntityType(String id, EntityType<?> entityType) {
-        Registry.register(Registries.ENTITY_TYPE, Identifier.of(PaladinFurnitureMod.MOD_ID, id), entityType);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), entityType);
     }
 }

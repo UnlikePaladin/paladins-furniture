@@ -3,30 +3,29 @@ package com.unlikepaladin.pfm.blocks.models.logTable.neoforge;
 import com.unlikepaladin.pfm.blocks.LogTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class NeoForgeLogTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeLogTableModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeLogTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof LogTableBlock))
             return;
 
@@ -34,9 +33,9 @@ public class NeoForgeLogTableModel extends PFMNeoForgeBakedModel {
         List<BlockModelPart> secondaryQuads = new ArrayList<>();
 
         LogTableBlock block = (LogTableBlock) state.getBlock();
-        Direction dir = state.get(LogTableBlock.FACING);
-        boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = block.isTable(world, pos, dir.rotateYClockwise(), dir);
+        Direction dir = state.getValue(LogTableBlock.FACING);
+        boolean left = block.isTable(world, pos, dir.getCounterClockWise(), dir);
+        boolean right = block.isTable(world, pos, dir.getClockWise(), dir);
 
         baseQuads.add(getTemplateBakedModels().get(0));
         if (!left && right) {
@@ -50,20 +49,20 @@ public class NeoForgeLogTableModel extends PFMNeoForgeBakedModel {
         if (!right && !left) {
             secondaryQuads.add(getTemplateBakedModels().get(3));
         }
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         List<BlockModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         parts.addAll(quads);
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
         // legs
         List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(face));
 
-        List<Sprite> spriteList = getSpriteList(blockState);
+        List<TextureAtlasSprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
 

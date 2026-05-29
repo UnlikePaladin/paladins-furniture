@@ -3,19 +3,19 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class SinkBlockEntity extends BlockEntity {
     public SinkBlockEntity(BlockPos pos, BlockState state) {
@@ -25,22 +25,22 @@ public class SinkBlockEntity extends BlockEntity {
     private boolean isFilling = false;
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return super.toInitialChunkDataNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return super.getUpdateTag(registryLookup);
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         view.putInt("sinkTimer", sinkTimer);
         view.putBoolean("isFilling", isFilling);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        sinkTimer = view.getInt("sinkTimer", 0);
-        isFilling = view.getBoolean("isFilling", false);
-        super.readData(view);
+    protected void loadAdditional(ValueInput view) {
+        sinkTimer = view.getIntOr("sinkTimer", 0);
+        isFilling = view.getBooleanOr("isFilling", false);
+        super.loadAdditional(view);
     }
 
     public void setSinkTimer(int sinkTimer) {
@@ -49,19 +49,19 @@ public class SinkBlockEntity extends BlockEntity {
 
     public void setFilling(boolean isFilling) {
         if (isFilling){
-            world.playSound(null, pos, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 0.7f, 1.0f);
+            level.playSound(null, getBlockPos(), SoundEvents.WATER_AMBIENT, SoundSource.BLOCKS, 0.7f, 1.0f);
         }
         this.isFilling = isFilling;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
+    public static void tick(Level world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
         if (blockEntity.isFilling) {
             if (blockEntity.sinkTimer >= 30) {
                 blockEntity.setSinkTimer(0);
                 blockEntity.setFilling(false);
             } else {
-                if (world.isClient()) {
-                    KitchenSinkBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
+                if (world.isClientSide()) {
+                    KitchenSinkBlock.spawnParticles(blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), blockEntity.level, blockEntity.getBlockPos());
                 }
                 blockEntity.sinkTimer++;
             }
@@ -69,7 +69,7 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends SinkBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends SinkBlockEntity> getFactory() {
         throw new AssertionError();
     }
 }

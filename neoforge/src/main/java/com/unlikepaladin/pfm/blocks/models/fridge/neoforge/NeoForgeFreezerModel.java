@@ -4,37 +4,34 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.RandomSource;
 
 public class NeoForgeFreezerModel extends PFMNeoForgeBakedModel {
     private final List<String> modelParts;
-    public NeoForgeFreezerModel(ModelBakeSettings settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public NeoForgeFreezerModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
     @Override
-    public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof FreezerBlock))
             return;
 
 
-        boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
-        int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
+        boolean hasFridge = world.getBlockState(pos.below()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.below()).getBlock() instanceof IronFridgeBlock);
+        int openOffset = state.getValue(FreezerBlock.OPEN) ? 2 : 0;
         if (Boolean.TRUE.equals(hasFridge)) {
             parts.add(getTemplateBakedModels().get(1+openOffset));
         } else {
@@ -43,7 +40,7 @@ public class NeoForgeFreezerModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         return List.of();
     }
 }

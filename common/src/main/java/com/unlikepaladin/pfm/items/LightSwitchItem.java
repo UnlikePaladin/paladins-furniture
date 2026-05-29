@@ -2,28 +2,29 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.PendantBlock;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.component.type.TooltipDisplayComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,58 +34,58 @@ import java.util.function.Consumer;
 
 public class LightSwitchItem extends BlockItem {
 
-    public LightSwitchItem(Block block, Settings settings) {
+    public LightSwitchItem(Block block, Properties settings) {
         super(block, settings);
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getStackInHand(hand);
-        if (world.isClient()) {
-            return ActionResult.FAIL;
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide()) {
+            return InteractionResult.FAIL;
         }
-        if (player.isSneaking()) {
+        if (player.isShiftKeyDown()) {
             stack.remove(PFMComponents.ACTIVATOR_COMPONENT);
             createComponents(stack);
-            return ActionResult.SUCCESS.withNewHandStack(stack);
+            return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos pos = context.getBlockPos();
-        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+    public InteractionResult useOn(UseOnContext context) {
+        BlockPos pos = context.getClickedPos();
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos());
         Block block = state.getBlock();
         if(block instanceof PowerableBlock){
            if (block instanceof PendantBlock){
-               boolean isSingle = (!state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
-               boolean isRoot = (state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
+               boolean isSingle = (!state.getValue(PendantBlock.DOWN) && !state.getValue(PendantBlock.UP));
+               boolean isRoot = (state.getValue(PendantBlock.DOWN) && !state.getValue(PendantBlock.UP));
 
                if (isSingle || isRoot) {
-                    addLight(context.getStack(), pos);
+                    addLight(context.getItemInHand(), pos);
                }
                else {
-                    if (context.getWorld().isClient())
-                        context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_not_canopy"), false);
+                    if (context.getLevel().isClientSide())
+                        context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_not_canopy"), false);
                }
            }
            else {
-               addLight(context.getStack(), pos);
+               addLight(context.getItemInHand(), pos);
            }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
     @Override
-    protected boolean canPlace(ItemPlacementContext context, BlockState state) {
-        BlockPos pos = context.getBlockPos();
-        WorldView world = context.getWorld();
-        Direction side = context.getSide();
-        List<BlockPos> lights = getLights(context.getStack());
-        boolean canPlace = state.canPlaceAt(world, pos) && side.getAxis().isHorizontal();
+    protected boolean canPlace(BlockPlaceContext context, BlockState state) {
+        BlockPos pos = context.getClickedPos();
+        LevelReader world = context.getLevel();
+        Direction side = context.getNearestLookingDirection();
+        List<BlockPos> lights = getLights(context.getItemInHand());
+        boolean canPlace = state.canSurvive(world, pos) && side.getAxis().isHorizontal();
 
         if (!canPlace) {
             return false;
@@ -93,7 +94,7 @@ public class LightSwitchItem extends BlockItem {
             ArrayList<BlockPos> removedLights = new ArrayList<>();
             ArrayList<BlockPos> lightOffsets = new ArrayList<>();
             for (BlockPos lightPos : lights) {
-                double distance = Math.sqrt(lightPos.getSquaredDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+                double distance = Math.sqrt(lightPos.distToLowCornerSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                 if (distance > 16) {
                     removedLights.add(lightPos);
                     lights.remove(lightPos);
@@ -101,14 +102,14 @@ public class LightSwitchItem extends BlockItem {
                     lightOffsets.add(pos.subtract(lightPos));
                 }
             }
-            context.getStack().remove(PFMComponents.ACTIVATOR_COMPONENT);
-            createComponents(context.getStack());
+            context.getItemInHand().remove(PFMComponents.ACTIVATOR_COMPONENT);
+            createComponents(context.getItemInHand());
             for (BlockPos blockPos : lightOffsets) {
-                addLight(context.getStack(), blockPos);
+                addLight(context.getItemInHand(), blockPos);
             }
 
-            if (!removedLights.isEmpty() && context.getWorld().isClient()){
-                context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
+            if (!removedLights.isEmpty() && context.getLevel().isClientSide()){
+                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
         return true;
@@ -124,7 +125,7 @@ public class LightSwitchItem extends BlockItem {
 
     @Nullable
     public static List<BlockPos> getLights(ItemStack stack) {
-        if(stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null) {
+        if(stack.has(PFMComponents.ACTIVATOR_COMPONENT)) {
             return stack.get(PFMComponents.ACTIVATOR_COMPONENT);
         }
         return null;
@@ -132,18 +133,18 @@ public class LightSwitchItem extends BlockItem {
 
     private static void createComponents(ItemStack stack)
     {
-        if(stack.get(PFMComponents.ACTIVATOR_COMPONENT) == null)
+        if(!stack.has(PFMComponents.ACTIVATOR_COMPONENT))
         {
             stack.set(PFMComponents.ACTIVATOR_COMPONENT, new ArrayList<>());
         }
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag tooltipFlag) {
         if (stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && !stack.get(PFMComponents.ACTIVATOR_COMPONENT).isEmpty()) {
             int lightNum = stack.get(PFMComponents.ACTIVATOR_COMPONENT).size();
-            textConsumer.accept(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
+            tooltip.accept(Component.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
-        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltip, tooltipFlag);
     }
 }

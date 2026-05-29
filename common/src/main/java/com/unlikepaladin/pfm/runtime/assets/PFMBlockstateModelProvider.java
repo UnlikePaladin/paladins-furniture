@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.runtime.assets;
 
 import com.google.gson.JsonElement;
+import com.mojang.math.Quadrant;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
@@ -47,31 +48,35 @@ import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.client.model.PFMModelVariantExtension;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
+import com.unlikepaladin.pfm.mixin.PFMTextureSlotFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.data.*;
-import net.minecraft.client.item.ItemAsset;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
-import net.minecraft.client.render.item.tint.TintSource;
-import net.minecraft.client.render.model.json.*;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.math.AxisRotation;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.*;
+import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.renderer.block.model.BlockModelDefinition;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.model.multipart.CombinedCondition;
+import net.minecraft.client.renderer.block.model.multipart.Condition;
+import net.minecraft.client.renderer.item.ClientItem;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -81,7 +86,7 @@ import java.util.function.Consumer;
 
 public class PFMBlockstateModelProvider extends PFMProvider {
 
-    public static Map<Block, Identifier> modelPathMap = new HashMap<>();
+    public static Map<Block, ResourceLocation> modelPathMap = new HashMap<>();
 
     public PFMBlockstateModelProvider(PFMGenerator parent) {
         super(parent, "PFM Blockstates and Models");
@@ -95,29 +100,29 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         Path path = getParent().getOutput();
 
-        Consumer<BlockModelDefinitionCreator> blockStateSupplierConsumer = blockStateSupplier -> {
-            Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.getBlock());
-            JsonElement element = BlockModelDefinition.CODEC.encodeStart(JsonOps.INSTANCE, blockStateSupplier.createBlockModelDefinition()).getOrThrow();
+        Consumer<BlockModelDefinitionGenerator> blockStateSupplierConsumer = blockStateSupplier -> {
+            Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.block());
+            JsonElement element = BlockModelDefinition.CODEC.encodeStart(JsonOps.INSTANCE, blockStateSupplier.create()).getOrThrow();
             String jsonContent = PFMDataGenerator.GSON.toJson(element);
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        BiConsumer<Identifier, ModelSupplier> identifierSupplierBiConsumer = (identifier, supplier) -> {
+        BiConsumer<ResourceLocation, ModelInstance> identifierSupplierBiConsumer = (identifier, supplier) -> {
             Path jsonPath = getModelJsonPath(path, identifier);
             String jsonContent = PFMDataGenerator.GSON.toJson(supplier.get());
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        Set<Identifier> models = new HashSet<>();
+        Set<ResourceLocation> models = new HashSet<>();
         new PFMBlockStateModelGenerator(this, blockStateSupplierConsumer, identifierSupplierBiConsumer).registerModelsAndStates();
         List<Item> generateModelFor = new ArrayList<>();
         modelPathMap.keySet().forEach(block -> {
-            Item item = Item.BLOCK_ITEMS.get(block);
+            Item item = Item.BY_BLOCK.get(block);
             if (item != null) {
-                Identifier identifier = ModelIds.getItemModelId(item);
+                ResourceLocation identifier = ModelLocationUtils.getModelLocation(item);
                 if (!models.contains(identifier)) {
                     Path jsonPath = getModelJsonPath(path, identifier);
-                    enqueueJsonWrite(getWriteQueue(), jsonPath, new SimpleModelSupplier(modelPathMap.get(block)).get());
+                    enqueueJsonWrite(getWriteQueue(), jsonPath, new DelegatedModel(modelPathMap.get(block)).get());
                     models.add(identifier);
                     generateModelFor.add(item);
                 }
@@ -125,10 +130,10 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         });
 
 
-        Set<Identifier> itemModels = new HashSet<>();
-        BiConsumer<Identifier, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
-            ItemAsset asset = new ItemAsset(unbakedModel, ItemAsset.Properties.DEFAULT);
-            DataResult<JsonElement> result = ItemAsset.CODEC.encodeStart(JsonOps.INSTANCE, asset);
+        Set<ResourceLocation> itemModels = new HashSet<>();
+        BiConsumer<ResourceLocation, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
+            ClientItem asset = new ClientItem(unbakedModel, ClientItem.Properties.DEFAULT);
+            DataResult<JsonElement> result = ClientItem.CODEC.encodeStart(JsonOps.INSTANCE, asset);
             Path dest = getItemsJsonPath(path, id);
             if (result.isSuccess() && !itemModels.contains(id)) {
                 enqueueJsonWrite(getWriteQueue(), dest, result.getOrThrow());
@@ -144,56 +149,56 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
     private static Path getBlockStateJsonPath(Path root, Block block) {
-        Identifier identifier = Registries.BLOCK.getId(block);
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         return root.resolve("assets/" + identifier.getNamespace() + "/blockstates/" + identifier.getPath() + ".json");
     }
 
-    private static Path getModelJsonPath(Path root, Identifier id) {
+    private static Path getModelJsonPath(Path root, ResourceLocation id) {
         return root.resolve("assets/" + id.getNamespace() + "/models/" + id.getPath() + ".json");
     }
 
-    private static Path getItemsJsonPath(Path root, Identifier id) {
+    private static Path getItemsJsonPath(Path root, ResourceLocation id) {
         return root.resolve("assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json");
     }
 
-    private static final Identifier replaceable = Identifier.of("block/stone");
+    private static final ResourceLocation replaceable = ResourceLocation.parse("block/stone");
 
     static class PFMItemModelGenerator {
-        final BiConsumer<Identifier, ItemModel.Unbaked> output;
-        public final BiConsumer<Identifier, ModelSupplier> modelCollector;
+        final BiConsumer<ResourceLocation, ItemModel.Unbaked> output;
+        public final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
 
-        PFMItemModelGenerator(BiConsumer<Identifier, ItemModel.Unbaked> output, BiConsumer<Identifier, ModelSupplier> modelCollector) {
+        PFMItemModelGenerator(BiConsumer<ResourceLocation, ItemModel.Unbaked> output, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
             this.output = output;
             this.modelCollector = modelCollector;
         }
 
 
         public final void registerBasicModel(Item item) {
-            this.output.accept(Registries.ITEM.getId(item), ItemModels.basic(ModelIds.getItemModelId(item)));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item)));
         }
 
         public final void registerFurnitureModel(Item item) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.empty()));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.empty()));
         }
 
         public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.empty()));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.empty()));
         }
 
-        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<TintSource> tints) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.empty()));
+        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<ItemTintSource> tints) {
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.empty()));
         }
 
-        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<TintSource> tints, BlockState state) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.of(state)));
+        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<ItemTintSource> tints, BlockState state) {
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.of(state)));
         }
 
         public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, BlockState state) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.of(state)));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.of(state)));
         }
 
         public final void registerFurnitureModel(Item item, BlockState state) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.of(state)));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.of(state)));
         }
 
 
@@ -221,15 +226,15 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
     static class PFMBlockStateModelGenerator {
-        public static Map<Model, Identifier> ModelIDS = new HashMap<>();
+        public static Map<ModelTemplate, ResourceLocation> ModelIDS = new HashMap<>();
 
-        final Consumer<BlockModelDefinitionCreator> blockStateCollector;
-        final BiConsumer<Identifier, ModelSupplier> modelCollector;
+        final Consumer<BlockModelDefinitionGenerator> blockStateCollector;
+        final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
 
-        final List<Identifier> generatedStates = new ArrayList<>();
+        final List<ResourceLocation> generatedStates = new ArrayList<>();
         final PFMBlockstateModelProvider provider;
 
-        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockModelDefinitionCreator> blockStateCollector, BiConsumer<Identifier, ModelSupplier> modelCollector) {
+        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockModelDefinitionGenerator> blockStateCollector, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
             this.provider = provider;
             this.blockStateCollector = blockStateCollector;
             this.modelCollector = modelCollector;
@@ -407,62 +412,62 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void registerAppliances() {
             provider.getParent().log("Fridges");
-            Identifier grayFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+            ResourceLocation grayFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(grayFridgeID), 180));
-            Identifier whiteFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+            ResourceLocation whiteFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(whiteFridgeID), 180));
-            Identifier ironFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+            ResourceLocation ironFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.IRON_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.IRON_FRIDGE, UnbakedIronFridgeModel.IRON_FRIDGE_ID, List.of(ironFridgeID), 180));
 
             provider.getParent().log("Freezers");
-            Identifier whiteFreezerID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
+            ResourceLocation whiteFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(whiteFreezerID), 180));
-            Identifier grayFreezerID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_FREEZER);
+            ResourceLocation grayFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FREEZER);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(grayFreezerID), 180));
         }
 
         public void registerDecorations() {
             provider.getParent().log("Mirrors");
-            Identifier grayMirrorID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_MIRROR);
+            ResourceLocation grayMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_MIRROR);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(grayMirrorID)));
-            Identifier whiteMirrorID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_MIRROR);
+            ResourceLocation whiteMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_MIRROR);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(whiteMirrorID)));
         }
 
         public void registerLamp() {
             provider.getParent().log("Basic Lamps");
-            Identifier modelID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.BASIC_LAMP);
+            ResourceLocation modelID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.BASIC_LAMP);
             this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.LAMP_MODEL_ID, List.of(modelID)));
-            PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
+            PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getModelLocation());
         }
 
-        public static TextureMap createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            Identifier top = ModelHelper.getTextureId(variantBase.getBaseBlock());
-            Identifier legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
-            return new TextureMap().put(TextureKey.TEXTURE, top).put(LOG_KEY, legs);
+        public static TextureMapping createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
+            ResourceLocation top = ModelHelper.getTextureId(variantBase.getBaseBlock());
+            ResourceLocation legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
+            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
 
         }
 
-        public static TextureMap createRawBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            return new TextureMap().put(TextureKey.TEXTURE, top).put(LOG_KEY, legs);
+        public static TextureMapping createRawBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
+            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            ResourceLocation legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
         }
 
-        public static TextureMap createPlankLogBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
-            Identifier legs = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            return new TextureMap().put(TextureKey.TEXTURE, top).put(LOG_KEY, legs);
+        public static TextureMapping createPlankLogBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
+            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
+            ResourceLocation legs = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
         }
 
-        public static TextureMap createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            Identifier counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
-            Identifier counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+        public static TextureMapping createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
+            ResourceLocation counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
+            ResourceLocation counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             if (variantBase.identifier.getPath().equals("granite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_GRANITE);
                 counterBase = ModelHelper.getTextureId(Blocks.WHITE_TERRACOTTA);
             } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
-                Identifier temp = counterBase;
+                ResourceLocation temp = counterBase;
                 counterBase = counterTop;
                 counterTop  = temp;
             } else if (variantBase.identifier.getPath().equals("andesite")) {
@@ -475,54 +480,54 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_BLACKSTONE);
                 counterBase = ModelHelper.getTextureId(Blocks.CRIMSON_PLANKS);
             }
-            return new TextureMap().put(TextureKey.TEXTURE, counterBase).put(LOG_KEY, counterTop);
+            return new TextureMapping().put(TextureSlot.TEXTURE, counterBase).put(LOG_KEY, counterTop);
         }
 
-        public static TextureMap createLogLogTopBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log"), "_top") : ModelHelper.getTextureId(variantBase.getSecondaryBlock(), "_top");
-            return new TextureMap().put(LOG_KEY, legs).put(LOG_TOP_KEY, top);
+        public static TextureMapping createLogLogTopBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
+            ResourceLocation legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log"), "_top") : ModelHelper.getTextureId(variantBase.getSecondaryBlock(), "_top");
+            return new TextureMapping().put(LOG_KEY, legs).put(LOG_TOP_KEY, top);
         }
 
-        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction) {
+        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
-                if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
-                    Identifier modelID = ModelIds.getBlockModelId(block);
-                    Identifier id = Identifier.of(modelID.getNamespace(), "block/" + blockName);
-                    List<Identifier> ids = new ArrayList<>(1);
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
+                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
+                    List<ResourceLocation> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
-                    generatedStates.add(Registries.BLOCK.getId(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                     PFMBlockstateModelProvider.modelPathMap.put(block, replaceable);
                 }
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
                 blockList.forEach(block1 -> {
                 Block block = (Block) block1;
-                if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
-                    Identifier modelID = ModelIds.getBlockModelId(block);
-                    Identifier id = Identifier.of(modelID.getNamespace(), "block/" + blockName);
-                    List<Identifier> ids = new ArrayList<>(1);
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
+                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
+                    List<ResourceLocation> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
-                    generatedStates.add(Registries.BLOCK.getId(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                     PFMBlockstateModelProvider.modelPathMap.put(block, replaceable);
                 }});
             });
 
         }
 
-        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, Model[] models, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
+        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, ModelTemplate[] models, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
-                if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                     String blockName2 = blockName;
 
-                    boolean stripped = block.getTranslationKey().contains("stripped");
-                    TextureMap blockTexture = textureBiFunction.apply(stripped, variantBase);
-                    List<Identifier> ids = new ArrayList<>();
+                    boolean stripped = block.getDescriptionId().contains("stripped");
+                    TextureMapping blockTexture = textureBiFunction.apply(stripped, variantBase);
+                    List<ResourceLocation> ids = new ArrayList<>();
                     String strippedprefix  = stripped ? "stripped_" : "";
                     if (block instanceof RawLogTableBlock) {
                         blockName2 = "raw_log_table";
@@ -532,348 +537,348 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     } else if (variantBase.isNetherWood() && block instanceof LogTableBlock) {
                         blockName2 = blockName2.replace("log", "stem");
                     }
-                    Identifier modelID = ModelIds.getBlockModelId(block);
-                    for (Model model : models) {
-                        Identifier id = Identifier.of(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.asString() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
-                        model.upload(id, blockTexture, this.modelCollector);
+                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                    for (ModelTemplate model : models) {
+                        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.getSerializedName() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
+                        model.create(id, blockTexture, this.modelCollector);
                         ids.add(id);
                     }
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     PFMBlockstateModelProvider.modelPathMap.put(block, ids.get(0));
-                    generatedStates.add(Registries.BLOCK.getId(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                 }
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, Model[] models, TriFunc<Block, List<Identifier>, String, BlockModelDefinitionCreator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, ModelTemplate[] models, TriFunc<Block, List<ResourceLocation>, String, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
-                List<Identifier> allids = new ArrayList<>();
+                List<ResourceLocation> allids = new ArrayList<>();
                 blockList.forEach(block1 -> {
                     Block block = (Block) block1;
-                    if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
-                        boolean stripped = block.getTranslationKey().contains("stripped");
-                        TextureMap blockTexture = textureBiFunction.apply(stripped, variantBase);
-                        Identifier modelID = ModelIds.getBlockModelId(block);
-                        String color = block instanceof SimpleBedBlock ? ((SimpleBedBlock) block).getPFMColor().asString() : "";
-                        List<Identifier> ids = new ArrayList<>();
-                        for (Model model : models) {
-                            Identifier id = Identifier.of(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.asString()));
+                    if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
+                        boolean stripped = block.getDescriptionId().contains("stripped");
+                        TextureMapping blockTexture = textureBiFunction.apply(stripped, variantBase);
+                        ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                        String color = block instanceof SimpleBedBlock ? ((SimpleBedBlock) block).getPFMColor().getSerializedName() : "";
+                        List<ResourceLocation> ids = new ArrayList<>();
+                        for (ModelTemplate model : models) {
+                            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.getSerializedName()));
 
                             if (allids.contains(id))
                                 continue;
                             if (model == models[0]) {
-                                block(blockName+"/template/full/"+ blockName+ "_"+color, TextureKey.TEXTURE).upload(id, blockTexture, this.modelCollector);
+                                block(blockName+"/template/full/"+ blockName+ "_"+color, TextureSlot.TEXTURE).create(id, blockTexture, this.modelCollector);
                             }  else {
-                                model.upload(block, blockTexture, this.modelCollector);
+                                model.create(block, blockTexture, this.modelCollector);
                             }
                             ids.add(id);
                         }
                         allids.addAll(ids);
                         this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids, color));
                         PFMBlockstateModelProvider.modelPathMap.put(block, ids.get(0));
-                        generatedStates.add(Registries.BLOCK.getId(block));
+                        generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                     }
                 });
             });
         }
-        public static final TextureKey LOG_KEY = of("log");
-        public static final TextureKey LOG_TOP_KEY = of("log_top");
-        public static final Model[] TEMPLATE_CHAIR = new Model[]{block("chair/template_chair", TextureKey.TEXTURE, LOG_KEY), block("chair/template_chair", "_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CHAIR_DINNER = new Model[]{block("chair_dinner/template_chair_dinner", TextureKey.TEXTURE, LOG_KEY), block("chair_dinner/template_chair_dinner","_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CHAIR_CLASSIC = new Model[]{block("chair_classic/template_chair_classic", TextureKey.TEXTURE, LOG_KEY), block("chair_classic/template_chair_classic","_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CHAIR_MODERN = new Model[]{block("chair_modern/template_chair_modern", TextureKey.TEXTURE, LOG_KEY), block("chair_modern/template_chair_modern","_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_LOG_STOOL = new Model[]{block("log_stool/log_stool", LOG_KEY, LOG_TOP_KEY), block("log_stool/log_stool", "_tucked",LOG_KEY, LOG_TOP_KEY)};
-        public static final Model[] TEMPLATE_SIMPLE_STOOL = new Model[]{block("simple_stool/simple_stool", TextureKey.TEXTURE, LOG_KEY), block("simple_stool/simple_stool", "_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CLASSIC_STOOL = new Model[]{block("classic_stool/classic_stool", TextureKey.TEXTURE, LOG_KEY), block("classic_stool/classic_stool", "_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_MODERN_STOOL = new Model[]{block("modern_stool/modern_stool", TextureKey.TEXTURE, LOG_KEY), block("modern_stool/modern_stool", "_tucked", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_BASIC_TABLE_ARRAY = new Model[]{block("table_basic/table_basic", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_base", TextureKey.TEXTURE, LOG_KEY),  block("table_basic/table_basic_north_east", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_west", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_east", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_west", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east_top", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west_top", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_east_west_north", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_east_west_south", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east_bottom", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west_bottom", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_east_corner", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_west_corner", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_east_corner", TextureKey.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_west_corner", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CLASSIC_TABLE_ARRAY = new Model[]{block("table_classic/table_classic", TextureKey.TEXTURE, LOG_KEY), block("table_classic/table_classic_middle", TextureKey.TEXTURE, LOG_KEY), block("table_classic/table_classic_one_uved", TextureKey.TEXTURE, LOG_KEY), block("table_classic/table_classic_one", TextureKey.TEXTURE, LOG_KEY), block("table_classic/table_classic_two_uved", TextureKey.TEXTURE, LOG_KEY), block("table_classic/table_classic_two", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_LOG_TABLE_ARRAY = new Model[]{block("log_table/log_table", TextureKey.TEXTURE, LOG_KEY), block("log_table/log_table_right", TextureKey.TEXTURE, LOG_KEY), block("log_table/log_table_left", TextureKey.TEXTURE, LOG_KEY), block("log_table/log_table_middle", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_DINNER_TABLE_ARRAY = new Model[]{block("dinner_table/dinner_table", TextureKey.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_middle", TextureKey.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_right", TextureKey.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_MODERN_DINNER_TABLE_ARRAY = new Model[]{block("table_modern_dinner/table_modern_dinner", TextureKey.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_middle", TextureKey.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_right", TextureKey.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_CLASSIC_NIGHTSTAND_ARRAY = new Model[]{block("classic_nightstand/classic_nightstand", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_middle", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_right", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_left", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_open", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_middle_open", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_right_open", TextureKey.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_left_open", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_SIMPLE_BED_ARRAY = new Model[]{block("simple_bed/template/full/simple_bed_white", TextureKey.TEXTURE), block("simple_bed/template/head/simple_bed_head", TextureKey.TEXTURE), block("simple_bed/template/head/simple_bed_head_left", TextureKey.TEXTURE), block("simple_bed/template/head/simple_bed_head_right", TextureKey.TEXTURE), block("simple_bed/template/foot/simple_bed_foot", TextureKey.TEXTURE), block("simple_bed/template/foot/simple_bed_foot_right", TextureKey.TEXTURE), block("simple_bed/template/foot/simple_bed_foot_left", TextureKey.TEXTURE), block("simple_bed/template/bunk/foot/simple_bed_foot_left", TextureKey.TEXTURE), block("simple_bed/template/bunk/foot/simple_bed_foot_right", TextureKey.TEXTURE), block("simple_bed/template/bunk/head/simple_bed_head", TextureKey.TEXTURE)};
-        public static final Model[] TEMPLATE_CLASSIC_BED_ARRAY = new Model[]{block("classic_bed/template/full/classic_bed_white", TextureKey.TEXTURE), block("classic_bed/template/head/classic_bed_head", TextureKey.TEXTURE), block("classic_bed/template/head/classic_bed_head_left", TextureKey.TEXTURE), block("classic_bed/template/head/classic_bed_head_right", TextureKey.TEXTURE), block("classic_bed/template/foot/classic_bed_foot", TextureKey.TEXTURE), block("classic_bed/template/foot/classic_bed_foot_right", TextureKey.TEXTURE), block("classic_bed/template/foot/classic_bed_foot_left", TextureKey.TEXTURE), block("classic_bed/template/bunk/foot/classic_bed_foot_left", TextureKey.TEXTURE), block("classic_bed/template/bunk/foot/classic_bed_foot_right", TextureKey.TEXTURE)};
-        public static final Model[] TEMPLATE_SIMPLE_BUNK_LADDER_ARRAY = new Model[]{block("simple_bunk_ladder/template/simple_ladder", TextureKey.TEXTURE), block("simple_bunk_ladder/template/simple_ladder_top", TextureKey.TEXTURE)};
-        public static final Model[] TEMPLATE_KITCHEN_COUNTER = new Model[]{block("kitchen_counter/kitchen_counter", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_edge_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_edge_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_inner_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_inner_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_outer_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_outer_corner_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_DRAWER = new Model[]{block("kitchen_drawer/kitchen_drawer", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_inner_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_inner_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_left_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_right_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_open_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_open_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_CABINET = new Model[]{block("kitchen_cabinet/kitchen_cabinet", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_open_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_open_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_open_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_open_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_WALL_DRAWER = new Model[]{block("kitchen_drawer/kitchen_drawer_middle", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_inner_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_inner_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_open_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_open_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_WALL_COUNTER = new Model[]{block("kitchen_counter/kitchen_counter_middle", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_inner_corner_left", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_inner_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_outer_corner_right", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_outer_corner_left", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_WALL_DRAWER_SMALL = new Model[]{block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", TextureKey.TEXTURE, LOG_KEY), block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", "_open", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_COUNTER_OVEN = new Model[]{block("kitchen_counter_oven/kitchen_counter_oven", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle",TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven", "_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle", "_open", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_KITCHEN_SINK = new Model[]{block("kitchen_sink/kitchen_sink", TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level1",TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level2", TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_full", TextureKey.TEXTURE, LOG_KEY)};
-        public static final Model[] TEMPLATE_LAMP_ARRAY = new Model[]{block("basic_lamp/basic_lamp_bottom", TextureKey.TEXTURE), block("basic_lamp/basic_lamp_middle", TextureKey.TEXTURE),  block("basic_lamp/basic_lamp_single", TextureKey.TEXTURE), block("basic_lamp/basic_lamp_top", TextureKey.TEXTURE)};
+        public static final TextureSlot LOG_KEY = of("log");
+        public static final TextureSlot LOG_TOP_KEY = of("log_top");
+        public static final ModelTemplate[] TEMPLATE_CHAIR = new ModelTemplate[]{block("chair/template_chair", TextureSlot.TEXTURE, LOG_KEY), block("chair/template_chair", "_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CHAIR_DINNER = new ModelTemplate[]{block("chair_dinner/template_chair_dinner", TextureSlot.TEXTURE, LOG_KEY), block("chair_dinner/template_chair_dinner","_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CHAIR_CLASSIC = new ModelTemplate[]{block("chair_classic/template_chair_classic", TextureSlot.TEXTURE, LOG_KEY), block("chair_classic/template_chair_classic","_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CHAIR_MODERN = new ModelTemplate[]{block("chair_modern/template_chair_modern", TextureSlot.TEXTURE, LOG_KEY), block("chair_modern/template_chair_modern","_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_LOG_STOOL = new ModelTemplate[]{block("log_stool/log_stool", LOG_KEY, LOG_TOP_KEY), block("log_stool/log_stool", "_tucked",LOG_KEY, LOG_TOP_KEY)};
+        public static final ModelTemplate[] TEMPLATE_SIMPLE_STOOL = new ModelTemplate[]{block("simple_stool/simple_stool", TextureSlot.TEXTURE, LOG_KEY), block("simple_stool/simple_stool", "_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CLASSIC_STOOL = new ModelTemplate[]{block("classic_stool/classic_stool", TextureSlot.TEXTURE, LOG_KEY), block("classic_stool/classic_stool", "_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_MODERN_STOOL = new ModelTemplate[]{block("modern_stool/modern_stool", TextureSlot.TEXTURE, LOG_KEY), block("modern_stool/modern_stool", "_tucked", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_BASIC_TABLE_ARRAY = new ModelTemplate[]{block("table_basic/table_basic", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_base", TextureSlot.TEXTURE, LOG_KEY),  block("table_basic/table_basic_north_east", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_west", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_east", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_west", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east_top", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west_top", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_east_west_north", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_east_west_south", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east_bottom", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west_bottom", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_east", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_south_west", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_east_corner", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_north_west_corner", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_east_corner", TextureSlot.TEXTURE, LOG_KEY), block("table_basic/table_basic_south_west_corner", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CLASSIC_TABLE_ARRAY = new ModelTemplate[]{block("table_classic/table_classic", TextureSlot.TEXTURE, LOG_KEY), block("table_classic/table_classic_middle", TextureSlot.TEXTURE, LOG_KEY), block("table_classic/table_classic_one_uved", TextureSlot.TEXTURE, LOG_KEY), block("table_classic/table_classic_one", TextureSlot.TEXTURE, LOG_KEY), block("table_classic/table_classic_two_uved", TextureSlot.TEXTURE, LOG_KEY), block("table_classic/table_classic_two", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_LOG_TABLE_ARRAY = new ModelTemplate[]{block("log_table/log_table", TextureSlot.TEXTURE, LOG_KEY), block("log_table/log_table_right", TextureSlot.TEXTURE, LOG_KEY), block("log_table/log_table_left", TextureSlot.TEXTURE, LOG_KEY), block("log_table/log_table_middle", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_DINNER_TABLE_ARRAY = new ModelTemplate[]{block("dinner_table/dinner_table", TextureSlot.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_middle", TextureSlot.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_right", TextureSlot.TEXTURE, LOG_KEY), block("dinner_table/dinner_table_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_MODERN_DINNER_TABLE_ARRAY = new ModelTemplate[]{block("table_modern_dinner/table_modern_dinner", TextureSlot.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_middle", TextureSlot.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_right", TextureSlot.TEXTURE, LOG_KEY), block("table_modern_dinner/table_modern_dinner_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_CLASSIC_NIGHTSTAND_ARRAY = new ModelTemplate[]{block("classic_nightstand/classic_nightstand", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_middle", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_right", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_left", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_open", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_middle_open", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_right_open", TextureSlot.TEXTURE, LOG_KEY), block("classic_nightstand/classic_nightstand_left_open", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_SIMPLE_BED_ARRAY = new ModelTemplate[]{block("simple_bed/template/full/simple_bed_white", TextureSlot.TEXTURE), block("simple_bed/template/head/simple_bed_head", TextureSlot.TEXTURE), block("simple_bed/template/head/simple_bed_head_left", TextureSlot.TEXTURE), block("simple_bed/template/head/simple_bed_head_right", TextureSlot.TEXTURE), block("simple_bed/template/foot/simple_bed_foot", TextureSlot.TEXTURE), block("simple_bed/template/foot/simple_bed_foot_right", TextureSlot.TEXTURE), block("simple_bed/template/foot/simple_bed_foot_left", TextureSlot.TEXTURE), block("simple_bed/template/bunk/foot/simple_bed_foot_left", TextureSlot.TEXTURE), block("simple_bed/template/bunk/foot/simple_bed_foot_right", TextureSlot.TEXTURE), block("simple_bed/template/bunk/head/simple_bed_head", TextureSlot.TEXTURE)};
+        public static final ModelTemplate[] TEMPLATE_CLASSIC_BED_ARRAY = new ModelTemplate[]{block("classic_bed/template/full/classic_bed_white", TextureSlot.TEXTURE), block("classic_bed/template/head/classic_bed_head", TextureSlot.TEXTURE), block("classic_bed/template/head/classic_bed_head_left", TextureSlot.TEXTURE), block("classic_bed/template/head/classic_bed_head_right", TextureSlot.TEXTURE), block("classic_bed/template/foot/classic_bed_foot", TextureSlot.TEXTURE), block("classic_bed/template/foot/classic_bed_foot_right", TextureSlot.TEXTURE), block("classic_bed/template/foot/classic_bed_foot_left", TextureSlot.TEXTURE), block("classic_bed/template/bunk/foot/classic_bed_foot_left", TextureSlot.TEXTURE), block("classic_bed/template/bunk/foot/classic_bed_foot_right", TextureSlot.TEXTURE)};
+        public static final ModelTemplate[] TEMPLATE_SIMPLE_BUNK_LADDER_ARRAY = new ModelTemplate[]{block("simple_bunk_ladder/template/simple_ladder", TextureSlot.TEXTURE), block("simple_bunk_ladder/template/simple_ladder_top", TextureSlot.TEXTURE)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_COUNTER = new ModelTemplate[]{block("kitchen_counter/kitchen_counter", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_edge_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_edge_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_inner_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_inner_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_outer_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_outer_corner_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_DRAWER = new ModelTemplate[]{block("kitchen_drawer/kitchen_drawer", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_inner_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_inner_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_left_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_edge_right_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_open_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_outer_corner_open_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_CABINET = new ModelTemplate[]{block("kitchen_cabinet/kitchen_cabinet", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_open_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_inner_corner_open_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_open_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_cabinet/kitchen_cabinet_outer_corner_open_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_WALL_DRAWER = new ModelTemplate[]{block("kitchen_drawer/kitchen_drawer_middle", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_inner_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_inner_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_open_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_drawer/kitchen_drawer_middle_outer_corner_open_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_WALL_COUNTER = new ModelTemplate[]{block("kitchen_counter/kitchen_counter_middle", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_inner_corner_left", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_inner_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_outer_corner_right", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter/kitchen_counter_middle_outer_corner_left", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_WALL_DRAWER_SMALL = new ModelTemplate[]{block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", "_open", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_COUNTER_OVEN = new ModelTemplate[]{block("kitchen_counter_oven/kitchen_counter_oven", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle",TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven", "_open", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle", "_open", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_KITCHEN_SINK = new ModelTemplate[]{block("kitchen_sink/kitchen_sink", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level1",TextureSlot.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level2", TextureSlot.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_full", TextureSlot.TEXTURE, LOG_KEY)};
+        public static final ModelTemplate[] TEMPLATE_LAMP_ARRAY = new ModelTemplate[]{block("basic_lamp/basic_lamp_bottom", TextureSlot.TEXTURE), block("basic_lamp/basic_lamp_middle", TextureSlot.TEXTURE),  block("basic_lamp/basic_lamp_single", TextureSlot.TEXTURE), block("basic_lamp/basic_lamp_top", TextureSlot.TEXTURE)};
 
-        private static Model make(TextureKey ... requiredTextures) {
-            return new Model(Optional.empty(), Optional.empty(), requiredTextures);
+        private static ModelTemplate make(TextureSlot ... requiredTextures) {
+            return new ModelTemplate(Optional.empty(), Optional.empty(), requiredTextures);
         }
 
-        private static Model block(String parent, TextureKey ... requiredTextures) {
-            Identifier id = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + parent);
-            Model model = new Model(Optional.of(id), Optional.empty(), requiredTextures);
+        private static ModelTemplate block(String parent, TextureSlot ... requiredTextures) {
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent);
+            ModelTemplate model = new ModelTemplate(Optional.of(id), Optional.empty(), requiredTextures);
             ModelIDS.put(model, id);
             return model;
         }
 
-        private static Model item(String parent, TextureKey ... requiredTextures) {
-            return new Model(Optional.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
+        private static ModelTemplate item(String parent, TextureSlot ... requiredTextures) {
+            return new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
         }
 
-        private static Model block(String parent, String variant, TextureKey ... requiredTextures) {
-            Identifier id = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
-            Model model = new Model(Optional.of(id), Optional.of(variant), requiredTextures);
+        private static ModelTemplate block(String parent, String variant, TextureSlot ... requiredTextures) {
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
+            ModelTemplate model = new ModelTemplate(Optional.of(id), Optional.of(variant), requiredTextures);
             ModelIDS.put(model, id);
             return model;
         }
 
-        private static TextureKey of(String name) {
-            return PFMTextureKeyFactory.newTextureKey(name, null);
+        private static TextureSlot of(String name) {
+            return PFMTextureSlotFactory.newTextureKey(name, null);
         }
 
-        private static TextureKey of(String name, TextureKey parent) {
-            return PFMTextureKeyFactory.newTextureKey(name, parent);
+        private static TextureSlot of(String name, TextureSlot parent) {
+            return PFMTextureSlotFactory.newTextureKey(name, parent);
         }
 
-        private static BlockModelDefinitionCreator createSingleStateBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createSingleStateBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
             String path = modelIdentifiers.get(0).getPath();
             //Ugly hack to get the folder name for the Baked Block Model
-            Identifier id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
-            ModelVariant var = new ModelVariant(id);
+            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+            Variant var = new Variant(id);
             ((PFMModelVariantExtension)(Object)var).pfm$setCustomType(typeId);
-            return VariantsBlockModelDefinitionCreator.of(block, new WeightedVariant(Pool.of(var)));
+            return MultiVariantGenerator.dispatch(block, new MultiVariant(WeightedList.of(var)));
         }
-        private static BlockModelDefinitionCreator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
-            Map<Direction.Axis, AxisRotation> variantMap = new HashMap<>();
+        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation) {
+            Map<Direction.Axis, Quadrant> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath();
-            Identifier id;
+            ResourceLocation id;
 
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90};
             for (int i = 0; rotationArray.length > i; i++) {
                 rotationArray[i] = (rotationArray[i] + rotation) % 180;
             }
 
-            variantMap.put(Direction.Axis.Z, AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
-            variantMap.put(Direction.Axis.X, AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
-            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS).generate(axis -> {
+            variantMap.put(Direction.Axis.Z, Quadrant.valueOf('R'+String.valueOf(rotationArray[0])));
+            variantMap.put(Direction.Axis.X, Quadrant.valueOf('R'+String.valueOf(rotationArray[1])));
+            return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_AXIS).generate(axis -> {
                 for (Direction.Axis axis1 : variantMap.keySet()) {
                     if (axis.equals(axis1)) {
-                        ModelVariant variant = new ModelVariant(id).withRotationY(variantMap.get(axis));
+                        Variant variant = new Variant(id).withYRot(variantMap.get(axis));
                         ((PFMModelVariantExtension)(Object)variant).pfm$setCustomType(typeId);
-                        return new WeightedVariant(Pool.of(variant));
+                        return new MultiVariant(WeightedList.of(variant));
                     }
                 }
                 return null;
             }));
         }
-        private static BlockModelDefinitionCreator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
             return createAxisOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionCreator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
             return createOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionCreator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
+        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation) {
             String path = modelIdentifiers.get(0).getPath();
-            Identifier id;
+            ResourceLocation id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
                 rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
 
-            ModelVariant north = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
+            Variant north = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[0])));
             ((PFMModelVariantExtension)(Object)north).pfm$setCustomType(typeId);
-            ModelVariant east = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
+            Variant east = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[1])));
             ((PFMModelVariantExtension)(Object)east).pfm$setCustomType(typeId);
-            ModelVariant south = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2])));
+            Variant south = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[2])));
             ((PFMModelVariantExtension)(Object)south).pfm$setCustomType(typeId);
-            ModelVariant west = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3])));
+            Variant west = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[3])));
             ((PFMModelVariantExtension)(Object)west).pfm$setCustomType(typeId);
 
-            BlockStateVariantMap<WeightedVariant> variant = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
-                    .register(Direction.NORTH, new WeightedVariant(Pool.of(north)))
-                    .register(Direction.EAST, new WeightedVariant(Pool.of(east)))
-                    .register(Direction.SOUTH, new WeightedVariant(Pool.of(south)))
-                    .register(Direction.WEST, new WeightedVariant(Pool.of(west)));
+            PropertyDispatch<MultiVariant> variant = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING)
+                    .select(Direction.NORTH, new MultiVariant(WeightedList.of(north)))
+                    .select(Direction.EAST, new MultiVariant(WeightedList.of(east)))
+                    .select(Direction.SOUTH, new MultiVariant(WeightedList.of(south)))
+                    .select(Direction.WEST, new MultiVariant(WeightedList.of(west)));
 
-            return VariantsBlockModelDefinitionCreator.of(block).with(variant);
+            return MultiVariantGenerator.dispatch(block).with(variant);
         }
-        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers){
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers){
             return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", 0);
         }
-        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation){
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation){
             return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", rotation);
         }
 
-        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
             String path = modelIdentifiers.get(0).getPath().replaceAll(override, "");
             String name = path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/'));
-            Identifier id;
+            ResourceLocation id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
+                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
                 rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
 
-            ModelVariant north = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0]))).withUVLock(true);
+            Variant north = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[0]))).withUvLock(true);
             ((PFMModelVariantExtension)(Object)north).pfm$setCustomType(typeId);
-            ModelVariant east = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1]))).withUVLock(true);
+            Variant east = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[1]))).withUvLock(true);
             ((PFMModelVariantExtension)(Object)east).pfm$setCustomType(typeId);
-            ModelVariant south = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2]))).withUVLock(true);
+            Variant south = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[2]))).withUvLock(true);
             ((PFMModelVariantExtension)(Object)south).pfm$setCustomType(typeId);
-            ModelVariant west = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3]))).withUVLock(true);
+            Variant west = new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[3]))).withUvLock(true);
             ((PFMModelVariantExtension)(Object)west).pfm$setCustomType(typeId);
 
-            BlockStateVariantMap<WeightedVariant> variant = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
-                    .register(Direction.NORTH, new WeightedVariant(Pool.of(north)))
-                    .register(Direction.EAST, new WeightedVariant(Pool.of(east)))
-                    .register(Direction.SOUTH, new WeightedVariant(Pool.of(south)))
-                    .register(Direction.WEST, new WeightedVariant(Pool.of(west)));
+            PropertyDispatch<MultiVariant> variant = PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING)
+                    .select(Direction.NORTH, new MultiVariant(WeightedList.of(north)))
+                    .select(Direction.EAST, new MultiVariant(WeightedList.of(east)))
+                    .select(Direction.SOUTH, new MultiVariant(WeightedList.of(south)))
+                    .select(Direction.WEST, new MultiVariant(WeightedList.of(west)));
 
-            return VariantsBlockModelDefinitionCreator.of(block).with(variant);
+            return MultiVariantGenerator.dispatch(block).with(variant);
         }
 
-        private static BlockModelDefinitionCreator createKitchenSink(Block block, List<Identifier> modelIdentifiers) {
-            Map<Direction, AxisRotation> rotationMap = new HashMap<>();
+        private static BlockModelDefinitionGenerator createKitchenSink(Block block, List<ResourceLocation> modelIdentifiers) {
+            Map<Direction, Quadrant> rotationMap = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
 
-            rotationMap.put(Direction.NORTH, AxisRotation.valueOf('R'+String.valueOf(rotation[0])));
-            rotationMap.put(Direction.EAST, AxisRotation.valueOf('R'+String.valueOf(rotation[1])));
-            rotationMap.put(Direction.SOUTH, AxisRotation.valueOf('R'+String.valueOf(rotation[2])));
-            rotationMap.put(Direction.WEST, AxisRotation.valueOf('R'+String.valueOf(rotation[3])));
+            rotationMap.put(Direction.NORTH, Quadrant.valueOf('R'+String.valueOf(rotation[0])));
+            rotationMap.put(Direction.EAST, Quadrant.valueOf('R'+String.valueOf(rotation[1])));
+            rotationMap.put(Direction.SOUTH, Quadrant.valueOf('R'+String.valueOf(rotation[2])));
+            rotationMap.put(Direction.WEST, Quadrant.valueOf('R'+String.valueOf(rotation[3])));
 
-            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(AbstractSinkBlock.LEVEL_4, Properties.HORIZONTAL_FACING).generate(((level, facing) -> {
-                return new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(level)).withRotationY(rotationMap.get(facing)).withUVLock(true)));
+            return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(AbstractSinkBlock.LEVEL_4, BlockStateProperties.HORIZONTAL_FACING).generate(((level, facing) -> {
+                return new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(level)).withYRot(rotationMap.get(facing)).withUvLock(true)));
             })));
         }
 
-        private static BlockModelDefinitionCreator createSmallKitchenDrawer(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement) {
-            Map<Direction, ModelVariant> variantMap = new HashMap<>();
-            Map<Direction, ModelVariant> variantMapOpen = new HashMap<>();
+        private static BlockModelDefinitionGenerator createSmallKitchenDrawer(Block block, List<ResourceLocation> modelIdentifiers, String override, String furnitureName, String replacement) {
+            Map<Direction, Variant> variantMap = new HashMap<>();
+            Map<Direction, Variant> variantMapOpen = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
 
-            variantMap.put(Direction.NORTH, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[0]))).withUVLock(true));
-            variantMap.put(Direction.EAST, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[1]))).withUVLock(true));
-            variantMap.put(Direction.SOUTH, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[2]))).withUVLock(true));
-            variantMap.put(Direction.WEST, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[3]))).withUVLock(true));
+            variantMap.put(Direction.NORTH, new Variant(modelIdentifiers.getFirst()).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[0]))).withUvLock(true));
+            variantMap.put(Direction.EAST, new Variant(modelIdentifiers.getFirst()).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[1]))).withUvLock(true));
+            variantMap.put(Direction.SOUTH, new Variant(modelIdentifiers.getFirst()).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[2]))).withUvLock(true));
+            variantMap.put(Direction.WEST, new Variant(modelIdentifiers.getFirst()).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[3]))).withUvLock(true));
 
-            variantMapOpen.put(Direction.NORTH, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[0]))).withUVLock(true));
-            variantMapOpen.put(Direction.EAST, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[1]))).withUVLock(true));
-            variantMapOpen.put(Direction.SOUTH, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[2]))).withUVLock(true));
-            variantMapOpen.put(Direction.WEST, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[3]))).withUVLock(true));
+            variantMapOpen.put(Direction.NORTH, new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[0]))).withUvLock(true));
+            variantMapOpen.put(Direction.EAST, new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[1]))).withUvLock(true));
+            variantMapOpen.put(Direction.SOUTH, new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[2]))).withUvLock(true));
+            variantMapOpen.put(Direction.WEST, new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.valueOf('R'+String.valueOf(rotation[3]))).withUvLock(true));
 
-            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(net.minecraft.state.property.Properties.HORIZONTAL_FACING, net.minecraft.state.property.Properties.OPEN).generate((facing, open) -> {
+            return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN).generate((facing, open) -> {
                 for (Direction direction : variantMap.keySet()) {
                     if (facing.equals(direction))
-                        return new WeightedVariant(Pool.of(open ? variantMapOpen.get(direction) : variantMap.get(direction)));
+                        return new MultiVariant(WeightedList.of(open ? variantMapOpen.get(direction) : variantMap.get(direction)));
                 }
                 return null;
             }));
         }
 
 
-        private static BlockModelDefinitionCreator createLadderBlockState(Block block, List<Identifier> modelIdentifiers) {
-            MultipartModelCondition northFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).put(net.minecraft.state.property.Properties.UP, false).build()));
-            MultipartModelCondition northTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).put(net.minecraft.state.property.Properties.UP, true).build()));
+        private static BlockModelDefinitionGenerator createLadderBlockState(Block block, List<ResourceLocation> modelIdentifiers) {
+            Condition northFalse = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, false).build()));
+            Condition northTrue = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, true).build()));
 
-            MultipartModelCondition eastFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).put(net.minecraft.state.property.Properties.UP, false).build()));
-            MultipartModelCondition eastTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).put(net.minecraft.state.property.Properties.UP, true).build()));
+            Condition eastFalse = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.EAST).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, false).build()));
+            Condition eastTrue = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.EAST).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, true).build()));
 
-            MultipartModelCondition westFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).put(net.minecraft.state.property.Properties.UP, false).build()));
-            MultipartModelCondition westTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).put(net.minecraft.state.property.Properties.UP, true).build()));
+            Condition westFalse = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.WEST).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, false).build()));
+            Condition westTrue = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.WEST).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, true).build()));
 
-            MultipartModelCondition southFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).put(net.minecraft.state.property.Properties.UP, false).build()));
-            MultipartModelCondition southTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).put(net.minecraft.state.property.Properties.UP, true).build()));
+            Condition southFalse = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, false).build()));
+            Condition southTrue = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, true).build()));
 
-            return MultipartBlockModelDefinitionCreator.create(block)
-                    .with(northFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)))))
-                    .with(northTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)))))
-                    .with(eastFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R90))))
-                    .with(eastTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R90))))
-                    .with(westFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R270))))
-                    .with(westTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R270))))
-                    .with(southFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R180))))
-                    .with(southTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R180))));
+            return MultiPartGenerator.multiPart(block)
+                    .with(northFalse, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(0)))))
+                    .with(northTrue, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(1)))))
+                    .with(eastFalse, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(0)).withYRot(Quadrant.R90))))
+                    .with(eastTrue, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.R90))))
+                    .with(westFalse, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(0)).withYRot(Quadrant.R270))))
+                    .with(westTrue, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.R270))))
+                    .with(southFalse, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(0)).withYRot(Quadrant.R180))))
+                    .with(southTrue, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.R180))));
         }
 
-        private static BlockModelDefinitionCreator createBedBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
-            Map<Direction, AxisRotation> variantMap = new HashMap<>();
-            Identifier id;
+        private static BlockModelDefinitionGenerator createBedBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
+            Map<Direction, Quadrant> variantMap = new HashMap<>();
+            ResourceLocation id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = ModelIds.getBlockModelId(block);
+                id = ModelLocationUtils.getModelLocation(block);
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
-            variantMap.put(Direction.NORTH, AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
-            variantMap.put(Direction.EAST, AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
-            variantMap.put(Direction.SOUTH, AxisRotation.valueOf('R'+String.valueOf(rotationArray[2])));
-            variantMap.put(Direction.WEST, AxisRotation.valueOf('R'+String.valueOf(rotationArray[3])));
+            variantMap.put(Direction.NORTH, Quadrant.valueOf('R'+String.valueOf(rotationArray[0])));
+            variantMap.put(Direction.EAST, Quadrant.valueOf('R'+String.valueOf(rotationArray[1])));
+            variantMap.put(Direction.SOUTH, Quadrant.valueOf('R'+String.valueOf(rotationArray[2])));
+            variantMap.put(Direction.WEST, Quadrant.valueOf('R'+String.valueOf(rotationArray[3])));
 
-            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(net.minecraft.state.property.Properties.HORIZONTAL_FACING).generate(facing -> {
+            return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING).generate(facing -> {
                 for (Direction direction : variantMap.keySet()) {
                     if (facing.equals(direction)) {
-                        ModelVariant variant = new ModelVariant(id).withRotationY(variantMap.get(direction));
+                        Variant variant = new Variant(id).withYRot(variantMap.get(direction));
                         ((PFMModelVariantExtension)(Object)variant).pfm$setCustomType(typeId);
-                        return new WeightedVariant(Pool.of(variant));
+                        return new MultiVariant(WeightedList.of(variant));
                     }
                 }
                 return null;
             }));
         }
-        private static BlockModelDefinitionCreator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<ResourceLocation> modelIdentifiers) {
             return createOrientableTuckableBlockState(block, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionCreator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
-            Map<TuckableVariant, ModelVariant> variantList = new HashMap<>();
+        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<ResourceLocation> modelIdentifiers, int rotation) {
+            Map<TuckableVariant, Variant> variantList = new HashMap<>();
             Integer[] rotationArray = new Integer[]{90, 270, 180, 0};
             for (int i = 0; rotationArray.length > i; i++) {
                 rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
             for (int i = 0; i <= 1; i++) {
                 boolean tucked =  i == 1;
-                Identifier id = tucked ? modelIdentifiers.get(1) : modelIdentifiers.get(0);
+                ResourceLocation id = tucked ? modelIdentifiers.get(1) : modelIdentifiers.get(0);
                 for (Direction direction : Direction.values())
                 {
                     if (direction.getAxis().isVertical())
                         continue;
                     switch (direction) {
                         case NORTH -> {
-                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[0]))));
                             break;
                         }
                         case SOUTH -> {
-                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[1]))));
                             break;
                         }
                         case EAST ->  {
-                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[2]))));
                             break;
                         }
                         case WEST -> {
-                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new Variant(id).withYRot(Quadrant.valueOf('R'+String.valueOf(rotationArray[3]))));
                             break;
                         }
                     }
                 }
             }
-            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, BasicChairBlock.TUCKED).generate((direction, aBoolean) -> {
+            return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, BasicChairBlock.TUCKED).generate((direction, aBoolean) -> {
                 for (TuckableVariant tuckableVariant : variantList.keySet()){
                     if (tuckableVariant.direction.equals(direction) && tuckableVariant.tucked == aBoolean) {
-                        return new WeightedVariant(Pool.of(variantList.get(tuckableVariant)));
+                        return new MultiVariant(WeightedList.of(variantList.get(tuckableVariant)));
                     }
                 }
                 return null;

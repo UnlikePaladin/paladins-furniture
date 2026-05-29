@@ -1,45 +1,41 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.item.ItemRenderState;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> implements BlockEntityRenderer<T, PFMToasterBlockEntityRenderer.ToasterBlockEntityRenderState> {
 
-    ItemModelManager modelManager;
-    public PFMToasterBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
-        this.modelManager = context.itemModelManager();
+    ItemModelResolver modelManager;
+    public PFMToasterBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+        this.modelManager = context.itemModelResolver();
     }
 
     @Override
-    public void render(ToasterBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(ToasterBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
         if (state != null) {
-            matrices.push();
+            matrices.pushPose();
             Direction dir = Direction.NORTH;
             if (state.blockState.getBlock() instanceof PFMToasterBlock) {
                 dir = Objects.requireNonNull(state.toasterFacing);
-                if (state.isToasting || state.blockState.get(PFMToasterBlock.ON)) {
+                if (state.isToasting || state.blockState.getValue(PFMToasterBlock.ON)) {
                     matrices.translate(0.0D, -0.11D, 0.0D);
                 }
             }
@@ -60,16 +56,16 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                     rot = 180;
             }
 
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float)rot));
-            matrices.scale(0.8f,0.8f,0.8f);
-            matrices.translate(0.0D, 0.0D, -0.55D);
-            matrices.translate(0.0D, 0.0D, 0.41D);
-            state.state0.render(matrices, queue, state.lightmapCoordinates, OverlayTexture.DEFAULT_UV, 0);
-            matrices.translate(0.0D, 0.0D, 0.29D);
-            state.state1.render(matrices, queue, state.lightmapCoordinates, OverlayTexture.DEFAULT_UV, 0);
-            matrices.pop();
+                matrices.mulPose(Axis.YP.rotationDegrees((float)rot));
+                matrices.scale(0.8f,0.8f,0.8f);
+                matrices.translate(0.0D, 0.0D, -0.55D);
+                matrices.translate(0.0D, 0.0D, 0.41D);
+                state.state0.submit(matrices, queue, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                matrices.translate(0.0D, 0.0D, 0.29D);
+                state.state1.submit(matrices, queue, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                matrices.popPose();
+            }
         }
-    }
 
     @Override
     public ToasterBlockEntityRenderState createRenderState() {
@@ -77,23 +73,23 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
     }
 
     @Override
-    public void updateRenderState(T blockEntity, ToasterBlockEntityRenderState state, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-        BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
-        state.blockState = blockEntity.getCachedState();
+    public void extractRenderState(T blockEntity, ToasterBlockEntityRenderState state, float tickProgress, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.blockState = blockEntity.getBlockState();
         state.toasterFacing = blockEntity.getToasterFacing();
         state.isToasting = blockEntity.isToasting();
-        state.state0 = new ItemRenderState();
-        modelManager.clearAndUpdate(state.state0, blockEntity.getItems().getFirst(), ItemDisplayContext.GROUND, blockEntity.getWorld(), null, 0);
+        state.state0 = new ItemStackRenderState();
+        modelManager.updateForTopItem(state.state0, blockEntity.getItems().getFirst(), ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
 
-        state.state1 = new ItemRenderState();
-        modelManager.clearAndUpdate(state.state1, blockEntity.getItems().get(1), ItemDisplayContext.GROUND, blockEntity.getWorld(), null, 0);
+        state.state1 = new ItemStackRenderState();
+        modelManager.updateForTopItem(state.state1, blockEntity.getItems().get(1), ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
     }
 
     public static class ToasterBlockEntityRenderState extends BlockEntityRenderState {
             public BlockState blockState;
             public Direction toasterFacing;
             boolean isToasting;
-            ItemRenderState state0, state1;
+            ItemStackRenderState state0, state1;
     }
 
 }

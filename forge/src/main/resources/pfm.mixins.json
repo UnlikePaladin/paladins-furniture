@@ -5,20 +5,22 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BlockColorsAccessor",
-    "PFMBakedModelManagerMixin",
-    "PFMModelBakerBakedModelsMixin",
-    "PFMModelBakerMixin",
     "BlockStateModelUnbakedMixinFabricAPI",
-    "PFMRenderLayersForgeMixin"
+    "PFMBakedModelManagerMixin",
+    "PFMItemBlockRenderTypesForgeMixin",
+    "PFMModelBakerBakedModelsMixin",
+    "PFMModelBakerMixin"
   ],
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
-    "PFMItemEntryAccessor",
+    "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMMinecraftServerMixin",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin"
+    "PFMSaveLoaderMixin",
+    "PFMSimpleReloadableResourceManagerMixin"
+  ],
+  "server": [
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

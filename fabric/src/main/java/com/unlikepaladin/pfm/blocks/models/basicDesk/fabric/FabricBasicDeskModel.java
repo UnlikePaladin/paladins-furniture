@@ -3,27 +3,27 @@ package com.unlikepaladin.pfm.blocks.models.basicDesk.fabric;
 import com.unlikepaladin.pfm.blocks.BasicDeskBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricBasicDeskModel extends PFMFabricBakedModel {
-    public FabricBasicDeskModel(ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
+    public FabricBasicDeskModel(ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         super(settings, itemSettings, modelParts);
     }
 
     @Override
-    public void emitQuads(QuadEmitter context, BlockRenderView world, BlockPos pos, BlockState state, Random random, Predicate<@Nullable Direction> cullTest) {
+    public void emitQuads(QuadEmitter context, BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
         if (state.getBlock() instanceof BasicDeskBlock block) {
             boolean north = block.canConnect(world.getBlockState(pos.north()));
             boolean east = block.canConnect(world.getBlockState(pos.east()));
@@ -51,7 +51,7 @@ public class FabricBasicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(QuadEmitter emitter, Random randomSupplier) {
+    public void emitItemQuads(QuadEmitter emitter, RandomSource randomSupplier) {
         if (blockState == null) return;
         Predicate<Direction> anyPredicate = d -> false;
 
@@ -69,7 +69,7 @@ public class FabricBasicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.runtime.data.forge;
 
 import com.unlikepaladin.pfm.data.PFMTag;
-import net.minecraft.data.tag.ProvidedTagBuilder;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.TagAppender;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagKey;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -14,13 +14,13 @@ import java.util.stream.Stream;
 
 public class PFMTagProviderImpl {
     public static <T> PFMTag<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
-        return new ObjectBuilder<T>(builder, t -> registry.getKey(t).get(), modID);
+        return new ObjectBuilder<T>(builder, t -> registry.getResourceKey(t).get(), modID);
     }
 
-    public static class ObjectBuilder<T> implements PFMTag<T>, ProvidedTagBuilder<RegistryKey<T>, T> {
-        private final Function<T, RegistryKey<T>> valueToKey;
+    public static class ObjectBuilder<T> implements PFMTag<T>, TagAppender<ResourceKey<T>, T> {
+        private final Function<T, ResourceKey<T>> valueToKey;
         private final TagBuilder tagBuilder;
-        ObjectBuilder(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
+        ObjectBuilder(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
             super();
             this.valueToKey = function;
             this.tagBuilder = arg;
@@ -35,54 +35,54 @@ public class PFMTagProviderImpl {
         }
 
         @Override
-        public PFMTag<T> addKey(RegistryKey<T>... keys) {
-            for (RegistryKey<T> key : keys){
-                tagBuilder.add(key.getValue());
+        public PFMTag<T> addKey(ResourceKey<T>... keys) {
+            for (ResourceKey<T> key : keys){
+                tagBuilder.addElement(key.location());
             }
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> add(RegistryKey<T> value) {
-            tagBuilder.add(value.getValue());
+        public TagAppender<ResourceKey<T>, T> add(ResourceKey<T> value) {
+            tagBuilder.addElement(value.location());
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> add(RegistryKey<T>... values) {
-            return ProvidedTagBuilder.super.add(values);
+        public TagAppender<ResourceKey<T>, T> add(ResourceKey<T>... values) {
+            return TagAppender.super.add(values);
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> add(Collection<RegistryKey<T>> values) {
-            return ProvidedTagBuilder.super.add(values);
+        public TagAppender<ResourceKey<T>, T> addAll(Collection<ResourceKey<T>> collection) {
+            return TagAppender.super.addAll(collection);
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addOptional(RegistryKey<T> value) {
-            tagBuilder.addOptional(value.getValue());
+        public TagAppender<ResourceKey<T>, T> addOptional(ResourceKey<T> value) {
+            tagBuilder.addOptionalElement(value.location());
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addTag(TagKey tag) {
-            this.tagBuilder.addTag(tag.id());
+        public TagAppender<ResourceKey<T>, T> addTag(TagKey tag) {
+            this.tagBuilder.addTag(tag.location());
             return this;
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> addOptionalTag(TagKey tag) {
-            this.tagBuilder.addOptionalTag(tag.id());
+        public TagAppender<ResourceKey<T>, T> addOptionalTag(TagKey tag) {
+            this.tagBuilder.addOptionalTag(tag.location());
             return this;
         }
 
-        public final RegistryKey<T> getKey(T value) {
+        public final ResourceKey<T> getKey(T value) {
             return this.valueToKey.apply(value);
         }
 
         @Override
-        public ProvidedTagBuilder<RegistryKey<T>, T> remove(RegistryKey<T> resourceKey) {
-            this.remove(resourceKey.getValue());
+        public TagAppender<ResourceKey<T>, T> remove(ResourceKey<T> resourceKey) {
+            this.remove(resourceKey.location());
             return this;
         }
     }

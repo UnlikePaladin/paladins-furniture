@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.unlikepaladin.pfm.registry.ParticleIDs;
-import net.minecraft.client.particle.BlockLeakParticle;
+import net.minecraft.client.particle.DripParticle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -13,6 +13,6 @@ public class ParticleProviderRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerParticleFactory(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
+        event.registerSpriteSet(ParticleIDs.WATER_DROP, DripParticle.WaterFallProvider::new);
     }
 }

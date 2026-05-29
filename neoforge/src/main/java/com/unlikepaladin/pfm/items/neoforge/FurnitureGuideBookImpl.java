@@ -1,16 +1,17 @@
 package com.unlikepaladin.pfm.items.neoforge;
 
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -19,24 +20,24 @@ import java.net.URISyntaxException;
 
 
 public class FurnitureGuideBookImpl extends FurnitureGuideBook {
-    public FurnitureGuideBookImpl(Item.Settings settings) {
+    public FurnitureGuideBookImpl(Item.Properties settings) {
         super(settings);
     }
 
-    public static ActionResult openBook(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient() && ModList.get().isLoaded("patchouli")) {
-         //   PatchouliAPI.get().openBookGUI((ServerPlayerEntity) user, Identifier.of("pfm:guide_book"));
-            return ActionResult.SUCCESS;
+    public static InteractionResult openBook(Level world, Player user, InteractionHand hand) {
+        if (!world.isClientSide() && ModList.get().isLoaded("patchouli")) {
+         //   PatchouliAPI.get().openBookGUI((ServerPlayer) user, ResourceLocation.parse("pfm:guide_book"));
+            return InteractionResult.SUCCESS;
         }
-        else if (world.isClient() && !ModList.get().isLoaded("patchouli"))
+        else if (world.isClientSide() && !ModList.get().isLoaded("patchouli"))
         {
-            Text text = null;
+            Component text = null;
             try {
-                text = Text.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
-                user.sendMessage(text,false);
+                text = Component.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
+                user.displayClientMessage(text,false);
             } catch (URISyntaxException e) {
             }
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 }

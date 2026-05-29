@@ -3,31 +3,29 @@ package com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.neoforge;
 import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicDeskCabinetModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicDeskCabinetBlock))
             return;
 
@@ -37,28 +35,28 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
         boolean west = block.canConnect(world.getBlockState(pos.west()));
         boolean south = block.canConnect(world.getBlockState(pos.south()));
 
-        Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
-        BlockState neighborStateFacing = world.getBlockState(pos.offset(isFacing));
-        BlockState neighborStateOpposite = world.getBlockState(pos.offset(isFacing.getOpposite()));
+        Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
+        BlockState neighborStateFacing = world.getBlockState(pos.relative(isFacing));
+        BlockState neighborStateOpposite = world.getBlockState(pos.relative(isFacing.getOpposite()));
 
         boolean isNeighborStateOppositeFacingDifferentDirection;
-        if (neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-            isNeighborStateOppositeFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateOpposite.get(Properties.HORIZONTAL_FACING));
+        if (neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            isNeighborStateOppositeFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING));
         } else {
             isNeighborStateOppositeFacingDifferentDirection = false;
         }
 
         boolean isNeighborStateFacingDifferentDirection;
-        if (neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-            isNeighborStateFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateFacing.get(Properties.HORIZONTAL_FACING).getOpposite());
+        if (neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            isNeighborStateFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite());
         } else {
             isNeighborStateFacingDifferentDirection = false;
         }
 
-        BlockState rightState = world.getBlockState(pos.offset(isFacing.rotateYCounterclockwise()));
+        BlockState rightState = world.getBlockState(pos.relative(isFacing.getCounterClockWise()));
         boolean right = block.canConnect(rightState) && rightState.getBlock() instanceof BasicDeskCabinetBlock;
 
-        BlockState leftState = world.getBlockState(pos.offset(isFacing.rotateYClockwise()));
+        BlockState leftState = world.getBlockState(pos.relative(isFacing.getClockWise()));
         boolean left = block.canConnect(leftState) && leftState.getBlock() instanceof BasicDeskCabinetBlock;
 
         List<BlockModelPart> secondaryQuads = new ArrayList<>();
@@ -77,13 +75,13 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
                 break;
         }
 
-        int openOffset = state.get(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
+        int openOffset = state.getValue(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
 
-        if (block.canConnect(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-            Direction neighborFacing = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+        if (block.canConnect(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction neighborFacing = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
             // outer corner
-            if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
-                if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+            if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
+                if (neighborFacing == isFacing.getCounterClockWise()) {
                     secondaryQuads.add(getTemplateBakedModels().get((4 + openOffset)));
                 }
                 else {
@@ -93,11 +91,11 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
                 secondaryQuads.add(middleDesk(left, right, openOffset));
             }
         }
-        else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-            Direction neighborFacing = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+        else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction neighborFacing = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             // inner corner
-            if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
-                if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+            if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
+                if (neighborFacing == isFacing.getCounterClockWise()) {
                     secondaryQuads.add(getTemplateBakedModels().get((6 + openOffset)));
                 } else {
                     secondaryQuads.add(getTemplateBakedModels().get((7 + openOffset)));
@@ -110,7 +108,7 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
             secondaryQuads.add(middleDesk(left, right, openOffset));
         }
 
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         parts.addAll(getTexturedParts(secondaryQuads, ModelHelper.getOakPlankLogSprites(), spriteList));
     }
 
@@ -145,7 +143,7 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
 
@@ -157,7 +155,7 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
         secondaryQuads.addAll(getTemplateBakedModels().get(19).getQuads(face));
         // in between pieces
 
-        List<Sprite> spriteList = getSpriteList(blockState);
+        List<TextureAtlasSprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

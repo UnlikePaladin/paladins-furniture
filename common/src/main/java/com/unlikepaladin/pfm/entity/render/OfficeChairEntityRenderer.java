@@ -1,31 +1,46 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.BlockModelRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.ModelBaker;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.random.Random;
+import com.unlikepaladin.pfm.items.PFMComponents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Axis;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEntity, OfficeChairEntityRenderState, OfficeChairModelEmpty> {
-    public static final Identifier[] MODEL_IDS = {Identifier.of("pfm:block/office_chair/office_chair"), Identifier.of("pfm:block/office_chair/office_chair_top"),
-    Identifier.of("pfm:block/office_chair/office_chair_bottom"), Identifier.of("pfm:block/office_chair/office_chair_wheels")};
+public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, OfficeChairEntityRenderState, OfficeChairModelEmpty> {
+    public static final ResourceLocation[] MODEL_IDS = {ResourceLocation.parse("pfm:block/office_chair/office_chair"), ResourceLocation.parse("pfm:block/office_chair/office_chair_top"),
+    ResourceLocation.parse("pfm:block/office_chair/office_chair_bottom"), ResourceLocation.parse("pfm:block/office_chair/office_chair_wheels")};
     // Wheel positions relative to center (x, z offsets)
     private static final float[][] WHEEL_OFFSETS = {
         {0f, 0.35f},   // front-right
@@ -34,7 +49,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         {0f, -0.35f}  // back-left
     };
 
-    public OfficeChairEntityRenderer(EntityRendererFactory.Context context) {
+    public OfficeChairEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new OfficeChairModelEmpty(), 0.0f);
     }
 
@@ -44,12 +59,12 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
     }
 
     @Override
-    public void render(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
+    public void submit(OfficeChairEntityRenderState mobEntity, PoseStack matrixStack, SubmitNodeCollector orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int damageStage = (int) Math.min(9, Math.max(mobEntity.maxHealth - mobEntity.health, 0));
 
-        RenderLayer damagedLayer = ModelBaker.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage);
+        RenderType damagedLayer = ModelBakery.DESTROY_TYPES.get(damageStage);
         // base
-        matrixStack.push();
+        matrixStack.pushPose();
 
         matrixStack.translate(-0.45, 0, -0.5);
 
@@ -60,24 +75,24 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         BlockStateModel wheelModel = ModelHelper.getModelFromIdentifier(MODEL_IDS[3]);
 
         // Calculate wheel rotation based on movement direction
-        Vec3d velocity = mobEntity.velocity;
+        Vec3 velocity = mobEntity.velocity;
         float wheelYaw = 0.0F;
-        double speed = velocity.horizontalLength();
+        double speed = velocity.horizontalDistance();
         if (speed > 1.0E-7) {
-            wheelYaw = (float) (MathHelper.atan2(velocity.z, velocity.x) * (180.0 / Math.PI)) - 90.0F;
+            wheelYaw = (float) (Mth.atan2(velocity.z, velocity.x) * (180.0 / Math.PI)) - 90.0F;
         }
 
         // Get accumulated wheel spin from entity
         float wheelSpin = mobEntity.wheelSpinAngle;
 
         for (float[] wheelOffset : WHEEL_OFFSETS) {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             // Move to wheel position (center of wheel)
             matrixStack.translate(wheelOffset[0], 0, wheelOffset[1]);
 
             // Rotate wheel to face movement direction around its own Y axis
-            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-wheelYaw));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-wheelYaw));
 
             // Offset for the model first
             matrixStack.translate(-0.45, 0, -0.5);
@@ -85,7 +100,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             // Move to wheel's center, spin, then move back
             // Assuming wheel center is roughly at (0.5, 0.05, 0.5) in model space
             matrixStack.translate(0.5, 0.08, 0.5);
-            matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(wheelSpin));
+            matrixStack.mulPose(Axis.XP.rotationDegrees(wheelSpin));
             matrixStack.translate(-0.5, -0.08, -0.5);
 
             submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, wheelModel, 1.0f, 1.0f, 1.0f);
@@ -103,8 +118,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             blue = (colorInt & 0xFF) / 255.0f;
         }
 
-        matrixStack.push();
-        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - mobEntity.bodyYaw));
+        matrixStack.pushPose();
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - mobEntity.bodyRot));
 
         matrixStack.translate(-0.45, 0, -0.5);
 
@@ -112,44 +127,44 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, model, red, green, blue);
     }
 
-    private void submitBlockPart(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, RenderLayer damagedLayer, BlockStateModel model, float red, float green, float blue) {
-        orderedRenderCommandQueue.submitBlockStateModel(matrixStack, RenderLayers.cutout(), model, red, green, blue, mobEntity.light,
-                OverlayTexture.DEFAULT_UV,
+    private void submitBlockPart(OfficeChairEntityRenderState mobEntity, PoseStack matrixStack, SubmitNodeCollector orderedRenderCommandQueue, RenderType damagedLayer, BlockStateModel model, float red, float green, float blue) {
+        orderedRenderCommandQueue.submitBlockModel(matrixStack, RenderTypes.cutoutMovingBlock(), model, red, green, blue, mobEntity.lightCoords,
+                OverlayTexture.NO_OVERLAY,
                 mobEntity.outlineColor);
-        if (mobEntity.timeUntilRegen > 0) {
-            orderedRenderCommandQueue.submitCustom(matrixStack, damagedLayer, (matricesEntry, vertexConsumer) -> {
-                BlockModelRenderer.render(
+        if (mobEntity.invulnerableTime > 0) {
+            orderedRenderCommandQueue.submitCustomGeometry(matrixStack, damagedLayer, (matricesEntry, vertexConsumer) -> {
+                ModelBlockRenderer.renderModel(
                         matricesEntry,
-                        new OverlayVertexConsumer(vertexConsumer, matricesEntry, 1.0f),
+                        new SheetedDecalTextureGenerator(vertexConsumer, matricesEntry, 1.0f),
                         model,
                         red,
                         green,
                         blue,
-                        mobEntity.light,
-                        OverlayTexture.DEFAULT_UV
+                        mobEntity.lightCoords,
+                        OverlayTexture.NO_OVERLAY
                 );
             });
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     @Override
-    public Identifier getTexture(OfficeChairEntityRenderState state) {
+    public ResourceLocation getTextureLocation(OfficeChairEntityRenderState state) {
         return null;
     }
 
     @Override
-    public void updateRenderState(OfficeChairEntity livingEntity, OfficeChairEntityRenderState livingEntityRenderState, float f) {
-        super.updateRenderState(livingEntity, livingEntityRenderState, f);
+    public void extractRenderState(OfficeChairEntity livingEntity, OfficeChairEntityRenderState livingEntityRenderState, float f) {
+        super.extractRenderState(livingEntity, livingEntityRenderState, f);
         livingEntityRenderState.color = livingEntity.getPFMColor();
         livingEntityRenderState.health = livingEntity.getHealth();
         livingEntityRenderState.maxHealth = livingEntity.getMaxHealth();
-        livingEntityRenderState.velocity = livingEntity.getVelocity();
-        livingEntityRenderState.timeUntilRegen = livingEntity.timeUntilRegen;
+        livingEntityRenderState.velocity = livingEntity.getDeltaMovement();
+        livingEntityRenderState.invulnerableTime = livingEntity.invulnerableTime;
         livingEntityRenderState.wheelSpinAngle = livingEntity.getWheelSpinAngle();
-        livingEntityRenderState.world = livingEntity.getEntityWorld();
-        livingEntityRenderState.pos = livingEntity.getEntityPos();
+        livingEntityRenderState.world = livingEntity.level();
+        livingEntityRenderState.pos = livingEntity.position();
         livingEntityRenderState.random = livingEntity.getRandom();
     }
 }

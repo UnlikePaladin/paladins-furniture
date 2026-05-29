@@ -4,28 +4,29 @@ import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.entity.ContainerUser;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.entity.ContainerUser;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.network.chat.Component;
 
-public class TrashcanBlockEntity extends LootableContainerBlockEntity {
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+
+public class TrashcanBlockEntity extends RandomizableContainerBlockEntity {
     public TrashcanBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
     }
@@ -33,120 +34,120 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
         super(trashcanBlockEntity, pos, state);
     }
 
-    protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(9, ItemStack.EMPTY);
 
     protected void onContainerOpen(BlockState state) {
         if (state.getBlock() instanceof TrashcanBlock){
-            this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            this.playSound(state, SoundEvents.IRON_TRAPDOOR_OPEN);
             this.setOpen(state, true);
         }
     }
 
-    protected void onContainerClose(BlockState state) {
+    protected void onClose(BlockState state) {
         if (state.getBlock() instanceof TrashcanBlock) {
-            this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            this.playSound(state, SoundEvents.IRON_TRAPDOOR_CLOSE);
             this.setOpen(state, false);
         }
     }
 
     void setOpen(BlockState state, boolean open) {
-        if (state.contains(Properties.OPEN))
-            this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+        if (state.hasProperty(BlockStateProperties.OPEN))
+            this.level.setBlock(this.getBlockPos(), state.setValue(BlockStateProperties.OPEN, open), 3);
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        this.world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+        this.level.playSound(null, getBlockPos(), soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
-    protected DefaultedList<ItemStack> getHeldStacks() {
+    protected NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     @Override
-    protected void setHeldStacks(DefaultedList<ItemStack> list) {
+    protected void setItems(NonNullList<ItemStack> list) {
         this.inventory = list;
     }
 
     @Override
-    protected Text getContainerName() {
-        return Text.translatable( "container.pfm.trashcan");
+    protected Component getDefaultName() {
+        return Component.translatable( "container.pfm.trashcan");
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new TrashcanScreenHandler(this, syncId, playerInventory, this);
+    protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
+        return new TrashcanScreenHandler(this, containerId, playerInventory, this);
     }
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return 9;
     }
 
 
     @Override
-    public void onOpen(ContainerUser player) {
-        if (!this.removed && !player.asLivingEntity().isSpectator()) {
-            this.onContainerOpen(this.getCachedState());
+    public void startOpen(ContainerUser player) {
+        if (!this.remove && !player.getLivingEntity().isSpectator()) {
+            this.onContainerOpen(this.getBlockState());
         }
     }
 
     @Override
-    public void onClose(ContainerUser player) {
-        if (!this.removed && !player.asLivingEntity().isSpectator()) {
-            this.onContainerClose(this.getCachedState());
+    public void stopOpen(ContainerUser player) {
+        if (!this.remove && !player.getLivingEntity().isSpectator()) {
+            this.onClose(this.getBlockState());
         }
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.readLootTable(view)) {
-            Inventories.readData(view, this.inventory);
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(view)) {
+            ContainerHelper.loadAllItems(view, this.inventory);
         }
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        if (!this.writeLootTable(view)) {
-            Inventories.writeData(view, this.inventory);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
+        if (!this.trySaveLootTable(view)) {
+            ContainerHelper.saveAllItems(view, this.inventory);
         }
     }
 
-    public DefaultedList<ItemStack> getInventory() {
+    public NonNullList<ItemStack> getContainer() {
         return this.inventory;
     }
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
-        super.setStack(slot, stack);
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    public void setItem(int slot, ItemStack stack) {
+        super.setItem(slot, stack);
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        ItemStack stack = super.removeStack(slot);
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack stack = super.removeItemNoUpdate(slot);
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         return stack;
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        ItemStack stack = super.removeStack(slot, amount);
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack stack = super.removeItem(slot, amount);
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         return stack;
     }
 
     @Override
-    public void clear() {
-        super.clear();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    public void clearContent() {
+        super.clearContent();
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends TrashcanBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

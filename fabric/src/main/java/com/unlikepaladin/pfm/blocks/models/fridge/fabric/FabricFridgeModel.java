@@ -5,32 +5,33 @@ import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
 public class FabricFridgeModel extends PFMFabricBakedModel {
-    public FabricFridgeModel(ModelBakeSettings settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public FabricFridgeModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
     }
 
     @Override
-    public void emitQuads(QuadEmitter context, BlockRenderView world, BlockPos pos, BlockState state, Random random, Predicate<@Nullable Direction> cullTest) {
-        boolean bottom = state.isOf(world.getBlockState(pos.up()).getBlock());
-        boolean top = state.isOf(world.getBlockState(pos.down()).getBlock());
-        boolean hasFreezer = world.getBlockState(pos.up()).getBlock() instanceof FreezerBlock && !(world.getBlockState(pos.up()).getBlock() instanceof IronFridgeBlock);
-        int openOffset = state.get(FridgeBlock.OPEN) ? 6 : 0;
+    public void emitQuads(QuadEmitter context, BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
+        boolean bottom = state.is(world.getBlockState(pos.above()).getBlock());
+        boolean top = state.is(world.getBlockState(pos.below()).getBlock());
+        boolean hasFreezer = world.getBlockState(pos.above()).getBlock() instanceof FreezerBlock && !(world.getBlockState(pos.above()).getBlock() instanceof IronFridgeBlock);
+        int openOffset = state.getValue(FridgeBlock.OPEN) ? 6 : 0;
         if (top && hasFreezer) {
             getTemplateBakedModels().get((5+openOffset)).emitQuads(context, cullTest);
         }
@@ -48,12 +49,12 @@ public class FabricFridgeModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(QuadEmitter context, Random randomSupplier) {
+    public void emitItemQuads(QuadEmitter context, RandomSource randomSupplier) {
 
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
-        return particleSprite();
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
+        return particleIcon();
     }
 }

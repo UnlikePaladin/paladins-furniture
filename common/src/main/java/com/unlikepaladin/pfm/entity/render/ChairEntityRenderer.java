@@ -1,14 +1,16 @@
 package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.entity.ChairEntity;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.util.Identifier;
+import com.unlikepaladin.pfm.entity.model.ModelEmpty;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.resources.ResourceLocation;
 
 public class ChairEntityRenderer extends EntityRenderer<ChairEntity, EntityRenderState> {
-    private static final Identifier EMPTY_TEXTURE = Identifier.of("minecraft:textures/block/stone.png");
-    public ChairEntityRenderer(EntityRendererFactory.Context context) {
+    private static final ResourceLocation EMPTY_TEXTURE = ResourceLocation.parse("minecraft:textures/block/stone.png");
+    public ChairEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
