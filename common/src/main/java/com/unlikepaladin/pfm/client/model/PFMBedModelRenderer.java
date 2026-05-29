@@ -1,43 +1,45 @@
 package com.unlikepaladin.pfm.client.model;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.entity.render.PFMBedBlockEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.model.LoadedEntityModels;
-import net.minecraft.client.render.item.model.special.SimpleSpecialModelRenderer;
-import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.util.DyeColor;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector3f;
 
 import java.util.Set;
 
-public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
+public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
     private final PFMBedBlockEntityRenderer blockEntityRenderer;
-    private final SpriteIdentifier textureId;
+    private final Material textureId;
 
-    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, SpriteIdentifier textureId) {
+    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, Material textureId) {
         this.blockEntityRenderer = blockEntityRenderer;
         this.textureId = textureId;
     }
 
 
     @Override
-    public void render(ItemDisplayContext displayContext, MatrixStack matrices, OrderedRenderCommandQueue queue, int light, int overlay, boolean glint, int i) {
+    public void submit(ItemDisplayContext displayContext, PoseStack matrices, SubmitNodeCollector queue, int light, int overlay, boolean glint, int i) {
         this.blockEntityRenderer.renderAsItem(matrices, queue, light, overlay, this.textureId, i);
 
     }
 
     @Override
-    public void collectVertices(Set<Vector3f> vertices) {
-        this.blockEntityRenderer.collectVertices(vertices);
+    public void getExtents(Set<Vector3f> vertices) {
+        this.blockEntityRenderer.getExtents(vertices);
     }
 
     @Environment(EnvType.CLIENT)
@@ -47,13 +49,13 @@ public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
         );
 
         @Override
-        public MapCodec<PFMBedModelRenderer.Unbaked> getCodec() {
+        public MapCodec<PFMBedModelRenderer.Unbaked> type() {
             return CODEC;
         }
 
         @Override
-        public SpecialModelRenderer<?> bake(BakeContext context) {
-            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(context), TexturedRenderLayers.createBedTextureId(color));
+        public SpecialModelRenderer<?> bake(BakingContext entityModels) {
+            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), Sheets.createBedMaterial(color));
         }
     }
 }

@@ -14,11 +14,11 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -84,7 +84,7 @@ public class PFMTagProvider extends PFMProvider {
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .addTags(showerTowels)
                 .addTags(stoneCounters)
                 .addTags(stoneCabinets)
@@ -180,7 +180,7 @@ public class PFMTagProvider extends PFMProvider {
         ClassicDeskBlock[] woodClassicDesks= ClassicDeskBlock.streamWoodClassicDesks().map(FurnitureBlock::getBlock).toArray(ClassicDeskBlock[]::new);
         ClassicDeskCabinetBlock[] woodClassicDeskCabinets = ClassicDeskCabinetBlock.streamWoodClassicDeskCabinets().map(FurnitureBlock::getBlock).toArray(ClassicDeskCabinetBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
                 .addTags(showerTowels)
                 .addTags(woodCounters)
                 .addTags(woodCabinets)
@@ -223,7 +223,7 @@ public class PFMTagProvider extends PFMProvider {
                 .addTags(woodClassicDesks)
                 .addTags(woodClassicDeskCabinets);
 
-        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL)
                 .addTags(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
         getOrCreateTagBuilder(BlockTags.BEDS)
@@ -258,7 +258,7 @@ public class PFMTagProvider extends PFMProvider {
 
     public static PFMTag<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
         TagBuilder builder = getTagBuilder(tag);
-        return getProviderPlatform(builder, Registries.BLOCK, "pfm");
+        return getProviderPlatform(builder, BuiltInRegistries.BLOCK, "pfm");
     }
 
     @ExpectPlatform
@@ -266,10 +266,10 @@ public class PFMTagProvider extends PFMProvider {
         throw new AssertionError();
     }
 
-    private static final Map<Identifier, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<ResourceLocation, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
 
     public static <T> TagBuilder getTagBuilder(TagKey<T> tag) {
-        return tagBuilders.computeIfAbsent(tag.id(), (id) -> new TagBuilder());
+        return tagBuilders.computeIfAbsent(tag.location(), (id) -> new TagBuilder());
     }
 
     @Override
@@ -280,12 +280,12 @@ public class PFMTagProvider extends PFMProvider {
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
             List<TagEntry> list = builder.build();
-            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.canAdd(Registries.BLOCK::containsId, tagBuilders::containsKey)).toList();
+            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.verifyIfPresent(BuiltInRegistries.BLOCK::containsKey, tagBuilders::containsKey)).toList();
             if (!list2.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }
             DataResult<JsonElement> jsonObject = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(builder.build(), false));
-            Path path = this.getOutput(id);
+            Path path = this.getResultItem(id);
             if (jsonObject.error().isEmpty())
                 enqueueJsonWrite(getWriteQueue(), path, jsonObject.getOrThrow());
         });
@@ -293,7 +293,7 @@ public class PFMTagProvider extends PFMProvider {
         endProviderRun();
     }
 
-    protected Path getOutput(Identifier id) {
+    protected Path getResultItem(ResourceLocation id) {
         return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/block/" + id.getPath() + ".json");
     }
 }

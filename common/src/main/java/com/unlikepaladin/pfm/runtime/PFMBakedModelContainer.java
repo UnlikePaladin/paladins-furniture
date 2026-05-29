@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.runtime;
 
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.ModelState;
 
 import java.util.List;
 import java.util.Map;
@@ -10,15 +10,15 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PFMBakedModelContainer {
-    public Map<ModelBakeSettings, BlockStateModel> getBakedModels() {
+    public Map<ModelState, BlockStateModel> getBakedModels() {
         return bakedModels;
     }
 
-    final Map<ModelBakeSettings, BlockStateModel> bakedModels = new ConcurrentHashMap<>();
+    final Map<ModelState, BlockStateModel> bakedModels = new ConcurrentHashMap<>();
 
-    final Map<ModelBakeSettings, List<BlockModelPart>> cachedModelParts = new ConcurrentHashMap<>();
+    final Map<ModelState, List<BlockModelPart>> cachedModelParts = new ConcurrentHashMap<>();
 
-    public Map<ModelBakeSettings, List<BlockModelPart>> getCachedModelParts() {
+    public Map<ModelState, List<BlockModelPart>> getCachedModelParts() {
         return cachedModelParts;
     }
 

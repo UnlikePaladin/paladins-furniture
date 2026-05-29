@@ -3,27 +3,25 @@ package com.unlikepaladin.pfm.client.model;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.items.PFMComponents;
-import net.minecraft.client.render.item.tint.DyeTintSource;
-import net.minecraft.client.render.item.tint.TintSource;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.ColorHelper;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 
-public record FurnitureTintSource(int defaultColor) implements TintSource {
-    public static final MapCodec<FurnitureTintSource> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(Codecs.RGB.fieldOf("default").forGetter(FurnitureTintSource::defaultColor)).apply(instance, FurnitureTintSource::new));
+public record FurnitureTintSource(int defaultColor) implements ItemTintSource {
+    public static final MapCodec<FurnitureTintSource> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(ExtraCodecs.RGB_COLOR_CODEC.fieldOf("default").forGetter(FurnitureTintSource::defaultColor)).apply(instance, FurnitureTintSource::new));
 
     @Override
-    public int getTint(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user) {
-        if (stack.get(PFMComponents.COLOR_COMPONENT) != null)
-            return ColorHelper.fullAlpha(stack.get(PFMComponents.COLOR_COMPONENT).getFireworkColor());
+    public int calculate(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity user) {
+        if (stack.has(PFMComponents.COLOR_COMPONENT))
+            return ARGB.opaque(stack.get(PFMComponents.COLOR_COMPONENT).getFireworkColor());
         return defaultColor;
     }
 
-    @Override
-    public MapCodec<? extends TintSource> getCodec() {
+    public MapCodec<? extends ItemTintSource> type() {
         return CODEC;
     }
 }

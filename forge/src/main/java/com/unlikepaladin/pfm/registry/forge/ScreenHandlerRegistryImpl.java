@@ -5,14 +5,16 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBloc
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 
 import java.util.LinkedHashMap;
@@ -20,34 +22,34 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
-    public static final Map<Identifier, ScreenHandlerType<?>> screenHandlerMap = new LinkedHashMap<>();
-    public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, PlayerInventory, T> factory) {
-        ScreenHandlerType<T> type = new ScreenHandlerType<>(factory::apply, FeatureFlags.DEFAULT_ENABLED_FEATURES);
+    public static final Map<ResourceLocation, MenuType<?>> screenHandlerMap = new LinkedHashMap<>();
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(ResourceLocation id, BiFunction<Integer, Inventory, T> factory) {
+        MenuType<T> type = new MenuType<>(factory::apply, FeatureFlags.DEFAULT_FLAGS);
         screenHandlerMap.put(id, type);
         return type;
     }
 
-    public static <T extends ScreenHandler, D> ScreenHandlerType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, PlayerInventory, D, T> factory, PacketCodec<RegistryByteBuf, D> pac) {
+    public static <T extends AbstractContainerMenu, D> MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
         if (pac == null) {
-            ScreenHandlerType<T> type = new ScreenHandlerType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_ENABLED_FEATURES);
+            MenuType<T> type = new MenuType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_FLAGS);
             screenHandlerMap.put(id, type);
             return type;
         } else {
-            ScreenHandlerType<T> type = IForgeMenuType.create((syncId, inventory, buf) -> factory.apply(syncId, inventory, pac.decode(new RegistryByteBuf(buf, inventory.player.getRegistryManager()))));
+            MenuType<T> type = IForgeMenuType.create((syncId, inventory, buf) -> factory.apply(syncId, inventory, pac.decode(new RegistryFriendlyByteBuf(buf, inventory.player.registryAccess()))));
             screenHandlerMap.put(id, type);
             return type;
         }
     }
 
-    public static <T extends ScreenHandler> Pair<TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>, PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData>> getStoveMenuFactory() {
+    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getStoveMenuFactory() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
-            return new Pair<>((TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
+            return new Tuple<>((TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
         }
         else
-            return new Pair<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+            return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 
-    public static <T extends ScreenHandler> Pair<TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>, PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory() {
-        return new Pair<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
+        return new Tuple<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 }

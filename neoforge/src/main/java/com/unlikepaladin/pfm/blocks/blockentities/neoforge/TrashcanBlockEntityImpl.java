@@ -1,18 +1,20 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.NonNullList;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     public TrashcanBlockEntityImpl(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity, BlockPos pos, BlockState state) {
@@ -25,26 +27,26 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(ReadView input) {
+    public void handleUpdateTag(ValueInput input) {
         super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends TrashcanBlockEntity> getFactory() {
         return TrashcanBlockEntityImpl::new;
     }
 

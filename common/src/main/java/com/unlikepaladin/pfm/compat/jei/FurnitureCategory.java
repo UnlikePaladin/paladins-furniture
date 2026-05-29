@@ -13,33 +13,37 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.fabricmc.loader.impl.lib.mappingio.format.FeatureSet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final Identifier TEXTURE_GUI_VANILLA = Identifier.of("pfm:textures/gui/gui_jei.png");
+    public static final ResourceLocation TEXTURE_GUI_VANILLA = ResourceLocation.parse("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
-    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
+    public static final Component TITLE = Component.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
     private static final int craftOutputSlot = 9;
     private static final int craftInputSlot1 = 0;
     private int itemsPerInnerRecipe;
-    private FeatureSet set;
+    private FeatureFlagSet set;
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
         craftingGridHelper = guiHelper.createCraftingGridHelper();
-        this.set = MinecraftClient.getInstance().world.getEnabledFeatures();
+        this.set = Minecraft.getInstance().level.enabledFeatures();
     }
-    public static final Identifier IDENTIFIER = Identifier.of(PaladinFurnitureMod.MOD_ID, "crafting");
+    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "crafting");
 
     @Override
     public IRecipeType<FurnitureRecipe> getRecipeType() {
@@ -47,7 +51,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
@@ -94,7 +98,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
             ItemStack focusedStack = focused.get().getTypedValue().getItemStack().get();
             if (!focusToOutput.containsKey(focusedStack)) {
                 for (ItemStack stack : outputs) {
-                    if (ItemStack.areItemsAndComponentsEqual(stack, focusedStack)) {
+                    if (ItemStack.isSameItemSameComponents(stack, focusedStack)) {
                         focusToOutput.put(focusedStack, stack);
                         break;
                     }

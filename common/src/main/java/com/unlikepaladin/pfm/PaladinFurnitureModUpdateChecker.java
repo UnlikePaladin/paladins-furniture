@@ -11,10 +11,10 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -149,7 +149,7 @@ public class PaladinFurnitureModUpdateChecker {
         }
 
         @Environment(EnvType.CLIENT)
-        public Optional<Text> getUpdateMessage() {
+        public Optional<Component> getUpdateMessage() {
             if (shouldShowUpdateMessage) {
                 UpdateInfo info = getUpdateInfo();
 
@@ -157,24 +157,24 @@ public class PaladinFurnitureModUpdateChecker {
                     return Optional.empty();
                 }
 
-                String languageCode = MinecraftClient.getInstance().options.language.toLowerCase(Locale.ROOT);
+                String languageCode = Minecraft.getInstance().options.languageCode.toLowerCase(Locale.ROOT);
                 String originalText = info.updateInfo.containsKey(languageCode) ? info.updateInfo.get(languageCode) : info.updateInfo.get("en_us");
                 String[] textParts = originalText.split("\\{link}");
                 if (textParts.length > 1) {
-                    MutableText component1 = Text.literal(textParts[0]);
-                    MutableText component2 = Text.literal(textParts[1]);
-                    Text link = Text.literal((info.modHost)).styled(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))).withUnderline(true));
+                    MutableComponent component1 = Component.literal(textParts[0]);
+                    MutableComponent component2 = Component.literal(textParts[1]);
+                    Component link = Component.literal(info.modHost).withStyle(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))).withUnderlined(true));
                     return Optional.of(component1.append(link).append(component2));
                 } else {
-                    MutableText link = Text.literal((info.modHost)).styled(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))).withUnderline(true));
-                    return Optional.of(Text.literal((textParts[0])).append(link));
+                    MutableComponent link = Component.literal(info.modHost).withStyle(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))).withUnderlined(true));
+                    return Optional.of(Component.literal(textParts[0]).append(link));
                 }
             } else {
                 return Optional.empty();
             }
         }
 
-    public Optional<Text> getUpdateMessageServer() {
+    public Optional<Component> getUpdateMessageServer() {
         if (shouldShowUpdateMessage) {
             UpdateInfo info = getUpdateInfo();
 
@@ -185,13 +185,13 @@ public class PaladinFurnitureModUpdateChecker {
             String originalText = info.updateInfo.get("en_us");
             String[] textParts = originalText.split("\\{link}");
             if (textParts.length > 1) {
-                MutableText component1 = Text.literal(textParts[0]);
-                MutableText component2 = Text.literal(textParts[1]);
-                MutableText link = Text.literal((info.modHost)).styled(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))));
+                MutableComponent component1 = Component.literal(textParts[0]);
+                MutableComponent component2 = Component.literal(textParts[1]);
+                MutableComponent link = Component.literal(info.modHost).withStyle(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))));
                 return Optional.of(component1.append(link).append(component2));
             } else {
-                MutableText link = Text.literal((info.modHost)).styled(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))));
-                return Optional.of(Text.literal((textParts[0])).append(link));
+                MutableComponent link = Component.literal(info.modHost).withStyle(arg -> arg.withClickEvent(new ClickEvent.OpenUrl(URI.create(info.modDownload))));
+                return Optional.of(Component.literal(textParts[0]).append(link));
             }
         } else {
             return Optional.empty();
@@ -260,7 +260,7 @@ public class PaladinFurnitureModUpdateChecker {
 
     public static String getReleaseTarget() {
         // If this is a snapshot, you must change backupVersionNumber!
-        return SharedConstants.getGameVersion().stable() ? SharedConstants.getGameVersion().name() : backupVersionNumber;
+        return SharedConstants.getCurrentVersion().stable() ? SharedConstants.getCurrentVersion().name() : backupVersionNumber;
     }
 
 }

@@ -13,44 +13,50 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public record UnbakedClassicStoolModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+public record UnbakedClassicStoolModel(Variant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedClassicStoolModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
-                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedClassicStoolModel::variant))
+                    instance.group(Variant.MAP_CODEC.forGetter(UnbakedClassicStoolModel::variant))
                             .apply(instance, UnbakedClassicStoolModel::new));
 
     public static final Codec<UnbakedClassicStoolModel> CODEC = MAP_CODEC.codec();
 
-    public static final Identifier[] CLASSIC_STOOL_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool_tucked")
+    public static final ResourceLocation[] CLASSIC_STOOL_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool_tucked")
     };
 
-    public static final Identifier STOOL_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_stool");
-    public static final List<Identifier> CLASSIC_STOOL_MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation STOOL_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool");
+    public static final List<ResourceLocation> CLASSIC_STOOL_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_stool"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
                 if (variant.hasStripped())
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_classic_stool"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_classic_stool"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_stool"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
             }
             add(STOOL_MODEL_ID);
         }
     };
 
     @Override
-    public BlockStateModel bake(Baker baker){
-        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(CLASSIC_STOOL_PARTS_BASE[0]), baker.getModel(CLASSIC_STOOL_PARTS_BASE[0]).getTextures());
+    public BlockStateModel bake(ModelBaker baker){
+        ModelState settings = variant.modelState().asModelState();
+        ModelRenderProperties itemSettings = ModelRenderProperties.fromResolvedModel(baker, baker.getModel(CLASSIC_STOOL_PARTS_BASE[0]), baker.getModel(CLASSIC_STOOL_PARTS_BASE[0]).getTopTextureSlots());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(STOOL_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(STOOL_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(STOOL_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(STOOL_MODEL_ID).getCachedModelParts().get(settings));
@@ -59,8 +65,8 @@ public record UnbakedClassicStoolModel(ModelVariant variant) implements PFMUnbak
             PFMRuntimeResources.modelCacheMap.put(STOOL_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : CLASSIC_STOOL_PARTS_BASE) {
-            bakedModelList.add(GeometryBakedModel.create(baker, modelPart, settings));
+        for (ResourceLocation modelPart : CLASSIC_STOOL_PARTS_BASE) {
+            bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
         PFMRuntimeResources.modelCacheMap.get(STOOL_MODEL_ID).getCachedModelParts().put(settings, bakedModelList);
@@ -68,13 +74,13 @@ public record UnbakedClassicStoolModel(ModelVariant variant) implements PFMUnbak
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : CLASSIC_STOOL_PARTS_BASE)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : CLASSIC_STOOL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

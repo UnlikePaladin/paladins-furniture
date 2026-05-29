@@ -21,14 +21,14 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.SimpleBlockStateModel;
-import net.minecraft.client.render.model.WeightedBlockStateModel;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.Pool;
-import net.minecraft.util.collection.Weighted;
-import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.SingleVariant;
+import net.minecraft.client.resources.model.WeightedVariants;
+import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,38 +39,38 @@ import java.util.stream.Stream;
 // This was taken from Fabric API as Forge has no way of loading custom blockstate models
 public class PFMUnbakedBlockStateModelRegistryFabricAPI {
 	private static final String TYPE_KEY = "pfm:type";
-	private static final Codecs.IdMapper<Identifier, MapCodec<? extends PFMUnbakedBlockStateModel>> ID_MAPPER = new Codecs.IdMapper<>();
+	private static final ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends PFMUnbakedBlockStateModel>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
 
 	/** Map codec for a custom model. Must be a map codec to allow combining with weighted model entry's "weight" field. */
-	private static final MapCodec<PFMUnbakedBlockStateModel> CUSTOM_MODEL_MAP_CODEC = ID_MAPPER.getCodec(Identifier.CODEC).dispatchMap(TYPE_KEY, PFMUnbakedBlockStateModel::codecc, codec -> codec);
+	private static final MapCodec<PFMUnbakedBlockStateModel> CUSTOM_MODEL_MAP_CODEC = ID_MAPPER.codec(ResourceLocation.CODEC).dispatchMap(TYPE_KEY, PFMUnbakedBlockStateModel::codecc, codec -> codec);
 	/** Map codec for a simple model. Must be a map codec to allow checking presence of type key before parsing. */
-	private static final MapCodec<SimpleBlockStateModel.Unbaked> SIMPLE_MODEL_MAP_CODEC = ModelVariant.MAP_CODEC
-			.xmap(SimpleBlockStateModel.Unbaked::new, SimpleBlockStateModel.Unbaked::variant);
-	/** Map codec for a custom model or a simple model. Uses {@link SimpleBlockStateModel.Unbaked} instead of {@link ModelVariant} like vanilla to also allow use in {@link #MODEL_CODEC} for convenience and consistent behavior. Must be a map codec to allow combining with weighted model entry's "weight" field. */
-	private static final MapCodec<Either<PFMUnbakedBlockStateModel, SimpleBlockStateModel.Unbaked>> VARIANT_MAP_CODEC = new KeyExistsCodec<>(TYPE_KEY, CUSTOM_MODEL_MAP_CODEC, SIMPLE_MODEL_MAP_CODEC);
+	private static final MapCodec<SingleVariant.Unbaked> SIMPLE_MODEL_MAP_CODEC = Variant.MAP_CODEC
+			.xmap(SingleVariant.Unbaked::new, SingleVariant.Unbaked::variant);
+	/** Map codec for a custom model or a simple model. Uses {@link SingleVariant.Unbaked} instead of {@link Variant} like vanilla to also allow use in {@link #MODEL_CODEC} for convenience and consistent behavior. Must be a map codec to allow combining with weighted model entry's "weight" field. */
+	private static final MapCodec<Either<PFMUnbakedBlockStateModel, SingleVariant.Unbaked>> VARIANT_MAP_CODEC = new KeyExistsCodec<>(TYPE_KEY, CUSTOM_MODEL_MAP_CODEC, SIMPLE_MODEL_MAP_CODEC);
 	/** Codec for a custom model or a simple model. */
-	private static final Codec<Either<PFMUnbakedBlockStateModel, SimpleBlockStateModel.Unbaked>> VARIANT_CODEC = VARIANT_MAP_CODEC.codec();
+	private static final Codec<Either<PFMUnbakedBlockStateModel, SingleVariant.Unbaked>> VARIANT_CODEC = VARIANT_MAP_CODEC.codec();
 	/** Codec for a weighted variant, with support for custom models. Used as list elements in a weighted model. */
-	private static final Codec<Weighted<Either<PFMUnbakedBlockStateModel, SimpleBlockStateModel.Unbaked>>> WEIGHTED_VARIANT_CODEC = RecordCodecBuilder.create(
+	private static final Codec<Weighted<Either<PFMUnbakedBlockStateModel, SingleVariant.Unbaked>>> WEIGHTED_VARIANT_CODEC = RecordCodecBuilder.create(
 			instance -> instance.group(
 					VARIANT_MAP_CODEC.forGetter(Weighted::value),
-					Codecs.POSITIVE_INT.optionalFieldOf("weight", 1).forGetter(Weighted::weight)
+					ExtraCodecs.POSITIVE_INT.optionalFieldOf("weight", 1).forGetter(Weighted::weight)
 			).apply(instance, Weighted::new)
 	);
-	/** Extended codec for a vanilla weighted model that supports using custom models instead of regular variants. Replaces {@link BlockStateModel.Unbaked#WEIGHTED_CODEC}. */
-	public static final Codec<WeightedBlockStateModel.Unbaked> WEIGHTED_MODEL_CODEC = Codecs.nonEmptyList(WEIGHTED_VARIANT_CODEC.listOf())
+	/** Extended codec for a vanilla weighted model that supports using custom models instead of regular variants. Replaces {@link BlockStateModel.Unbaked#HARDCODED_WEIGHTED_CODEC}. */
+	public static final Codec<WeightedVariants.Unbaked> WEIGHTED_MODEL_CODEC = ExtraCodecs.nonEmptyList(WEIGHTED_VARIANT_CODEC.listOf())
 			.flatComapMap(
-					weightedVariants -> new WeightedBlockStateModel.Unbaked(Pool.of(Lists.transform(weightedVariants, weighted -> weighted.transform(either -> either.map(Function.identity(), Function.identity()))))),
+					weightedVariants -> new WeightedVariants.Unbaked(WeightedList.of(Lists.transform(weightedVariants, weighted -> weighted.map(either -> either.map(Function.identity(), Function.identity()))))),
 					model -> {
-						List<Weighted<BlockStateModel.Unbaked>> entries = model.entries().getEntries();
-						List<Weighted<Either<PFMUnbakedBlockStateModel, SimpleBlockStateModel.Unbaked>>> weightedVariants = new ArrayList<>(entries.size());
+						List<Weighted<BlockStateModel.Unbaked>> entries = model.entries().unwrap();
+						List<Weighted<Either<PFMUnbakedBlockStateModel, SingleVariant.Unbaked>>> weightedVariants = new ArrayList<>(entries.size());
 
 						for (Weighted<BlockStateModel.Unbaked> weighted : entries) {
 							switch (weighted.value()) {
 								case PFMUnbakedBlockStateModel custom -> {
 									weightedVariants.add(new Weighted<>(Either.left(custom), weighted.weight()));
 								}
-								case SimpleBlockStateModel.Unbaked simple -> {
+								case SingleVariant.Unbaked simple -> {
 									weightedVariants.add(new Weighted<>(Either.right(simple), weighted.weight()));
 								}
 								default -> {
@@ -89,13 +89,13 @@ public class PFMUnbakedBlockStateModelRegistryFabricAPI {
 
 				return switch (model) {
 				case PFMUnbakedBlockStateModel custom -> DataResult.success(Either.right(Either.left(custom)));
-				case SimpleBlockStateModel.Unbaked simple -> DataResult.success(Either.right(Either.right(simple)));
-				case WeightedBlockStateModel.Unbaked weighted -> DataResult.success(Either.left(weighted));
+				case SingleVariant.Unbaked simple -> DataResult.success(Either.right(Either.right(simple)));
+				case WeightedVariants.Unbaked weighted -> DataResult.success(Either.left(weighted));
 				default -> DataResult.error(() -> "Only a custom model or a single variant or a list of variants are supported");
 				};
 			});
 
-	public static void register(Identifier id, MapCodec<? extends PFMUnbakedBlockStateModel> codec) {
+	public static void register(ResourceLocation id, MapCodec<? extends PFMUnbakedBlockStateModel> codec) {
 		ID_MAPPER.put(id, codec);
 	}
 

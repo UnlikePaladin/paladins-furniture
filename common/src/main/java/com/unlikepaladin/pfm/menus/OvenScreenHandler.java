@@ -1,33 +1,33 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.RecipeBookType;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.item.crafting.RecipeType;
 
-public class OvenScreenHandler extends AbstractFurnaceScreenHandler {
-    private final Inventory inventory;
-    public OvenScreenHandler(int syncId, PlayerInventory playerInventory, StoveScreenHandler.StoveData data) {
-        super(ScreenHandlerIDs.OVEN_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory, (Inventory) playerInventory.player.getEntityWorld().getBlockEntity(data.pos()), new ArrayPropertyDelegate(4));
-        this.inventory = (Inventory) playerInventory.player.getEntityWorld().getBlockEntity(data.pos());
-        inventory.onOpen(playerInventory.player);
+public class OvenScreenHandler extends AbstractFurnaceMenu {
+    private final Container inventory;
+    public OvenScreenHandler(int syncId, Inventory playerInventory, StoveScreenHandler.StoveData data) {
+        super(ScreenHandlerIDs.OVEN_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory, (Container) playerInventory.player.level().getBlockEntity(data.pos()), new SimpleContainerData(4));
+        this.inventory = (Container) playerInventory.player.level().getBlockEntity(data.pos());
+        inventory.startOpen(playerInventory.player);
     }
 
-    public OvenScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    public OvenScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate) {
         super(ScreenHandlerIDs.OVEN_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory, inventory, propertyDelegate);
         this.inventory = inventory;
-        inventory.onOpen(playerInventory.player);
+        inventory.startOpen(playerInventory.player);
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
-        super.onClosed(player);
-        this.inventory.onClose(player);
+    public void removed(Player player) {
+        super.removed(player);
+        this.inventory.stopOpen(player);
     }
 }

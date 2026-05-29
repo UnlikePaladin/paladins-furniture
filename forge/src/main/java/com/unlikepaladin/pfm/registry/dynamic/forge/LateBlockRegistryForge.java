@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.registry.dynamic.forge;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

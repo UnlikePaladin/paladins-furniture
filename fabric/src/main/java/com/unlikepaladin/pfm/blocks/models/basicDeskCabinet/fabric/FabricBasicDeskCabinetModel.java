@@ -4,47 +4,47 @@ import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
-    public FabricBasicDeskCabinetModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public FabricBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void emitQuads(QuadEmitter context, BlockRenderView world, BlockPos pos, BlockState state, Random randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitQuads(QuadEmitter context, BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource randomSupplier, Predicate<@Nullable Direction> cullTest) {
         if (state.getBlock() instanceof BasicDeskCabinetBlock block) {
-            Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
+            Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
 
-            BlockState rightState = world.getBlockState(pos.offset(isFacing.rotateYCounterclockwise()));
+            BlockState rightState = world.getBlockState(pos.relative(isFacing.getCounterClockWise()));
             boolean right = block.canConnect(rightState) && rightState.getBlock() instanceof BasicDeskCabinetBlock;
 
-            BlockState leftState = world.getBlockState(pos.offset(isFacing.rotateYClockwise()));
+            BlockState leftState = world.getBlockState(pos.relative(isFacing.getClockWise()));
             boolean left = block.canConnect(leftState) && leftState.getBlock() instanceof BasicDeskCabinetBlock;
 
-            BlockState neighborStateFacing = world.getBlockState(pos.offset(isFacing));
-            BlockState neighborStateOpposite = world.getBlockState(pos.offset(isFacing.getOpposite()));
-            int openOffset = state.get(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
+            BlockState neighborStateFacing = world.getBlockState(pos.relative(isFacing));
+            BlockState neighborStateOpposite = world.getBlockState(pos.relative(isFacing.getOpposite()));
+            int openOffset = state.getValue(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
 
             pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), getSpriteList(state));
-            if (block.canConnect(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-                Direction neighborFacing = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+            if (block.canConnect(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                Direction neighborFacing = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 // outer corner
-                if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(world, pos, neighborFacing.getOpposite())) {
-                    if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(world, pos, neighborFacing.getOpposite())) {
+                    if (neighborFacing == isFacing.getCounterClockWise()) {
                         getTemplateBakedModels().get((4 + openOffset)).emitQuads(context, cullTest);
                     }
                     else {
@@ -54,11 +54,11 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
                     middleDesk(world, state, pos, randomSupplier, context, cullTest, left, right, openOffset);
                 }
             }
-            else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-                Direction neighborFacing = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+            else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                Direction neighborFacing = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 // inner corner
-                if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(world, pos, neighborFacing)) {
-                    if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(world, pos, neighborFacing)) {
+                    if (neighborFacing == isFacing.getCounterClockWise()) {
                         getTemplateBakedModels().get((6 + openOffset)).emitQuads(context, cullTest);
                     } else {
                         getTemplateBakedModels().get((7 + openOffset)).emitQuads(context, cullTest);
@@ -94,7 +94,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
         }
     }
 
-    private void legsDesk(BlockRenderView world, BlockState state, BlockPos pos, Random randomSupplier, QuadEmitter context, Predicate<@Nullable Direction> cullTest, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+    private void legsDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, RandomSource randomSupplier, QuadEmitter context, Predicate<@Nullable Direction> cullTest, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
         if (!north && !east) {
             getTemplateBakedModels().get(northLeg).emitQuads(context, cullTest);
         }
@@ -110,7 +110,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
 
-    private void middleDesk(BlockRenderView world, BlockState state, BlockPos pos, Random randomSupplier, QuadEmitter context, Predicate<@Nullable Direction> cullTest, boolean left, boolean right, int openOffset) {
+    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, RandomSource randomSupplier, QuadEmitter context, Predicate<@Nullable Direction> cullTest, boolean left, boolean right, int openOffset) {
         if (left && right) {
             getTemplateBakedModels().get((3 + openOffset)).emitQuads(context, cullTest);
         }  else if (left) {
@@ -123,7 +123,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(QuadEmitter emitter, Random randomSupplier) {
+    public void emitItemQuads(QuadEmitter emitter, RandomSource randomSupplier) {
         if (blockState == null) return;
         Predicate<Direction> anyPredicate = d -> false;
 
@@ -141,7 +141,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

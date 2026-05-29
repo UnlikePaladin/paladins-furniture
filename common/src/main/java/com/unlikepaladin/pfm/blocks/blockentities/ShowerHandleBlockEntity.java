@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
 
@@ -22,18 +22,18 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
+    protected void saveAdditional(ValueOutput view) {
+        super.saveAdditional(view);
         if (this.showerOffset != null) {
             view.putLong("showerHead", this.showerOffset.asLong());
         }
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        view.getOptionalLong("showerHead").ifPresent(
-                aLong -> this.showerOffset = BlockPos.fromLong(aLong));
+    protected void loadAdditional(ValueInput view) {
+        super.loadAdditional(view);
+        view.getLong("showerHead").ifPresent(
+                aLong -> this.showerOffset = BlockPos.of(aLong));
     }
 
     public void setShowerOffset(BlockPos showerOffset) {
@@ -43,14 +43,14 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     public void setState(boolean open)
     {
         if (this.showerOffset != null) {
-            BlockPos showerHeadPos = this.pos.subtract(this.showerOffset);
-            if(this.world.getBlockEntity(showerHeadPos) != null) {
+            BlockPos showerHeadPos = this.worldPosition.subtract(this.showerOffset);
+            if(this.level.getBlockEntity(showerHeadPos) != null) {
 
-                BlockState state = world.getBlockState(showerHeadPos);
-                ((ShowerHeadBlockEntity)world.getBlockEntity(showerHeadPos)).setOpen(open);
+                BlockState state = level.getBlockState(showerHeadPos);
+                ((ShowerHeadBlockEntity)level.getBlockEntity(showerHeadPos)).setOpen(open);
 
-                world.updateListeners(showerHeadPos, state, state, Block.NOTIFY_LISTENERS);
-            } else if (this.world.getBlockEntity(showerHeadPos) == null) {
+                level.sendBlockUpdated(showerHeadPos, state, state, Block.UPDATE_CLIENTS);
+            } else if (this.level.getBlockEntity(showerHeadPos) == null) {
                 this.showerOffset = null;
             }
         }

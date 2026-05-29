@@ -27,46 +27,42 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
 public class FurnitureDisplay implements Display {
-    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture"));
+    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
-    public Optional<Identifier> location;
-    public FurnitureDisplay(RecipeEntry<FurnitureRecipe> recipeEntry, FeatureSet set) {
+    public Optional<ResourceLocation> location;
+    public FurnitureDisplay(RecipeHolder<FurnitureRecipe> recipeEntry, FeatureFlagSet set) {
         this(recipeEntry.value(), set);
-        this.location = Optional.of(recipeEntry.id().getValue());
+        this.location = Optional.of(recipeEntry.id().location());
     }
 
-    public FurnitureDisplay(List<EntryIngredient> input, List<EntryIngredient> output, Optional<Identifier> location, int itemsPerInnerRecipe) {
+    public FurnitureDisplay(List<EntryIngredient> input, List<EntryIngredient> output, Optional<ResourceLocation> location, int itemsPerInnerRecipe) {
         this.input = input;
         this.output = output;
         this.location = location;
         this.itemsPerInnerRecipe = itemsPerInnerRecipe;
     }
 
-    public FurnitureDisplay(FurnitureRecipe recipe, FeatureSet set) {
+    public FurnitureDisplay(FurnitureRecipe recipe, FeatureFlagSet set) {
         input = new ArrayList<>();
         output = new ArrayList<>();
         List<EntryIngredient> inputEntries = new ArrayList<>();
@@ -112,7 +108,7 @@ public class FurnitureDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return location;
     }
 
@@ -125,17 +121,17 @@ public class FurnitureDisplay implements Display {
             RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntryIngredient.codec().listOf().fieldOf("inputs").forGetter(FurnitureDisplay::getInputEntries),
                     EntryIngredient.codec().listOf().fieldOf("outputs").forGetter(FurnitureDisplay::getOutputEntries),
-                    Identifier.CODEC.optionalFieldOf("location").forGetter(FurnitureDisplay::getDisplayLocation),
+                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(FurnitureDisplay::getDisplayLocation),
                     Codec.INT.fieldOf("itemsPerInnerRecipe").forGetter(FurnitureDisplay::itemsPerInnerRecipe)
             ).apply(instance, FurnitureDisplay::new)),
-            PacketCodec.tuple(
-                    EntryIngredient.streamCodec().collect(PacketCodecs.toList()),
+            StreamCodec.composite(
+                    EntryIngredient.streamCodec().apply(ByteBufCodecs.list()),
                     FurnitureDisplay::getInputEntries,
-                    EntryIngredient.streamCodec().collect(PacketCodecs.toList()),
+                    EntryIngredient.streamCodec().apply(ByteBufCodecs.list()),
                     FurnitureDisplay::getOutputEntries,
-                    PacketCodecs.optional(Identifier.PACKET_CODEC),
+                    ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC),
                     FurnitureDisplay::getDisplayLocation,
-                    PacketCodecs.INTEGER,
+                    ByteBufCodecs.INT,
                     FurnitureDisplay::itemsPerInnerRecipe,
                     FurnitureDisplay::new
             ));

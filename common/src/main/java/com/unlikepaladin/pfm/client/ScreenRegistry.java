@@ -5,12 +5,12 @@ import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.chat.Component;
 
 public class ScreenRegistry {
     public static void registerScreens() {
@@ -29,17 +29,17 @@ public class ScreenRegistry {
     }
 
     @ExpectPlatform
-    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> void registerScreen(ScreenHandlerType<T> screenType, TriFunc<T, PlayerInventory, Text, J> factory) {
+    public static <T extends AbstractContainerMenu, J extends Screen & MenuAccess<T>> void registerScreen(MenuType<T> screenType, TriFunc<T, Inventory, Component, J> factory) {
         throw new RuntimeException();
     }
 
     @ExpectPlatform
-    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text, J> getStoveFactory() {
+    public static <T extends AbstractContainerMenu, J extends Screen & MenuAccess<T>> TriFunc<T, Inventory, Component, J> getStoveFactory() {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text, J> getOvenFactory() {
+    public static <T extends AbstractContainerMenu, J extends Screen & MenuAccess<T>> TriFunc<T, Inventory, Component, J> getOvenFactory() {
         throw new AssertionError();
     }
 }

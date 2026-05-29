@@ -1,34 +1,20 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
-import net.minecraft.client.texture.SpriteContents;
-import net.minecraft.client.texture.SpriteLoader;
-import net.minecraft.client.texture.SpriteOpener;
-import net.minecraft.client.texture.atlas.AtlasLoader;
-import net.minecraft.client.texture.atlas.AtlasSource;
-import net.minecraft.client.texture.atlas.SingleAtlasSource;
-import net.minecraft.client.texture.atlas.UnstitchAtlasSource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.SpriteLoader;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mixin(SpriteLoader.class)
@@ -41,11 +27,11 @@ public class PFMSpriteLoaderMixin {
         PFMSpriteRegistry.registerAdditionalSprites();
         List<SpriteContents> spritesCopy = new ArrayList<>(sprites);
 
-        Set<Identifier> ids = sprites.stream().map(SpriteContents::getId).collect(Collectors.toSet());
+        Set<ResourceLocation> ids = sprites.stream().map(SpriteContents::name).collect(Collectors.toSet());
         List<SpriteContents> matchingContents = sprites.stream()
             .filter(sc -> {
                 try {
-                    return PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.containsKey(sc.getId());
+                    return PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.containsKey(sc.name());
                 } catch (RuntimeException e) {
                     return false;
                 }
@@ -53,8 +39,8 @@ public class PFMSpriteLoaderMixin {
             .toList();
 
         for (SpriteContents sc : matchingContents) {
-            spritesCopy.addAll(PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.get(sc.getId()).apply(sc).stream()
-                    .filter(a -> !ids.contains(a.getLeft())).map(Pair::getRight).toList());
+            spritesCopy.addAll(PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.get(sc.name()).apply(sc).stream()
+                    .filter(a -> !ids.contains(a.getA())).map(Tuple::getB).toList());
         }
 
         spriteList.set(spritesCopy);

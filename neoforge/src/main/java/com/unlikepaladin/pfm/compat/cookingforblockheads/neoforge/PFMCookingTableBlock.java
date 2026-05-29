@@ -5,97 +5,97 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class PFMCookingTableBlock extends BlockWithEntity {
-    protected PFMCookingTableBlock(Settings arg) {
+public class PFMCookingTableBlock extends BaseEntityBlock {
+    protected PFMCookingTableBlock(Properties arg) {
         super(arg);
     }
 
-    MapCodec<PFMCookingTableBlock> CODEC = createCodec(PFMCookingTableBlock::new);
+    MapCodec<PFMCookingTableBlock> CODEC = simpleCodec(PFMCookingTableBlock::new);
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult blockHitResult) {
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult blockHitResult) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
-            if (player.isSneaking()) {
+            if (player.isShiftKeyDown()) {
                 ItemStack noFilterBook = cookingTable.getNoFilterBook();
                 if (!noFilterBook.isEmpty()) {
-                    if (!player.getInventory().insertStack(noFilterBook)) {
-                        player.dropItem(noFilterBook, false);
+                    if (!player.getInventory().add(noFilterBook)) {
+                        player.drop(noFilterBook, false);
                     }
 
                     cookingTable.setNoFilterBook(ItemStack.EMPTY);
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
-            if (!world.isClient()) {
+            if (!world.isClientSide()) {
                 Balm.getNetworking().openMenu(player, cookingTable);
             }
         }
 
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (!itemStack.isEmpty()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
                 if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
                     cookingTable.setNoFilterBook(itemStack.split(1));
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
         }
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
-
-    public void onStateReplaced(BlockState state, ServerWorld level, BlockPos pos, BlockState newState, boolean isMoving) {
+    @Override
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
         CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
-        if (tileEntity != null && !state.isOf(newState.getBlock())) {
-            ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
-        }
-        super.onStateReplaced(state, level, pos, isMoving);
+        ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new CookingTableBlockEntity(pos, state);
     }
 
-    private static final VoxelShape SHAPE = VoxelShapes.union(createCuboidShape(3, 0, 3, 13,1,13));
+    private static final VoxelShape SHAPE = Shapes.or(box(3, 0, 3, 13,1,13));
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

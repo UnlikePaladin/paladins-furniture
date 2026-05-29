@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.bed;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,64 +15,68 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
-public record UnbakedBedModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+public record UnbakedBedModel(Variant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedBedModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
-                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedBedModel::variant))
+                    instance.group(Variant.MAP_CODEC.forGetter(UnbakedBedModel::variant))
                             .apply(instance, UnbakedBedModel::new));
 
     public static final Codec<UnbakedBedModel> CODEC = MAP_CODEC.codec();
 
-    public static final Identifier[] BED_MODEL_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_foot_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_head_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/full/simple_bed"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_foot_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_head_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/full/classic_bed"),
+    public static final ResourceLocation[] BED_MODEL_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_foot_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_head_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/full/simple_bed"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_foot_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_head_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/full/classic_bed"),
     };
 
-    public static final Identifier BED_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed");
-    public static final List<Identifier> BED_MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation BED_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed");
+    public static final List<ResourceLocation> BED_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 int i = 0;
                 for (DyeColor dyeColor : DyeColor.values()) {
                     if (i > 15)
                         break;
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getId() + "_simple_bed"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + dyeColor.getName() + "_simple_bed"));
                     i++;
                 }
             }
@@ -80,7 +85,7 @@ public record UnbakedBedModel(ModelVariant variant) implements PFMUnbakedBlockSt
                 for (DyeColor dyeColor : DyeColor.values()) {
                     if (i > 15)
                         break;
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getId() + "_classic_bed"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + dyeColor.getName() + "_classic_bed"));
                     i++;
                 }
             }
@@ -88,11 +93,11 @@ public record UnbakedBedModel(ModelVariant variant) implements PFMUnbakedBlockSt
         }
     };
 
-    public static Pair<BlockModelPart, BlockModelPart> inventoryModels = new Pair<>(null,null);
+    public static Tuple<BlockModelPart, BlockModelPart> inventoryModels = new Tuple<>(null,null);
     @Override
-    public BlockStateModel bake(Baker baker){
-        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(BED_MODEL_PARTS_BASE[0]), baker.getModel(BED_MODEL_PARTS_BASE[0]).getTextures());
+    public BlockStateModel bake(ModelBaker baker){
+        ModelState settings = variant.modelState().asModelState();
+        ModelRenderProperties itemSettings = ModelRenderProperties.fromResolvedModel(baker, baker.getModel(BED_MODEL_PARTS_BASE[0]), baker.getModel(BED_MODEL_PARTS_BASE[0]).getTopTextureSlots());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(BED_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(BED_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(BED_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(BED_MODEL_ID).getCachedModelParts().get(settings));
@@ -101,14 +106,14 @@ public record UnbakedBedModel(ModelVariant variant) implements PFMUnbakedBlockSt
             PFMRuntimeResources.modelCacheMap.put(BED_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : BED_MODEL_PARTS_BASE) {
-            BlockModelPart model = GeometryBakedModel.create(baker, modelPart, settings);
+        for (ResourceLocation modelPart : BED_MODEL_PARTS_BASE) {
+            BlockModelPart model = SimpleModelWrapper.bake(baker, modelPart, settings);
             bakedModelList.add(model);
             if (modelPart.getPath().contains("full")) {
                 if (modelPart.getPath().contains("simple"))
-                    inventoryModels.setLeft(model);
+                    inventoryModels.setA(model);
                 else
-                    inventoryModels.setRight(model);
+                    inventoryModels.setB(model);
             }
         }
 
@@ -117,13 +122,13 @@ public record UnbakedBedModel(ModelVariant variant) implements PFMUnbakedBlockSt
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier model, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(ResourceLocation model, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : BED_MODEL_PARTS_BASE)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : BED_MODEL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

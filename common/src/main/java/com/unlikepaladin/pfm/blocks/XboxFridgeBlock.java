@@ -2,34 +2,29 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -38,95 +33,95 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class XboxFridgeBlock extends FridgeBlock
 {
-    public XboxFridgeBlock(Settings settings, Supplier<FreezerBlock> freezer) {
+    public XboxFridgeBlock(Properties settings, Supplier<FreezerBlock> freezer) {
         super(settings, freezer);
     }
-    public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(HALF);
     }
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient()) {
-            return ActionResult.SUCCESS;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide()) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld serverWorld && blockEntity instanceof FridgeBlockEntity) {
-            player.openHandledScreen((FridgeBlockEntity)blockEntity);
-            player.incrementStat(Statistics.FRIDGE_OPENED);
-            PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
+        if (world instanceof ServerLevel serverWorld && blockEntity instanceof FridgeBlockEntity) {
+            player.openMenu((FridgeBlockEntity)blockEntity);
+            player.awardStat(Statistics.FRIDGE_OPENED);
+            PiglinAi.angerNearbyPiglins(serverWorld, player, true);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos.up(), this.getDefaultState().with(FACING, placer.getHorizontalFacing()).with(HALF, DoubleBlockHalf.UPPER).with(OPEN,false), NOTIFY_ALL);
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        world.setBlock(pos.above(), this.defaultBlockState().setValue(FACING, placer.getDirection()).setValue(HALF, DoubleBlockHalf.UPPER).setValue(OPEN,false), UPDATE_ALL);
     }
 
     @Override
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient() && player.isCreative()) {
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (!world.isClientSide() && player.isCreative()) {
             this.onBreakInCreative(world, pos, state, player);
         }
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        DoubleBlockHalf doubleBlockHalf = state.get(HALF);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
-            if (neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf) {
-                return state.with(FACING, neighborState.get(FACING)).with(OPEN, neighborState.get(OPEN));
+            if (neighborState.is(this) && neighborState.getValue(HALF) != doubleBlockHalf) {
+                return state.setValue(FACING, neighborState.getValue(FACING)).setValue(OPEN, neighborState.getValue(OPEN));
             }
         }
         return state;
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockPos blockPos = pos.down();
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        BlockPos blockPos = pos.below();
         BlockState blockState = world.getBlockState(blockPos);
-        if (state.get(HALF) == DoubleBlockHalf.LOWER) {
-            return blockState.isSideSolidFullSquare(world, blockPos, Direction.UP);
+        if (state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            return blockState.isFaceSturdy(world, blockPos, Direction.UP);
         }
-        return blockState.isOf(this);
+        return blockState.is(this);
     }
 
     @Override
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        if (blockPos.getY() < world.getTopYInclusive() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing()).with(OPEN, false).with(HALF, DoubleBlockHalf.LOWER);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockPos blockPos = ctx.getClickedPos();
+        Level world = ctx.getLevel();
+        if (blockPos.getY() < world.getMaxY() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx)) {
+            return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection()).setValue(OPEN, false).setValue(HALF, DoubleBlockHalf.LOWER);
         }
         return null;
     }
 
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+    public void destroy(LevelAccessor world, BlockPos pos, BlockState state) {
         BlockPos blockPos;
-        BlockState blockState = world.getBlockState(blockPos = pos.down());
-        if (blockState.isOf(state.getBlock())) {
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
+        BlockState blockState = world.getBlockState(blockPos = pos.below());
+        if (blockState.is(state.getBlock())) {
+            BlockState blockState2 = blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+            world.setBlock(blockPos, blockState2, UPDATE_ALL | UPDATE_SUPPRESS_DROPS);
         }
-        blockState = world.getBlockState(blockPos = pos.up());
-        if (blockState.isOf(state.getBlock())) {
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
+        blockState = world.getBlockState(blockPos = pos.above());
+        if (blockState.is(state.getBlock())) {
+            BlockState blockState2 = blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+            world.setBlock(blockPos, blockState2, UPDATE_ALL | UPDATE_SUPPRESS_DROPS);
         }
-        super.onBroken(world, pos, state);
+        super.destroy(world, pos, state);
     }
 
-    protected static final VoxelShape XBOX_FRIDGE = VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 32, 16),createCuboidShape(1, 0, 2.84,15, 1, 15.84),createCuboidShape(0.51, 1, 1.91,15.31, 16, 2.91));
-    protected static final VoxelShape XBOX_FRIDGE_UPPER = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.51, 0, 1.91,15.31, 16, 2.91));
-    protected static final VoxelShape XBOX_FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 32, 16),createCuboidShape(1, 0, 2.84,15, 1, 15.84),createCuboidShape(0.5, 16, -11.69,1.5, 32, 3.11));
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.5, 0, -11.69,1.5, 16, 3.11));
+    protected static final VoxelShape XBOX_FRIDGE = Shapes.or(box(0.5, 1, 3,15.5, 32, 16),box(1, 0, 2.84,15, 1, 15.84),box(0.51, 1, 1.91,15.31, 16, 2.91));
+    protected static final VoxelShape XBOX_FRIDGE_UPPER = Shapes.or(box(0.5, -15, 3,15.5, 16, 16),box(1, -16, 2.84,15, -15, 15.84),box(0.51, 0, 1.91,15.31, 16, 2.91));
+    protected static final VoxelShape XBOX_FRIDGE_OPEN = Shapes.or(box(0.5, 1, 3,15.5, 32, 16),box(1, 0, 2.84,15, 1, 15.84),box(0.5, 16, -11.69,1.5, 32, 3.11));
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN = Shapes.or(box(0.5, -15, 3,15.5, 16, 16),box(1, -16, 2.84,15, -15, 15.84),box(0.5, 0, -11.69,1.5, 16, 3.11));
 
     protected static final VoxelShape XBOX_FRIDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE);
     protected static final VoxelShape XBOX_FRIDGE_UPPER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER);
@@ -142,10 +137,10 @@ public class XboxFridgeBlock extends FridgeBlock
     protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER_OPEN);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        Boolean open = state.get(OPEN);
-        Enum<DoubleBlockHalf> half = state.get(HALF);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
+        Boolean open = state.getValue(OPEN);
+        Enum<DoubleBlockHalf> half = state.getValue(HALF);
 
         switch (dir) {
             case NORTH:

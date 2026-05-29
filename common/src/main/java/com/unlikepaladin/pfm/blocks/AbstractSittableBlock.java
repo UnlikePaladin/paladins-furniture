@@ -5,33 +5,30 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.NoteBlockInstrument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCollisionHandler;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,32 +36,32 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractSittableBlock extends HorizontalFacingBlock implements CustomItemBlockState{
+public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock implements CustomItemBlockState {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     public static Map<Class<? extends Block>, MapCodec<AbstractSittableBlock>> CODECS = new HashMap<>();
 
-    public AbstractSittableBlock(Settings settings) {
-        super(settings.luminance((state) -> {return 0;}).emissiveLighting((blockstate, b, c) -> {return false;}));
-        this.baseBlockState = this.getDefaultState();
+    public AbstractSittableBlock(Properties settings) {
+        super(settings.lightLevel((state) -> {return 0;}).emissiveRendering((blockstate, b, c) -> {return false;}));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
 
         this.height = 0.7f;
         if (!CODECS.containsKey(this)) {
-            CODECS.put(this.getClass(), createCodec(settings1 -> getChairConstructor().apply(settings1)));
+            CODECS.put(this.getClass(), simpleCodec(settings1 -> getChairConstructor().apply(settings1)));
         }
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getHorizontalPlayerFacing() : ctx.getHorizontalPlayerFacing().getOpposite();
-            return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getHorizontalDirection() : ctx.getHorizontalDirection().getOpposite();
+            return this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, facing);
     }
 
     @Override
@@ -73,53 +70,53 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (state.contains(Properties.WATERLOGGED)) {
-            if (state.get(Properties.WATERLOGGED))
-                tickView.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
+            if (state.getValue(BlockStateProperties.WATERLOGGED))
+                scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
-        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     public float height;
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient()) {
-            return ActionResult.CONSUME;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide()) {
+            return InteractionResult.CONSUME;
         }
 
-        if (player.isSpectator() || player.isSneaking()) {
-            return ActionResult.FAIL;
+        if (player.isSpectator() || player.isShiftKeyDown()) {
+            return InteractionResult.FAIL;
         }
 
-        List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
+        List<ChairEntity> active = world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::isVehicle);
         if (active == null)
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
 
         List<Entity> hasPassenger = new ArrayList<>();
         active.forEach(chairEntity -> hasPassenger.add(chairEntity.getFirstPassenger()));
-        if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isPlayer)) {
-            return ActionResult.FAIL;
+        if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isAlwaysTicking)) {
+            return InteractionResult.FAIL;
         }
         else if (!active.isEmpty()) {
             hasPassenger.forEach(Entity::stopRiding);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        else if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
+        else if (sitEntity(world, pos, state, player) == InteractionResult.SUCCESS) {
             if (!(state.getBlock() instanceof BasicToiletBlock))
-                player.incrementStat(Statistics.CHAIR_USED);
-            return ActionResult.SUCCESS;
+                player.awardStat(Statistics.CHAIR_USED);
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
 
-    public ActionResult sitEntity(World world, BlockPos pos, BlockState state, Entity entityToSit) {
+    public InteractionResult sitEntity(Level world, BlockPos pos, BlockState state, Entity entityToSit) {
         double px;
         double pz;
         if (state.getBlock() instanceof BasicChairBlock) {
-            Direction direction = state.get(FACING);
-            if (state.get(BasicChairBlock.TUCKED)) {
+            Direction direction = state.getValue(FACING);
+            if (state.getValue(BasicChairBlock.TUCKED)) {
                 switch (direction) {
                     case EAST -> {
                         px = pos.getX() + 0.1;
@@ -149,39 +146,39 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
             pz = pos.getZ() + 0.5;
         }
         double py = pos.getY() + this.height;
-        float yaw = state.get(FACING).getOpposite().getPositiveHorizontalDegrees();
-        ChairEntity chairEntity = Entities.CHAIR.create(world, SpawnReason.TRIGGERED);
-        chairEntity.refreshPositionAndAngles(px, py, pz, yaw, 0);
+        float yaw = state.getValue(FACING).getOpposite().toYRot();
+        ChairEntity chairEntity = Entities.CHAIR.create(world, EntitySpawnReason.TRIGGERED);
+        chairEntity.snapTo(px, py, pz, yaw, 0);
         chairEntity.setNoGravity(true);
         chairEntity.setSilent(true);
         chairEntity.setInvisible(false);
         chairEntity.setInvulnerable(true);
-        chairEntity.setAiDisabled(true);
-        chairEntity.setNoDrag(true);
-        chairEntity.setHeadYaw(yaw);
-        chairEntity.setYaw(yaw);
-        chairEntity.setBodyYaw(yaw);
-        if (world.spawnEntity(chairEntity)) {
+        chairEntity.setNoAi(true);
+        chairEntity.setDiscardFriction(true);
+        chairEntity.setYHeadRot(yaw);
+        chairEntity.setYRot(yaw);
+        chairEntity.setYBodyRot(yaw);
+        if (world.addFreshEntity(chairEntity)) {
             entityToSit.startRiding(chairEntity, true, true);
-            entityToSit.setYaw(yaw);
-            entityToSit.setHeadYaw(yaw);
-            chairEntity.setYaw(yaw);
-            chairEntity.setBodyYaw(yaw);
-            chairEntity.setHeadYaw(yaw);
+            entityToSit.setYRot(yaw);
+            entityToSit.setYHeadRot(yaw);
+            chairEntity.setYRot(yaw);
+            chairEntity.setYBodyRot(yaw);
+            chairEntity.setYHeadRot(yaw);
 
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
-        super.onEntityCollision(state, world, pos, entity, handler, bl);
-        List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
+    protected void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier handler, boolean bl) {
+        super.entityInside(state, world, pos, entity, handler, bl);
+        List<ChairEntity> active = world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::isVehicle);
         if (active == null || !active.isEmpty())
             return;
 
-        if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity) || entity instanceof ChairEntity) {
+        if (entity instanceof Player || entity instanceof IronGolem || entity instanceof AbstractMinecart || entity.isPassenger() || !(entity instanceof LivingEntity) || entity instanceof ChairEntity) {
             return;
         }
         if (!PaladinFurnitureMod.getPFMConfig().doMobsSitOnChairs())
@@ -190,7 +187,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
         sitEntity(world, pos, state, entity);
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (isWoodBased(state)) {
             return 20;
         }
@@ -198,27 +195,27 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     public static boolean isWoodBased(BlockState state) {
-        NoteBlockInstrument instrument = state.getInstrument();
-        BlockSoundGroup soundGroup = state.getSoundGroup();
-        return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == NoteBlockInstrument.BASS;
+        NoteBlockInstrument instrument = state.instrument();
+        SoundType soundGroup = state.getSoundType();
+        return soundGroup == SoundType.BAMBOO_WOOD || soundGroup == SoundType.WOOL || soundGroup == SoundType.CHERRY_WOOD || soundGroup == SoundType.WOOD || soundGroup == SoundType.NETHER_WOOD || instrument == NoteBlockInstrument.BASS;
     }
 
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODECS.get(this.getClass());
     }
 
-    public abstract Function<Settings, AbstractSittableBlock> getChairConstructor();
+    public abstract Function<Properties, AbstractSittableBlock> getChairConstructor();
 
     @Override
     public BlockState getItemBlockState() {
-        return getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.WEST);
+        return defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST);
     }
 }
 

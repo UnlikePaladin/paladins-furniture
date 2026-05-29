@@ -1,40 +1,40 @@
 package com.unlikepaladin.pfm.entity.render;
 
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
-import net.minecraft.client.render.command.ModelCommandRenderer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.item.ItemRenderState;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.state.CameraRenderState;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T, MicrowaveBlockEntityRenderer.MicrowaveBlockEntityRenderState> {
 
-    private final ItemModelManager itemModelManager;
-    public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        itemModelManager = ctx.itemModelManager();
+    private final ItemModelResolver itemModelManager;
+    public MicrowaveBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+        itemModelManager = ctx.itemModelResolver();
     }
 
     @Override
-    public void render(MicrowaveBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+    public void submit(MicrowaveBlockEntityRenderState state, PoseStack matrices, SubmitNodeCollector queue, CameraRenderState cameraState) {
         if (state != null) {
-            matrices.push();
+            matrices.pushPose();
 
             Direction facing = state.facing;
             float x,y,z;
@@ -62,13 +62,13 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
                 default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
             matrices.translate(x, y ,z);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.getPositiveHorizontalDegrees()));
-            if (state.isActive && state.recipePropertySet.canUse(state.itemStack)) {
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(state.rotationFactor));
+            matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+            if (state.isActive && state.recipePropertySet.test(state.itemStack)) {
+                matrices.mulPose(Axis.YP.rotationDegrees((state.rotationFactor)));
             }
             matrices.scale(0.5f, 0.5f, 0.5f);
-            state.state0.render(matrices, queue, state.lightAbove, OverlayTexture.DEFAULT_UV, 0);
-            matrices.pop();
+            state.state0.submit(matrices, queue, state.lightAbove, OverlayTexture.NO_OVERLAY, 0);
+            matrices.popPose();
         }
     }
 
@@ -78,23 +78,23 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
     }
 
     @Override
-    public void updateRenderState(T blockEntity, MicrowaveBlockEntityRenderState state, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
-        BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
-        state.blockState = blockEntity.getCachedState();
-        ItemStack itemStack = blockEntity.getStack(0);
-        state.state0 = new ItemRenderState();
-        this.itemModelManager.clearAndUpdate(state.state0, itemStack, ItemDisplayContext.GROUND, blockEntity.getWorld(), null, 0);
-        state.recipePropertySet = blockEntity.getWorld().getRecipeManager().getPropertySet(RecipePropertySet.SMOKER_INPUT);
-        state.lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
+    public void extractRenderState(T blockEntity, MicrowaveBlockEntityRenderState state, float tickProgress, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.blockState = blockEntity.getBlockState();
+        ItemStack itemStack = blockEntity.getItem(0);
+        state.state0 = new ItemStackRenderState();
+        this.itemModelManager.updateForTopItem(state.state0, itemStack, ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
+        state.recipePropertySet = blockEntity.getLevel().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
+        state.lightAbove = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above());
         state.facing = blockEntity.getFacing();
         state.isActive = blockEntity.isActive;
         state.itemStack = itemStack;
-        state.rotationFactor = blockEntity.getWorld().getTime() * 4f;
+        state.rotationFactor = blockEntity.getLevel().getGameTime() * 4f;
     }
 
     public static class MicrowaveBlockEntityRenderState extends BlockEntityRenderState {
         public BlockState blockState;
-        ItemRenderState state0;
+        ItemStackRenderState state0;
         private RecipePropertySet recipePropertySet;
         int lightAbove;
         Direction facing;

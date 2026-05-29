@@ -2,21 +2,14 @@ package com.unlikepaladin.pfm.recipes;
 
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.CookingRecipeCategory;
-import net.minecraft.recipe.book.RecipeBookCategories;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.resources.ResourceLocation;
 
 public class FreezingRecipe extends AbstractCookingRecipe {
 
-    public FreezingRecipe(String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
+    public FreezingRecipe(String group, CookingBookCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
         super(group, category, input, output, experience, cookTime);
     }
 
@@ -31,17 +24,17 @@ public class FreezingRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    public RecipeBookCategory getRecipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return RecipeBookCategories.FURNACE_MISC;
     }
 
     @Override
-    protected Item getCookerItem() {
+    protected Item furnaceIcon() {
         return PaladinFurnitureModBlocksItems.WHITE_FREEZER.asItem();
     }
 
     @Override
-    public boolean isIgnoredInRecipeBook() {
+    public boolean isSpecial() {
         return true;
     }
 }

@@ -2,13 +2,13 @@ package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.ResourceLocation;
 
 public class PaladinFurnitureModClient {
-    public static KeyBinding USE_TOILET_KEYBIND;
+    public static KeyMapping USE_TOILET_KEYBIND;
 
-    public static final KeyBinding.Category PFM_CATEGORY = KeyBinding.Category.create(Identifier.of(PaladinFurnitureMod.MOD_ID, "main"));
+    public static final KeyMapping.Category PFM_CATEGORY = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "main"));
 
 
     @ExpectPlatform

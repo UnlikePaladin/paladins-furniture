@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.client.model;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 
 public interface PFMModelVariantExtension {
-    Optional<Identifier> pfm$getCustomType();
+    Optional<ResourceLocation> pfm$getCustomType();
 
-    void pfm$setCustomType(Identifier customType);
+    void pfm$setCustomType(ResourceLocation customType);
 }

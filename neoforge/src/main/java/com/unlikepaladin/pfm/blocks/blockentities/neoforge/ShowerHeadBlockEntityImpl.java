@@ -1,14 +1,15 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.core.BlockPos;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
@@ -18,22 +19,22 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return super.saveInitialChunkData(new NbtCompound(), registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return this.saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, ReadView valueInput) {
-        super.onDataPacket(net, valueInput);
-        this.isOpen = valueInput.getBoolean("isOpen", false);
+    public void onDataPacket(Connection net, ValueInput view) {
+        super.onDataPacket(net, view);
+        this.isOpen = view.getBooleanOr("isOpen", false);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends ShowerHeadBlockEntity> getFactory() {
         return ShowerHeadBlockEntityImpl::new;
     }
 }

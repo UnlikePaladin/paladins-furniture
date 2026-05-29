@@ -8,40 +8,38 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
-import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.recipe.SmokingRecipe;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,23 +49,23 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.ClassicChairBlock.rotateShape;
 
 public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements DynamicRenderLayerInterface {
-    public static final BooleanProperty OPEN = Properties.OPEN;
-    public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
-    public static final MapCodec<MicrowaveBlock> CODEC = createCodec(MicrowaveBlock::new);
+    public static final MapCodec<MicrowaveBlock> CODEC = simpleCodec(MicrowaveBlock::new);
 
-    public MicrowaveBlock(Settings settings) {
+    public MicrowaveBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(FACING, Direction.NORTH));
-        this.baseBlockState = this.getDefaultState();
+        registerDefaultState(this.getStateDefinition().any().setValue(OPEN, false).setValue(FACING, Direction.NORTH));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         MICROWAVES.add(new FurnitureBlock(this, "microwave"));
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
@@ -75,38 +73,38 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         return MICROWAVES.stream();
     }
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(POWERED);
     }
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient()) {
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!world.isClientSide()) {
             openScreen(player, state, world, pos);
-            player.incrementStat(Statistics.MICROWAVE_USED);
-            PiglinBrain.onGuardedBlockInteracted((ServerWorld) world,player, true);
+            player.awardStat(Statistics.MICROWAVE_USED);
+            PiglinAi.angerNearbyPiglins((ServerLevel) world,player, true);
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @ExpectPlatform
-    public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
+    public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
         return;
     }
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean hasSidedTransparency(BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
 
@@ -117,50 +115,50 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof Inventory) {
-            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateComparators(pos, this);
+        if (blockEntity instanceof Container) {
+            Containers.dropContents(world, pos, (Container) blockEntity);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, moved);
+        super.affectNeighborsAfterRemoval(state, world, pos, moved);
     }
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return checkType(world, type, BlockEntities.MICROWAVE_BLOCK_ENTITY);
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
-        if (!world.isClient()) {
-            ServerRecipeManager.MatchGetter<SingleStackRecipeInput, SmokingRecipe> cachedcheck = ServerRecipeManager.createCachedMatchGetter(
+    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(Level world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
+        if (!world.isClientSide()) {
+            RecipeManager.CachedCheck<SingleRecipeInput, SmokingRecipe> cachedcheck = RecipeManager.createCheck(
                     RecipeType.SMOKING
             );
-            return validateTicker(givenType, expectedType, (worldx, pos, statex, blockEntity) -> MicrowaveBlockEntity.tick(worldx, pos, statex, blockEntity, cachedcheck));
+            return createTickerHelper(givenType, expectedType, (worldx, pos, statex, blockEntity) -> MicrowaveBlockEntity.tick(worldx, pos, statex, blockEntity, cachedcheck));
         }
         return null;
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
-    private final VoxelShape MICROWAVE = VoxelShapes.union(createCuboidShape(1, 0, 4,15, 8, 14));
+    private final VoxelShape MICROWAVE = Shapes.or(box(1, 0, 4,15, 8, 14));
 
     private final VoxelShape MICROWAVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
     private final VoxelShape MICROWAVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
     private final VoxelShape MICROWAVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(FACING);
         switch (direction) {
             case SOUTH -> {
                 return MICROWAVE_SOUTH;
@@ -178,13 +176,13 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public BlockRenderLayer getCustomRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+    public ChunkSectionLayer getCustomRenderLayer() {
+        return ChunkSectionLayer.TRANSLUCENT;
     }
 }

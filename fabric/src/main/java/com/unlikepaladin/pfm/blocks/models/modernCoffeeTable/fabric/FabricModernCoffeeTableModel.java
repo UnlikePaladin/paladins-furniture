@@ -3,33 +3,34 @@ package com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.fabric;
 import com.unlikepaladin.pfm.blocks.ModernCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricModernCoffeeTableModel extends PFMFabricBakedModel {
-    public FabricModernCoffeeTableModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelList) {
+    public FabricModernCoffeeTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelList) {
         super(settings, modelSettings, modelList);
     }
 
     @Override
-    public void emitQuads(QuadEmitter context, BlockRenderView world, BlockPos pos, BlockState state, Random randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitQuads(QuadEmitter context, BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource randomSupplier, Predicate<@Nullable Direction> cullTest) {
         if (state.getBlock() instanceof ModernCoffeeTableBlock) {
             ModernCoffeeTableBlock block = (ModernCoffeeTableBlock) state.getBlock();
-            Direction.Axis dir = state.get(ModernCoffeeTableBlock.AXIS);
+            Direction.Axis dir = state.getValue(ModernCoffeeTableBlock.AXIS);
             boolean left = block.isTable(world, pos, dir, -1);
             boolean right = block.isTable(world, pos, dir, 1);
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, spriteList.get(0));
             getTemplateBakedModels().get((0)).emitQuads(context, cullTest);
             context.popTransform();
@@ -52,7 +53,7 @@ public class FabricModernCoffeeTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(QuadEmitter context, Random randomSupplier) {
+    public void emitItemQuads(QuadEmitter context, RandomSource randomSupplier) {
         if (blockState == null) return;
         Predicate<Direction> anyPredicate = d -> false;
         pushTextureTransform(context, getSpriteList(blockState).get(0));
@@ -67,7 +68,7 @@ public class FabricModernCoffeeTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

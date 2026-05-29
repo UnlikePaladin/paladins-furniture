@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.stream.JsonWriter;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
@@ -12,25 +11,25 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.data.DataWriter;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.loot.*;
-import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
-import net.minecraft.loot.condition.LootConditionConsumingBuilder;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.CopyComponentsLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.predicate.StatePredicate;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.context.ContextType;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.context.ContextKeySet;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.ConditionUserBuilder;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.resources.ResourceLocation;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -39,8 +38,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+
 public class PFMLootTableProvider extends PFMProvider {
-    private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, ContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
+    private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, ContextKeySet>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextParamSets.BLOCK));
 
     public PFMLootTableProvider(PFMGenerator parent) {
         super(parent, "PFM Drops");
@@ -53,13 +53,13 @@ public class PFMLootTableProvider extends PFMProvider {
         createWriter();
 
         Path path = getParent().getOutput();
-        Set<Identifier> identifiers = new HashSet<>();
+        Set<ResourceLocation> identifiers = new HashSet<>();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (!identifiers.add(identifier)) {
                 throw new IllegalStateException("Duplicate loot table " + identifier);
             } else {
-                Path path2 = getOutput(path, identifier);
-                String string = PFMDataGenerator.GSON.toJson(LootTable.CODEC.encodeStart(JsonOps.INSTANCE, builder.build()).getOrThrow((error) -> {
+                Path path2 = getResultItem(path, identifier);
+                String string = PFMDataGenerator.GSON.toJson(LootTable.DIRECT_CODEC.encodeStart(JsonOps.INSTANCE, builder.build()).getOrThrow((error) -> {
                     getParent().getLogger().warn("Failed to parse Loot table: {}", error);
                     return null;
                 }));
@@ -75,26 +75,26 @@ public class PFMLootTableProvider extends PFMProvider {
         return "PFM Loot Tables";
     }
 
-    private static Path getOutput(Path rootOutput, Identifier lootTableId) {
+    private static Path getResultItem(Path rootOutput, ResourceLocation lootTableId) {
         return rootOutput.resolve("data/" + lootTableId.getNamespace() + "/loot_table/" + lootTableId.getPath() + ".json");
     }
 
     private static LootTable.Builder lampDrop(Block drop) {
-        return LootTable.builder()
-                .pool(
-                        LootPool.builder()
-                                .rolls(ConstantLootNumberProvider.create(1.0F))
-                                .with(
-                                        ItemEntry.builder(drop)
-                                                .apply(CopyComponentsLootFunction.blockEntity(LootContextParameters.BLOCK_ENTITY).include(PFMComponents.VARIANT_COMPONENT).include(PFMComponents.COLOR_COMPONENT))
+        return LootTable.lootTable()
+                .withPool(
+                        LootPool.lootPool()
+                                .setBonusRolls(ConstantValue.exactly(1.0F))
+                                .add(
+                                        LootItem.lootTableItem(drop)
+                                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY).include(PFMComponents.VARIANT_COMPONENT).include(PFMComponents.COLOR_COMPONENT))
                                 )
                 );
     }
 
-    static class PFMLootTableGenerator implements Consumer<BiConsumer<Identifier, LootTable.Builder>> {
-        private final Map<Identifier, LootTable.Builder> lootTables = Maps.newHashMap();
+    static class PFMLootTableGenerator implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+        private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
         private final List<Block> pfmBlocks = new ArrayList<>();
-        public void accept(BiConsumer<Identifier, LootTable.Builder> biConsumer) {
+        public void accept(BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
             List<Block> blocks = PaladinFurnitureModBlocksItems.BLOCKS;
             blocks.forEach(this::addDrop);
             Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
@@ -102,15 +102,15 @@ public class PFMLootTableProvider extends PFMProvider {
             BasicBathtubBlock.basicBathtubBlockStream().forEach(basicBathtubBlock -> this.addDrop(basicBathtubBlock, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
             this.addDrop(PaladinFurnitureModBlocksItems.BASIC_LAMP, PFMLootTableProvider::lampDrop);
 
-            HashSet<Identifier> set = Sets.newHashSet();
+            HashSet<ResourceLocation> set = Sets.newHashSet();
             for (Block block : pfmBlocks) {
-                if (block.getLootTableKey().isEmpty()) continue;
+                if (block.getLootTable().isEmpty()) continue;
 
-                Identifier identifier = block.getLootTableKey().get().getValue();
+                ResourceLocation identifier = block.getLootTable().get().location();
                 if (!set.add(identifier)) continue;
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
-                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, Registries.BLOCK.getId(block)));
+                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, BuiltInRegistries.BLOCK.getKey(block)));
                 }
                 biConsumer.accept(identifier, builder5);
             }
@@ -127,8 +127,8 @@ public class PFMLootTableProvider extends PFMProvider {
             this.addDrop(block, drops(drop));
         }
 
-        public LootTable.Builder drops(ItemConvertible drop) {
-            return LootTable.builder().pool(this.addSurvivesExplosionCondition(drop, LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(drop))));
+        public LootTable.Builder drops(ItemLike drop) {
+            return LootTable.lootTable().withPool(this.addSurvivesExplosionCondition(drop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(drop))));
         }
 
         public void addDrop(Block block) {
@@ -136,16 +136,16 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public final void addDrop(Block block, LootTable.Builder lootTable) {
-            this.lootTables.put(block.getLootTableKey().get().getValue(), lootTable);
+            this.lootTables.put(block.getLootTable().get().location(), lootTable);
             this.pfmBlocks.add(block);
         }
 
-        public <T extends Comparable<T> & StringIdentifiable> LootTable.Builder dropsWithProperty(Block drop, Property<T> property, T value) {
-            return LootTable.builder().pool(this.addSurvivesExplosionCondition(drop, LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F)).with(ItemEntry.builder(drop).conditionally(BlockStatePropertyLootCondition.builder(drop).properties(StatePredicate.Builder.create().exactMatch(property, value))))));
+        public <T extends Comparable<T> & StringRepresentable> LootTable.Builder dropsWithProperty(Block drop, Property<T> property, T value) {
+            return LootTable.lootTable().withPool(this.addSurvivesExplosionCondition(drop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(drop).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(drop).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(property, value))))));
         }
 
-        protected <T extends LootConditionConsumingBuilder<T>> T addSurvivesExplosionCondition(ItemConvertible drop, LootConditionConsumingBuilder<T> builder) {
-            return builder.getThisConditionConsumingBuilder();
+        protected <T extends ConditionUserBuilder<T>> T addSurvivesExplosionCondition(ItemLike drop, ConditionUserBuilder<T> builder) {
+            return builder.unwrap();
         }
     }
 }

@@ -5,11 +5,11 @@ import com.unlikepaladin.pfm.client.forge.PFMExtraModelsForge;
 import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
 import com.unlikepaladin.pfm.ducks.forge.PFMBakedModelManagerExtensions;
 import com.unlikepaladin.pfm.ducks.forge.PFModelBakerBakedExtensions;
-import net.minecraft.client.item.ItemAssetsLoader;
-import net.minecraft.client.render.model.*;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceReloader;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,41 +25,40 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-@Mixin(BakedModelManager.class)
+@Mixin(ModelManager.class)
 public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerExtensions {
-
     @Shadow
-    public abstract BlockStateModel getMissingModel();
+    public abstract BlockStateModel getMissingBlockStateModel();
 
     @Unique
     @Nullable
-    private Map<Identifier, BlockStateModel> pfm$extraModels;
+    private Map<ResourceLocation, BlockStateModel> pfm$extraModels;
 
-    @Inject(method = "collect", at = @At(value = "INVOKE", target = "net/minecraft/client/render/model/ReferencedModelsCollector.collectModels()Ljava/util/Map;"))
+    @Inject(method = "discoverModelDependencies", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelDiscovery;resolve()Ljava/util/Map;"))
     private static void resolveExtraModels(
-            Map<Identifier, UnbakedModel> modelMap, BlockStatesLoader.LoadedModels stateDefinition, ItemAssetsLoader.Result result, CallbackInfoReturnable<?> cir,
-            @Local ReferencedModelsCollector collector
+            Map<ResourceLocation, UnbakedModel> modelMap, BlockStateModelLoader.LoadedModels stateDefinition, ClientItemInfoLoader.LoadedClientInfos result, CallbackInfoReturnable<?> cir,
+            @Local ModelDiscovery collector
     ) {
-        PFMExtraModelsForge.unbakedModels.forEach((id, block) -> collector.resolve(block));
+        PFMExtraModelsForge.unbakedModels.forEach((id, block) -> collector.addRoot(block));
     }
 
     @Inject(method = "reload", at = @At("HEAD"))
-    private void onHeadReload(ResourceReloader.Store arg, Executor executor, ResourceReloader.Synchronizer arg2, Executor executor2, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        List<Identifier> ids = new ArrayList<>();
+    private void onHeadReload(PreparableReloadListener.SharedState arg, Executor executor, PreparableReloadListener.PreparationBarrier arg2, Executor executor2, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
+        List<ResourceLocation> ids = new ArrayList<>();
         PaladinFurnitureModClientForge.registerExtraModels(ids::add);
         PFMExtraModelsForge.registerExtraModels(ids);
     }
 
-    @Inject(method = "upload", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;setModels(Ljava/util/Map;)V", ordinal = 0))
-    private void onUpload(CallbackInfo ci, @Local ModelBaker.BakedModels bakedModels) {
+    @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;setModels(Ljava/util/Map;)V", ordinal = 0))
+    private void onUpload(CallbackInfo ci, @Local ModelBakery.BakingResult bakedModels) {
         pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) bakedModels).pfm_getExtraModels();
     }
 
     @Override
-    public BlockStateModel pfm_getModel(Identifier id) {
+    public BlockStateModel pfm_getModel(ResourceLocation id) {
         if (pfm$extraModels == null) {
-            return getMissingModel();
+            return getMissingBlockStateModel();
         }
-        return pfm$extraModels.getOrDefault(id, getMissingModel());
+        return pfm$extraModels.getOrDefault(id, getMissingBlockStateModel());
     }
 }
