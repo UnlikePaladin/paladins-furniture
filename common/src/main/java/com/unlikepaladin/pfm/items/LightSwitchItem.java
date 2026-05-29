@@ -133,7 +133,7 @@ public class LightSwitchItem extends BlockItem {
 
     private static void createComponents(ItemStack stack)
     {
-        if(stack.has(PFMComponents.ACTIVATOR_COMPONENT))
+        if(!stack.has(PFMComponents.ACTIVATOR_COMPONENT))
         {
             stack.set(PFMComponents.ACTIVATOR_COMPONENT, new ArrayList<>());
         }
