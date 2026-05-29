@@ -45,8 +45,6 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     @Override
     public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
-        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(valueInput, this.inventory);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends TrashcanBlockEntity> getFactory() {

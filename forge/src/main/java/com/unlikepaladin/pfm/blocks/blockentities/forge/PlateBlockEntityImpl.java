@@ -39,8 +39,6 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     @Override
     public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, data, registryLookup);
-        this.itemInPlate.clear();
-        ContainerHelper.loadAllItems(data, this.itemInPlate);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {

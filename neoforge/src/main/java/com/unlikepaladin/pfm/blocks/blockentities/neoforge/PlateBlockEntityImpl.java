@@ -38,8 +38,6 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     @Override
     public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
-        this.itemInPlate.clear();
-        ContainerHelper.loadAllItems(valueInput, this.itemInPlate);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {

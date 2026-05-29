@@ -51,9 +51,6 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     @Override
     public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
         super.onDataPacket(connection, data, lookup);
-        this.container = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        this.isActive = data.getBooleanOr("isActive", false);
-        ContainerHelper.loadAllItems(data, this.container);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends MicrowaveBlockEntity> getFactory() {

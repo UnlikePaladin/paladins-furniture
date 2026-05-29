@@ -46,8 +46,6 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
 
     @Override
     public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
-        this.itemsBeingCooked.clear();
-        ContainerHelper.loadAllItems(data, this.itemsBeingCooked);
         super.onDataPacket(connection, data, lookup);
     }
 

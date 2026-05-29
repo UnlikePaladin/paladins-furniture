@@ -37,7 +37,6 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     @Override
     public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider lookup) {
         super.onDataPacket(net, data, lookup);
-        this.isOpen = data.getBooleanOr("isOpen", false);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends ShowerHeadBlockEntity> getFactory() {

@@ -45,7 +45,5 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     @Override
     public void onDataPacket(Connection net, ValueInput valueInput) {
         super.onDataPacket(net, valueInput);
-        this.color = DyeColor.byName(valueInput.getStringOr("color", "white"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(valueInput.getStringOr("variant", "minecraft:oak")));
     }
 }

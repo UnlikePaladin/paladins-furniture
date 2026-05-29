@@ -50,7 +50,5 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     @Override
     public void onDataPacket(Connection net, ValueInput data, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, data, registryLookup);
-        this.getItems().clear();
-        ContainerHelper.loadAllItems(data, this.items);
     }
 }
