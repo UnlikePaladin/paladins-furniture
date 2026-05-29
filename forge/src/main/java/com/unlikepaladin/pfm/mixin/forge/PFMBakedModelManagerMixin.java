@@ -49,7 +49,7 @@ public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerE
         PFMExtraModelsForge.registerExtraModels(ids);
     }
 
-    @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;setModels(Ljava/util/Map;)V", ordinal = 0))
+    @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelShaper;replaceCache(Ljava/util/Map;)V", ordinal = 0))
     private void onUpload(CallbackInfo ci, @Local ModelBakery.BakingResult bakedModels) {
         pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) bakedModels).pfm_getExtraModels();
     }
