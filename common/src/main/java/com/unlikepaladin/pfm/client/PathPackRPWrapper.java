@@ -6,7 +6,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +37,7 @@ public class PathPackRPWrapper implements PackResources {
     }
 
     @Override
-    public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
+    public IoSupplier<InputStream> getResource(PackType type, Identifier id) {
         if (PFMRuntimeResources.ready)
             return delegate.get().getResource(type, id);
         return () -> null;

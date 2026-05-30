@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +60,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
     ItemStack getResult(HolderLookup.Provider registryManager);
 
-    default List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(Level world, ResourceLocation identifier) {
+    default List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(Level world, Identifier identifier) {
         return Collections.singletonList(getInnerRecipes(world.enabledFeatures()).getFirst());
     }
 

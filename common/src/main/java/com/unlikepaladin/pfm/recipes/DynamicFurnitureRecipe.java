@@ -28,7 +28,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -36,20 +36,20 @@ import java.util.*;
 public class DynamicFurnitureRecipe implements FurnitureRecipe {
     private final String group;
     private final FurnitureOutput furnitureOutput;
-    private final List<ResourceLocation> supportedVariants;
+    private final List<Identifier> supportedVariants;
     private final FurnitureIngredients ingredients;
-    public DynamicFurnitureRecipe(String group, FurnitureOutput furnitureOutput, List<ResourceLocation> supportedVariants, FurnitureIngredients furnitureIngredients) {
+    public DynamicFurnitureRecipe(String group, FurnitureOutput furnitureOutput, List<Identifier> supportedVariants, FurnitureIngredients furnitureIngredients) {
         this.group = group;
         this.furnitureOutput = furnitureOutput;
         this.supportedVariants = supportedVariants;
         this.ingredients = furnitureIngredients;
     }
 
-    Map<ResourceLocation, List<FurnitureInnerRecipe>> furnitureInnerRecipes = Maps.newHashMap();
+    Map<Identifier, List<FurnitureInnerRecipe>> furnitureInnerRecipes = Maps.newHashMap();
     public void constructInnerRecipes() {
         if (!furnitureInnerRecipes.isEmpty()) return;
 
-        for (ResourceLocation id : supportedVariants) {
+        for (Identifier id : supportedVariants) {
             VariantBase<?> variant = VariantHelper.getVariant(id);
             if (variant == null || furnitureInnerRecipes.containsKey(id)) continue;
             Optional<Block> optionalOutput;
@@ -134,7 +134,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     @Override
     public boolean matches(FurnitureRecipe.FurnitureRecipeInput inventory, Level level) {
         constructInnerRecipes();
-        for (ResourceLocation id : furnitureInnerRecipes.keySet()) {
+        for (Identifier id : furnitureInnerRecipes.keySet()) {
             List<FurnitureInnerRecipe> recipes = furnitureInnerRecipes.get(id);
             for (FurnitureInnerRecipe recipe : recipes) {
                 if (recipe.isInnerEnabled(level.enabledFeatures()) && recipe.matches(inventory, level))
@@ -149,7 +149,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         constructInnerRecipes();
         Inventory inventory = input.playerInventory();
         List<CraftableFurnitureRecipe> stacks = Lists.newArrayList();
-        for (ResourceLocation id : furnitureInnerRecipes.keySet()) {
+        for (Identifier id : furnitureInnerRecipes.keySet()) {
             List<FurnitureInnerRecipe> recipes = furnitureInnerRecipes.get(id);
             for (FurnitureInnerRecipe recipe : recipes) {
                 if (recipe.isInnerEnabled(inventory.player.level().enabledFeatures()) && recipe.matches(input, inventory.player.level()))
@@ -212,7 +212,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         return FurnitureOutput.getOutputBlockClass(furnitureOutput.outputClass);
     }
 
-    public List<ResourceLocation> getSupportedVariants() {
+    public List<Identifier> getSupportedVariants() {
         return supportedVariants;
     }
 
@@ -227,7 +227,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(Level level, ResourceLocation identifier){
+    public List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(Level level, Identifier identifier){
         constructInnerRecipes();
         if (furnitureInnerRecipes.containsKey(identifier)) {
             return furnitureInnerRecipes.get(identifier);
@@ -465,7 +465,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         MapCodec<DynamicFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                 Codec.STRING.optionalFieldOf("group", "").forGetter(DynamicFurnitureRecipe::group),
                 FurnitureOutput.CODEC.fieldOf("result").forGetter(DynamicFurnitureRecipe::getOutput),
-                ResourceLocation.CODEC.listOf().fieldOf("supportedVariants").forGetter(DynamicFurnitureRecipe::getSupportedVariants),
+                Identifier.CODEC.listOf().fieldOf("supportedVariants").forGetter(DynamicFurnitureRecipe::getSupportedVariants),
                 FurnitureIngredients.CODEC.fieldOf("ingredients").forGetter(DynamicFurnitureRecipe::getInnerIngredients)
         ).apply(instance, DynamicFurnitureRecipe::new));
 
@@ -486,7 +486,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
         public static DynamicFurnitureRecipe read(RegistryFriendlyByteBuf buf) {
             String group = buf.readUtf();
-            List<ResourceLocation> supportedVariants = buf.readList(FriendlyByteBuf::readResourceLocation);
+            List<Identifier> supportedVariants = buf.readList(FriendlyByteBuf::readIdentifier);
             FurnitureIngredients ingredients = FurnitureIngredients.read(buf);
             FurnitureOutput output = FurnitureOutput.read(buf);
             return new DynamicFurnitureRecipe(group, output, supportedVariants, ingredients);
@@ -494,7 +494,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
         public static void write(RegistryFriendlyByteBuf buf, DynamicFurnitureRecipe recipe) {
             buf.writeUtf(recipe.group);
-            buf.writeCollection(recipe.supportedVariants, FriendlyByteBuf::writeResourceLocation);
+            buf.writeCollection(recipe.supportedVariants, FriendlyByteBuf::writeIdentifier);
             FurnitureIngredients.write(buf, recipe.ingredients);
             FurnitureOutput.write(buf, recipe.furnitureOutput);
         }

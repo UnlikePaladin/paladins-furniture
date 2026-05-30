@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,16 +46,16 @@ public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlock
         }
     };
 
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
 
-    public static final ResourceLocation IRON_FRIDGE_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/iron_fridge");
-    public static final List<ResourceLocation> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
+    public static final Identifier IRON_FRIDGE_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/iron_fridge");
+    public static final List<Identifier> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
         add(IRON_FRIDGE_ID);
     }};
 
@@ -67,7 +67,7 @@ public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlock
 
         Map<String,BlockModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
-            bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
+            bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
         }
 
         return getBakedModel(settings, bakedModels, FRIDGE_MODEL_PARTS_BASE);
@@ -80,7 +80,7 @@ public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlock
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : ALL_MODEL_IDS)
+        for (Identifier c : ALL_MODEL_IDS)
             resolver.markDependency(c);
     }
 

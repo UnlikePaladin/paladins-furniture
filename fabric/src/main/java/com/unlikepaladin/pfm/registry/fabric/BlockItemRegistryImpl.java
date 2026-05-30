@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.util.LinkedHashSet;
@@ -26,7 +26,7 @@ public class BlockItemRegistryImpl {
 
     public static void registerItemPlatformSpecific(String itemName, Supplier<Item> itemSupplier, Tuple<String, CreativeModeTab> group) {
         Item item = itemSupplier.get();
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new LinkedHashSet<>());
         }
@@ -50,7 +50,7 @@ public class BlockItemRegistryImpl {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS)));
         }
-        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName),  block);
+        Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName),  block);
     }
 
     public static boolean isModLoaded(String modId) {

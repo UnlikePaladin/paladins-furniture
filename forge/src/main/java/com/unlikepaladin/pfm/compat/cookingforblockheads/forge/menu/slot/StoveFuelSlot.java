@@ -16,8 +16,6 @@ public class StoveFuelSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack itemStack) {
-     return true;
-     //TODO FIX AS SOON AS CFBH is updated
-        //   return OvenBlockEntity.isItemFuel(menu.getTileEntity().getLevel(), itemStack);
+       return OvenBlockEntity.isItemFuel(menu.getTileEntity().getLevel(), itemStack);
     }
 }

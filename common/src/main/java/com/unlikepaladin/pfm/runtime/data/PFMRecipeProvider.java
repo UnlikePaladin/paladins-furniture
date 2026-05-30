@@ -20,8 +20,8 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,10 +90,10 @@ public class PFMRecipeProvider extends PFMProvider {
                     getParent().getLogger().error("Recipe Json Provider is null");
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
-                Path recipePath = path.resolve("data/" + recipeId.location().getNamespace() + "/recipe/" + recipeId.location().getPath() + ".json");
+                Path recipePath = path.resolve("data/" + recipeId.identifier().getNamespace() + "/recipe/" + recipeId.identifier().getPath() + ".json");
                 enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
                 if (advancementEntry != null) {
-                    Path advancementPath = path.resolve("data/" + recipeId.location().getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
+                    Path advancementPath = path.resolve("data/" + recipeId.identifier().getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
                 }
             }
 
@@ -108,23 +108,23 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
 
-        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.CODEC.encodeStart(ops, Advancement.Builder.advancement().addCriterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(ResourceLocation.parse("root")).value()).getOrThrow(IllegalAccessError::new));
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.CODEC.encodeStart(ops, Advancement.Builder.advancement().addCriterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(Identifier.parse("root")).value()).getOrThrow(IllegalAccessError::new));
         waitForWrite();
         endProviderRun();
     }
 
     @ExpectPlatform
-    protected static ResourceLocation getId(Block block) {
+    protected static Identifier getId(Block block) {
         throw new AssertionError();    
     }
 
     @ExpectPlatform
-    protected static ResourceLocation getId(Item item) {
+    protected static Identifier getId(Item item) {
         throw new AssertionError();
     }
 
     protected void generateRecipes(RecipeOutput exporter) {
-        List<ResourceLocation> generatedRecipes = new ArrayList<>();
+        List<Identifier> generatedRecipes = new ArrayList<>();
 
         offerBasicChairRecipe(BasicChairBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariants(), exporter);
         offerDinnerChairRecipe(DinnerChairBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariants(), exporter);
@@ -284,7 +284,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
         if (!generatedRecipes.contains(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDefaultInstance().copyWithCount(6)).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDefaultInstance().copyWithCount(6)).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
             generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
@@ -319,11 +319,11 @@ public class PFMRecipeProvider extends PFMProvider {
         }
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.MESH_TRASHCAN))) {
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, 1).input(Items.IRON_INGOT, 1).input(Items.ENDER_PEARL, 1).input(Blocks.IRON_BARS, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.MESH_TRASHCAN.asItem().getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, 1).input(Items.IRON_INGOT, 1).input(Items.ENDER_PEARL, 1).input(Blocks.IRON_BARS, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.MESH_TRASHCAN.asItem().getDescriptionId().replace("block.pfm.", "")));
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.MESH_TRASHCAN));
         }
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.TRASHCAN))) {
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.TRASHCAN, 1).input(Items.IRON_INGOT, 1).input(Items.ENDER_PEARL, 1).input(Blocks.IRON_BARS, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.TRASHCAN.asItem().getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.TRASHCAN, 1).input(Items.IRON_INGOT, 1).input(Items.ENDER_PEARL, 1).input(Blocks.IRON_BARS, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.TRASHCAN.asItem().getDescriptionId().replace("block.pfm.", "")));
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.TRASHCAN));
         }
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM))) {
@@ -364,7 +364,7 @@ public class PFMRecipeProvider extends PFMProvider {
         for (DyeColor color : DyeColor.values()) {
             DataComponentPatch.Builder builder = DataComponentPatch.builder();
             builder.set(PFMComponents.COLOR_COMPONENT, color);
-            DynamicFurnitureRecipeJsonFactory.create(BasicLampBlock.class, 1,  WoodVariantRegistry.getVariants().stream().map(woodVariant -> woodVariant.identifier).toList(), builder.build()).vanillaInput(ModelHelper.getWoolColor(color.getSerializedName()), 3).vanillaInput(Items.TORCH).vanillaInput(Items.REDSTONE).childInput("stripped_log", 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", String.format("basic_%s_lamp", color.getSerializedName())));
+            DynamicFurnitureRecipeJsonFactory.create(BasicLampBlock.class, 1,  WoodVariantRegistry.getVariants().stream().map(woodVariant -> woodVariant.identifier).toList(), builder.build()).vanillaInput(ModelHelper.getWoolColor(color.getSerializedName()), 3).vanillaInput(Items.TORCH).vanillaInput(Items.REDSTONE).childInput("stripped_log", 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", String.format("basic_%s_lamp", color.getSerializedName())));
         }
     }
 
@@ -372,7 +372,7 @@ public class PFMRecipeProvider extends PFMProvider {
         for (DyeColor color : DyeColor.values()) {
             DataComponentPatch.Builder builder = DataComponentPatch.builder();
             builder.set(PFMComponents.COLOR_COMPONENT, color);
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, builder.build()).input(ModelHelper.getWoolColor(color.getSerializedName()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", String.format("%s_office_chair", color.getSerializedName())));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, builder.build()).input(ModelHelper.getWoolColor(color.getSerializedName()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", String.format("%s_office_chair", color.getSerializedName())));
         }
     }
 
@@ -390,7 +390,7 @@ public class PFMRecipeProvider extends PFMProvider {
     public Block getVanillaBed(Block block) {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();
-            return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse("minecraft:" + color + "_bed"));
+            return BuiltInRegistries.BLOCK.getValue(Identifier.parse("minecraft:" + color + "_bed"));
         }
         return null;
     }
@@ -404,92 +404,92 @@ public class PFMRecipeProvider extends PFMProvider {
         return beds;
     }
 
-    public static void offerBasicChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 2).childInput(baseMaterial, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerBasicChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 2).childInput(baseMaterial, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerFroggyChairRecipe(ItemLike output, Ingredient baseMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("chairs").unlockedBy("has_concrete", conditionsFromIngredient(baseMaterial)).input(baseMaterial, 6).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("chairs").unlockedBy("has_concrete", conditionsFromIngredient(baseMaterial)).input(baseMaterial, 6).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    public static void offerDinnerChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerDinnerChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerClassicChairDyedRecipe(ItemLike output, Ingredient legMaterial, Ingredient baseMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("chairs").unlockedBy(getunlockedByNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("chairs").unlockedBy(getunlockedByNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    public static void offerClassicChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 4).childInput(baseMaterial, 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 4).childInput(baseMaterial, 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerModernChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerModernChairRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("chairs").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
 
     }
     public static void offerArmChairRecipe(ItemLike output, Ingredient baseMaterial, Ingredient legMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("chairs").unlockedBy("has_wool", conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("chairs").unlockedBy("has_wool", conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerSimpleSofaRecipe(ItemLike output, Ingredient baseMaterial, Ingredient legMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("chairs").unlockedBy("has_wool", conditionsFromIngredient(baseMaterial)).input(legMaterial, 2).input(baseMaterial, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("chairs").unlockedBy("has_wool", conditionsFromIngredient(baseMaterial)).input(legMaterial, 2).input(baseMaterial, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    public static void offerBasicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerBasicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.of(Items.CHEST)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.of(Items.CHEST)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.of(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.of(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerModernCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerModernCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerLogTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerLogTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerHerringbonePlanks(ItemLike output, Item baseMaterial, RecipeOutput exporter) {
-        ShapedRecipeBuilder.shaped(createWrapperLookup().lookupOrThrow(Registries.ITEM), RecipeCategory.BUILDING_BLOCKS, output, 4).define('X', baseMaterial).pattern("XX").pattern("XX").unlockedBy("has_wood_slabs", conditionsFromItem(baseMaterial)).save(exporter, ResourceKey.create(Registries.RECIPE ,ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", ""))));
+        ShapedRecipeBuilder.shaped(createWrapperLookup().lookupOrThrow(Registries.ITEM), RecipeCategory.BUILDING_BLOCKS, output, 4).define('X', baseMaterial).pattern("XX").pattern("XX").unlockedBy("has_wood_slabs", conditionsFromItem(baseMaterial)).save(exporter, ResourceKey.create(Registries.RECIPE ,Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", ""))));
     }
 
-    public static void offerDinnerTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerDinnerTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 3).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerModernDinnerTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerModernDinnerTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicNightStandRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("bedroom").childInput(legMaterial, 6).childInput(baseMaterial, 1).vanillaInput(Blocks.CHEST, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicNightStandRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("bedroom").childInput(legMaterial, 6).childInput(baseMaterial, 1).vanillaInput(Blocks.CHEST, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static String getunlockedByNameFromOutput(ItemLike output) {
@@ -510,134 +510,134 @@ public class PFMRecipeProvider extends PFMProvider {
         else return getItemPath(output);
     }
 
-    public static void offerSimpleBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, RecipeOutput exporter) {
+    public static void offerSimpleBedRecipe(Class<? extends Block> output, String legMaterial, List<Identifier> variants, Ingredient baseBed, RecipeOutput exporter) {
         DyeColor color = ((BedBlock)((BlockItem)(baseBed.items().findFirst().get().value())).getBlock()).getColor();
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
         builder.set(PFMComponents.COLOR_COMPONENT, color);
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 5).vanillaInput(baseBed, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 5).vanillaInput(baseBed, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
     }
 
-    public static void offerClassicBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, String fence, RecipeOutput exporter) {
+    public static void offerClassicBedRecipe(Class<? extends Block> output, String legMaterial, List<Identifier> variants, Ingredient baseBed, String fence, RecipeOutput exporter) {
         DyeColor color = ((BedBlock)((BlockItem)(baseBed.items().findFirst().get().value())).getBlock()).getColor();
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
         builder.set(PFMComponents.COLOR_COMPONENT, color);
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
     }
 
-    public static void offerSimpleBunkLadderRecipe(Class<? extends Block> output, String base, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("bedroom").childInput(base, 1).vanillaInput(Ingredient.of(Items.STICK), 6).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerSimpleBunkLadderRecipe(Class<? extends Block> output, String base, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("bedroom").childInput(base, 1).vanillaInput(Ingredient.of(Items.STICK), 6).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerLogStoolRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerLogStoolRecipe(Class<? extends Block> output, String legMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerSimpleStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerSimpleStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 2).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 3).childInput(baseMaterial, 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerClassicStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 3).childInput(baseMaterial, 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerModernStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 1).childInput(baseMaterial, 3).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerModernStoolRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("stools").childInput(legMaterial, 1).childInput(baseMaterial, 3).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerCounterRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 6, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 6).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerCounterRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 6, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 6).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerCounterApplianceRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, Ingredient appliance, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 5).vanillaInput(appliance).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerCounterApplianceRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Ingredient appliance, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 5).vanillaInput(appliance).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerKitchenSinkRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, Ingredient center, Ingredient ingot, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 2).childInput(baseMaterial, 5).vanillaInput(ingot).vanillaInput(center).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerKitchenSinkRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Ingredient center, Ingredient ingot, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 2).childInput(baseMaterial, 5).vanillaInput(ingot).vanillaInput(center).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerWallDrawerRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, Ingredient appliace, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 6).childInput(baseMaterial, 2).vanillaInput(appliace).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerWallDrawerRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Ingredient appliace, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants).group("kitchen").childInput(legMaterial, 6).childInput(baseMaterial, 2).vanillaInput(appliace).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerWallDrawerSmallRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, Ingredient appliance, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 3, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 2).vanillaInput(appliance).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerWallDrawerSmallRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Ingredient appliance, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 3, variants).group("kitchen").childInput(legMaterial, 3).childInput(baseMaterial, 2).vanillaInput(appliance).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, Ingredient chest, RecipeOutput exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 3, variants).group("kitchen").childInput(legMaterial, 6).childInput(baseMaterial, 2).vanillaInput(chest).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    public static void offerCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Ingredient chest, RecipeOutput exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 3, variants).group("kitchen").childInput(legMaterial, 6).childInput(baseMaterial, 2).vanillaInput(chest).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerFridgeRecipe(ItemLike output, Ingredient legMaterial, Ingredient storage, RecipeOutput exporter) {
         if (output.asItem().toString().contains("xbox")) {
-            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 6).input(storage, 1).input(Ingredient.of(Items.REDSTONE)).input(Ingredient.of(Items.WHITE_CONCRETE)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 6).input(storage, 1).input(Ingredient.of(Items.REDSTONE)).input(Ingredient.of(Items.WHITE_CONCRETE)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
         }
         else {
-            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 7).input(storage).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 7).input(storage).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
         }
     }
 
     public static void offerFreezerRecipe(ItemLike output, Ingredient legMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 7).input(Ingredient.of(Items.REDSTONE), 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 7).input(Ingredient.of(Items.REDSTONE), 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerMicrowaveRecipe(ItemLike output, Ingredient legMaterial, Ingredient storage, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial ,5).input(storage).input(Ingredient.of(Items.REDSTONE)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial ,5).input(storage).input(Ingredient.of(Items.REDSTONE)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerRangeHoodRecipe(ItemLike output, Ingredient legMaterial, Ingredient secondMaterial, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 4).input(secondMaterial).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 4).input(secondMaterial).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerStoveRecipe(ItemLike output, Ingredient legMaterial, Ingredient storage, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 8).input(storage).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 8).input(storage).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerStovetopRecipe(ItemLike output, Ingredient base, Ingredient material, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 6).input(material, 2).input(Ingredient.of(Items.FLINT_AND_STEEL)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 6).input(material, 2).input(Ingredient.of(Items.FLINT_AND_STEEL)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerPlateRecipe(ItemLike output, Ingredient base, Ingredient frame, Ingredient decoration, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).input(frame).input(decoration, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).input(frame).input(decoration, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
     public static void offerCutleryRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("kitchen").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerPendantRecipe(ItemLike output, Ingredient base, Ingredient hang, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("lighting").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(hang, 2).input(PaladinFurnitureModBlocksItems.SIMPLE_LIGHT).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 4).group("lighting").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(hang, 2).input(PaladinFurnitureModBlocksItems.SIMPLE_LIGHT).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void saveiletRecipe(ItemLike output, Ingredient base, Ingredient material, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(material), conditionsFromIngredient(material)).input(base).input(material, 4).input(Ingredient.of(Items.BUCKET)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(material), conditionsFromIngredient(material)).input(base).input(material, 4).input(Ingredient.of(Items.BUCKET)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerWallToiletPaperRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(Items.PAPER), conditionsFromItem(Items.PAPER)).input(base, 1).input(Items.PAPER, 8).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(Items.PAPER), conditionsFromItem(Items.PAPER)).input(base, 1).input(Items.PAPER, 8).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerSinkRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 3).input(Items.STONE_BUTTON, 2).input(Items.IRON_INGOT, 1).input(Items.BUCKET, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 3).input(Items.STONE_BUTTON, 2).input(Items.IRON_INGOT, 1).input(Items.BUCKET, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerBathtubRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 5).input(Items.STONE_BUTTON, 2).input(Items.BUCKET, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 5).input(Items.STONE_BUTTON, 2).input(Items.BUCKET, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerShowerHeadRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 1).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 1).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerShowerHandleRecipe(ItemStack output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerShowerTowelRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,4).input(Ingredient.of(Items.LIGHT_GRAY_CONCRETE), 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,4).input(Ingredient.of(Items.LIGHT_GRAY_CONCRETE), 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerMirrorRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,3).input(Ingredient.of(Items.GLASS), 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,3).input(Ingredient.of(Items.GLASS), 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromItem(ItemLike item) {

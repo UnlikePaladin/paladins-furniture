@@ -9,7 +9,13 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.world.ContainerUtils;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
+import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -37,6 +43,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+
+import java.util.Set;
 
 public class PFMCookingForBlockHeadsCompat {
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).setId(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
@@ -137,53 +145,18 @@ public class PFMCookingForBlockHeadsCompat {
 
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-/*
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FREEZER_BLOCK_ENTITY, (entity, side) -> {
-            return new ContainerKitchenItemProvider(entity){
-                private final ItemStack snowStack;
-                private final ItemStack iceStack;
-                {
-                    this.snowStack = new ItemStack(Items.SNOWBALL);
-                    this.iceStack = new ItemStack(Blocks.ICE);
-                }
-
-                @Override
-                public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                    IngredientToken result = applyIceUnit(ingredient::test);
-                    if (result != null)
-                        return result;
-
-                    return super.findIngredient(ingredient, ingredientTokens, cacheHint);
-                }
-
-                @Override
-                public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                    IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
-                    if (result != null)
-                        return result;
-
-                    return super.findIngredient(itemStack, ingredientTokens, cacheHint);
-                }
-
-                private @Nullable IngredientToken applyIceUnit(Function<ItemStack, Boolean> predicate) {
-                    if (predicate.apply(this.snowStack))
-                        return new FridgeBlockEntity.IceUnitIngredientToken(ContainerUtils.copyStackWithSize(this.snowStack, 64));
-                    else
-                        return predicate.apply(this.iceStack) ? new FridgeBlockEntity.IceUnitIngredientToken(ContainerUtils.copyStackWithSize(this.iceStack, 64)) : null;
-                }
-            };
-        });
-
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> {
-            StoveBlockEntityBalm ovenBlockEntityBalm = (StoveBlockEntityBalm) entity;
-            return new ContainerKitchenItemProvider(new CombinedContainer(ovenBlockEntityBalm.toolsContainer, ovenBlockEntityBalm.outputContainer));
-        });
-
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProcessor.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> (StoveBlockEntityBalm) entity);
-
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.DRAWER_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm9x3)entity).itemProvider);
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FRIDGE_BLOCK_ENTITY, (entity, side) -> ((FridgeBlockEntityBalm)entity).itemProvider);
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, (entity, side) -> ((CounterOvenBlockEntityBalm)entity).itemProvider);
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm3x3)entity).itemProvider);*/
+        BalmCapabilities balmCapabilities = Balm.capabilities();
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+            if (blockEntity instanceof KitchenItemProviderHolder provider) {
+                return provider.getKitchenItemProvider();
+            }
+            return null;
+        }),  () -> Set.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
+            if (blockEntity instanceof KitchenItemProcessorHolder holder) {
+                return holder.getKitchenItemProcessor();
+            }
+            return null;
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
     }
 }

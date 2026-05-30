@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,7 +52,7 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
                     combinedRenderTypes.addAll(currentRenderTypes);
 
                     // Prioritize cutout and translucent over solid
-                    if (combinedRenderTypes.contains(ChunkSectionLayer.CUTOUT) || combinedRenderTypes.contains(ChunkSectionLayer.TRANSLUCENT) || combinedRenderTypes.contains(ChunkSectionLayer.CUTOUT_MIPPED)) {
+                    if (combinedRenderTypes.contains(ChunkSectionLayer.CUTOUT) || combinedRenderTypes.contains(ChunkSectionLayer.TRANSLUCENT)) {
                         // Remove solid if higher-priority layers are present
                         combinedRenderTypes.remove(ChunkSectionLayer.SOLID);
                     }

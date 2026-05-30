@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.SoundType;
 
@@ -24,7 +24,7 @@ public class FurnitureBlock extends PFMMaterial {
         if (block.getDescriptionId().contains("stripped")) {
             return getStrippedSecondMaterial();
         }
-        String secondMaterial = this.block.getLootTable().get().location().getPath();
+        String secondMaterial = this.block.getLootTable().get().identifier().getPath();
         if (secondMaterial.contains("raw")) {
             secondMaterial = secondMaterial.replace("raw_", "");
         }
@@ -43,7 +43,7 @@ public class FurnitureBlock extends PFMMaterial {
         }
         else if(secondMaterial.contains("concrete")){
             secondMaterial = "raw_concrete";
-            this.secondMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("pfm:" + secondMaterial));
+            this.secondMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("pfm:" + secondMaterial));
             return this.secondMaterial;
         }
         else if(secondMaterial.contains("deepslate_tile")){
@@ -94,7 +94,7 @@ public class FurnitureBlock extends PFMMaterial {
         if (secondMaterial.contains("stemlog")) {
             secondMaterial = secondMaterial.replace("stemlog", "stem");
         }
-        this.secondMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + secondMaterial));
+        this.secondMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
@@ -102,7 +102,7 @@ public class FurnitureBlock extends PFMMaterial {
         if (block.getDescriptionId().contains("stripped")) {
             return getStrippedBaseMaterial();
         }
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         if(baseMaterial.contains("andesite")){
             baseMaterial = "stripped_oak_log";
         }
@@ -161,48 +161,48 @@ public class FurnitureBlock extends PFMMaterial {
             }
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "planks");
         }
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Item getFroggyChairMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.matches("froggy_chair")) {
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + "lime_concrete"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + "lime_concrete"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("_concrete");
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Item getFridgeMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.contains("iron")) {
-            this.baseMaterial =  BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + "iron_ingot"));
+            this.baseMaterial =  BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + "iron_ingot"));
             return this.baseMaterial;
         }
         else if (baseMaterial.contains("xbox")) {
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + "black_concrete"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + "black_concrete"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("concrete");
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Block getSlab(){
-        String slabName = this.block.getLootTable().get().location().getPath().replace("blocks/", "").replace(furnitureName, "slab");
+        String slabName = this.block.getLootTable().get().identifier().getPath().replace("blocks/", "").replace(furnitureName, "slab");
         if (block.getDescriptionId().contains("stripped")) {
             slabName.replace("stripped_", "");
         }
-        ResourceLocation originalId = BuiltInRegistries.BLOCK.getKey(block);
-        this.slab =  BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath(originalId.getNamespace(), slabName));
+        Identifier originalId = BuiltInRegistries.BLOCK.getKey(block);
+        this.slab =  BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath(originalId.getNamespace(), slabName));
         return slab;
     }
 
 
     public Item getStrippedBaseMaterial() {
-        String secondMaterial = this.block.getLootTable().get().location().getPath().replace("blocks/", "");
+        String secondMaterial = this.block.getLootTable().get().identifier().getPath().replace("blocks/", "");
         if (secondMaterial.contains("raw_")) {
             secondMaterial = secondMaterial.replace("raw_", "");
         }
@@ -215,12 +215,12 @@ public class FurnitureBlock extends PFMMaterial {
         else {
             secondMaterial = secondMaterial.replace(furnitureName, "");
         }
-        this.secondMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + secondMaterial));
+        this.secondMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
     public Item getStrippedSecondMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath().replace("blocks/", "");
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath().replace("blocks/", "");
         if (baseMaterial.contains("log") || baseMaterial.contains("stem")) {
             baseMaterial = baseMaterial.replace("log", "");
             baseMaterial = baseMaterial.replace("stem", "");
@@ -229,35 +229,35 @@ public class FurnitureBlock extends PFMMaterial {
             baseMaterial = baseMaterial.replace("raw_", "");
         }
         baseMaterial = baseMaterial.replace("stripped_", "").replace(furnitureName, "planks");
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getArmChairMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.contains("leather")) {
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("pfm:" + "leather_block"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("pfm:" + "leather_block"));
             return this.baseMaterial;
         }
         else if (baseMaterial.contains("standard")) {
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + "white_wool"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + "white_wool"));
             return this.baseMaterial;
         }
         if (this.block instanceof DyeableFurnitureBlock) {
             String color = ((DyeableFurnitureBlock) this.block).getPFMColor().toString();
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + color + "_wool"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("wool");
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getWoolColor() {
         if (this.block instanceof DyeableFurnitureBlock) {
             String color = ((DyeableFurnitureBlock) this.block).getPFMColor().toString();
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + color + "_wool"));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }
         return null;
@@ -266,24 +266,24 @@ public class FurnitureBlock extends PFMMaterial {
     public Block getBed() {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();
-            return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse("minecraft:" + color + "_bed"));
+            return BuiltInRegistries.BLOCK.getValue(Identifier.parse("minecraft:" + color + "_bed"));
         }
         return null;
     }
 
     public Item getFence() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
             if (baseMaterial.contains("log") || baseMaterial.contains("stem")) {
                 baseMaterial = baseMaterial.replace("log", "");
                 baseMaterial = baseMaterial.replace("stem", "");
             }
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "fence");
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getSecondaryStoneMaterial() {
-        String secondMaterial = this.block.getLootTable().get().location().getPath();
+        String secondMaterial = this.block.getLootTable().get().identifier().getPath();
         if(secondMaterial.contains("andesite")){
             secondMaterial = "andesite";
         }
@@ -298,7 +298,7 @@ public class FurnitureBlock extends PFMMaterial {
         }
         else if(secondMaterial.contains("concrete")){
             secondMaterial = "raw_concrete";
-            this.secondMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("pfm:" + secondMaterial));
+            this.secondMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("pfm:" + secondMaterial));
             return this.secondMaterial;
         }
         else if(secondMaterial.contains("deepslate")){
@@ -325,12 +325,12 @@ public class FurnitureBlock extends PFMMaterial {
         else {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
-        this.secondMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + secondMaterial));
+        this.secondMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
     public Item getBaseStoneMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         if(baseMaterial.contains("andesite")){
             baseMaterial = "polished_andesite";
         }
@@ -345,7 +345,7 @@ public class FurnitureBlock extends PFMMaterial {
         }
         else if(baseMaterial.contains("concrete")){
             baseMaterial = "raw_concrete";
-            this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("pfm:" + baseMaterial));
+            this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("pfm:" + baseMaterial));
             return this.baseMaterial;
         }
         else if(baseMaterial.contains("deepslate")){
@@ -378,43 +378,43 @@ public class FurnitureBlock extends PFMMaterial {
         else {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getPlateMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         if (baseMaterial.contains("basic")) {
             baseMaterial = "white_concrete";
         }
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getPlateDecoration() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         if (baseMaterial.contains("basic")) {
             baseMaterial = "white_concrete";
         }
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getCutleryMaterial() {
-        String baseMaterial = this.block.getLootTable().get().location().getPath();
+        String baseMaterial = this.block.getLootTable().get().identifier().getPath();
         if (baseMaterial.contains("basic")) {
             baseMaterial = "light_gray_concrete";
         }
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse("minecraft:" + baseMaterial));
+        this.baseMaterial = BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 }

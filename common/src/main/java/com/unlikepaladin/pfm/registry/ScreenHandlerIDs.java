@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.menus.*;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ScreenHandlerIDs {
 
@@ -14,6 +14,6 @@ public class ScreenHandlerIDs {
     public static MenuType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
     public static MenuType<WorkbenchScreenHandler> WORKBENCH_SCREEN_HANDLER;
     public static MenuType<TrashcanScreenHandler> TRASHCAN_SCREEN_HANDLER;
-    public static final ResourceLocation FREEZER = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezer_block_entity");
+    public static final Identifier FREEZER = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezer_block_entity");
 
 }

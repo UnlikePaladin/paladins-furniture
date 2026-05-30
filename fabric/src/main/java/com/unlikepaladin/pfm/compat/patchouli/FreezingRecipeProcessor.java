@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -29,7 +29,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
         RecipeManager manager = level.recipeAccess();
-        recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
+        recipe = manager.byKey(Identifier.parse(recipeId)).map(RecipeHolder::value).orElse(null);
     }
 
     @Override

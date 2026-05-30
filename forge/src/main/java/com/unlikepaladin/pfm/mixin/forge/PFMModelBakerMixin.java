@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.thread.ParallelMapTransform;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +26,7 @@ public class PFMModelBakerMixin {
 
     @ModifyReturnValue(method = "bakeModels", at = @At("RETURN"))
     private CompletableFuture<ModelBakery.BakingResult> withExtraModels(CompletableFuture<ModelBakery.BakingResult> models, @Local Executor executor, @Local ModelBakery.ModelBakerImpl baker) {
-        CompletableFuture<Map<ResourceLocation, BlockStateModel>> extraModels = ParallelMapTransform.schedule(PFMExtraModelsForge.unbakedModels, (key, model) -> {
+        CompletableFuture<Map<Identifier, BlockStateModel>> extraModels = ParallelMapTransform.schedule(PFMExtraModelsForge.unbakedModels, (key, model) -> {
             try {
                 return model.bake(baker);
             } catch (Exception e) {

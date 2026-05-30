@@ -11,7 +11,7 @@ import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +25,7 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     private final Block polishedBlock;
     private final Block rawBlock;
 
-    StoneVariant(ResourceLocation identifier, Block polishedBlock, Block rawBlock) {
+    StoneVariant(Identifier identifier, Block polishedBlock, Block rawBlock) {
         super(identifier);
         this.polishedBlock = polishedBlock;
         this.rawBlock = rawBlock;
@@ -39,7 +39,7 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public ResourceLocation getTextureLocation(BlockType type) {
+    public Identifier getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(rawBlock);
         return ModelHelper.getTextureId(polishedBlock);
@@ -123,32 +123,32 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
     public static class Finder implements SetFinder<StoneVariant> {
 
-        private final Map<String, ResourceLocation> childNames = new HashMap<>();
+        private final Map<String, Identifier> childNames = new HashMap<>();
         private final Supplier<Block> polishedFinder;
         private final Supplier<Block> rawFinder;
-        private final ResourceLocation id;
+        private final Identifier id;
 
-        public Finder(ResourceLocation id, Supplier<Block> polished, Supplier<Block> raw) {
+        public Finder(Identifier id, Supplier<Block> polished, Supplier<Block> raw) {
             this.id = id;
             this.polishedFinder = polished;
             this.rawFinder = raw;
         }
 
         public static Finder simple(String modId, String stoneTypeName, String polishedName, String rawName) {
-            return simple(ResourceLocation.fromNamespaceAndPath(modId, stoneTypeName), ResourceLocation.fromNamespaceAndPath(modId, polishedName), ResourceLocation.fromNamespaceAndPath(modId, rawName));
+            return simple(Identifier.fromNamespaceAndPath(modId, stoneTypeName), Identifier.fromNamespaceAndPath(modId, polishedName), Identifier.fromNamespaceAndPath(modId, rawName));
         }
 
-        public static Finder simple(ResourceLocation stoneTypeName, ResourceLocation polishedName, ResourceLocation rawName) {
+        public static Finder simple(Identifier stoneTypeName, Identifier polishedName, Identifier rawName) {
             return new Finder(stoneTypeName,
                     () -> BuiltInRegistries.BLOCK.getValue(polishedName),
                     () -> BuiltInRegistries.BLOCK.getValue(rawName));
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), childName));
+            addChild(childType, Identifier.fromNamespaceAndPath(id.getNamespace(), childName));
         }
 
-        public void addChild(String childType, ResourceLocation childName) {
+        public void addChild(String childType, Identifier childName) {
             this.childNames.put(childType, childName);
         }
 
@@ -157,10 +157,10 @@ public class StoneVariant extends VariantBase<StoneVariant> {
                 try {
                     Block plank = polishedFinder.get();
                     Block log = rawFinder.get();
-                    Block d = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         StoneVariant w = new StoneVariant(id, plank, log);
-                        for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
+                        for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
                             Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.getValue(entry.getValue()) : BuiltInRegistries.ITEM.getValue(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }

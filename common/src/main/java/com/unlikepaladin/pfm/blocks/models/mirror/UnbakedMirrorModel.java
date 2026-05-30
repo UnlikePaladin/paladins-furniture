@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -30,18 +30,18 @@ public record UnbakedMirrorModel(Variant variant) implements PFMUnbakedBlockStat
     public static final Codec<UnbakedMirrorModel> CODEC = MAP_CODEC.codec();
 
     public static final String[] BASE_MODEL_PARTS = new String[] {"block/mirror/mirror_base", "block/mirror/mirror_top", "block/mirror/mirror_bottom", "block/mirror/mirror_left","block/mirror/mirror_right", "block/mirror/mirror_right_top", "block/mirror/mirror_left_top", "block/mirror/mirror_right_bottom", "block/mirror/mirror_left_bottom"};
-    public static final ResourceLocation[] DEFAULT_TEXTURES = new ResourceLocation[] {ResourceLocation.fromNamespaceAndPath("minecraft","block/white_concrete"), ResourceLocation.fromNamespaceAndPath("minecraft","block/glass"), ResourceLocation.fromNamespaceAndPath("pfm","block/mirror")};
-    public static final ResourceLocation[] MIRROR_MODEL_IDS = {ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
-    public static final ResourceLocation MIRROR_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/mirror");
+    public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {Identifier.fromNamespaceAndPath("minecraft","block/white_concrete"), Identifier.fromNamespaceAndPath("minecraft","block/glass"), Identifier.fromNamespaceAndPath("pfm","block/mirror")};
+    public static final Identifier[] MIRROR_MODEL_IDS = {Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
+    public static final Identifier MIRROR_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/mirror");
 
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : BASE_MODEL_PARTS) {
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : BASE_MODEL_PARTS) {
                 part = part.replace("mirror", "gray_mirror");
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
@@ -53,7 +53,7 @@ public record UnbakedMirrorModel(Variant variant) implements PFMUnbakedBlockStat
         Map<String,BlockModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPartName: BASE_MODEL_PARTS) {
             String part = modelPartName.replace("mirror", "gray_mirror");
-            bakedModels.put(modelPartName, SimpleModelWrapper.bake(baker, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part), settings));
+            bakedModels.put(modelPartName, SimpleModelWrapper.bake(baker, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part), settings));
         }
 
         return getBakedModel(settings, bakedModels, bakedModels.keySet().stream().toList());
@@ -66,7 +66,7 @@ public record UnbakedMirrorModel(Variant variant) implements PFMUnbakedBlockStat
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : ALL_MODEL_IDS)
+        for (Identifier c : ALL_MODEL_IDS)
             resolver.markDependency(c);
     }
 

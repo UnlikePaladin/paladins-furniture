@@ -31,7 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +41,7 @@ import java.util.Collection;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
-    public static final ResourceLocation FURNITURE_DYED_ID = ResourceLocation.parse("pfm:furniture_dyed");
+    public static final Identifier FURNITURE_DYED_ID = Identifier.parse("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.createVariableRangeEvent(FURNITURE_DYED_ID);
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
@@ -97,9 +97,9 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(new SyncConfigPayload(buffer));
     }
-//new ResourceLocation(MOD_ID, "dye_kits")
+//new Identifier(MOD_ID, "dye_kits")
     public static void initializeItemGroup() {
-        PaladinFurnitureMod.DYE_KITS.setB(Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(MOD_ID, "dye_kits"), FabricItemGroup.builder()
+        PaladinFurnitureMod.DYE_KITS.setB(Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(MOD_ID, "dye_kits"), FabricItemGroup.builder()
                 .title(Component.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                 .displayItems((enabledFeatures, stacks) -> {
@@ -122,7 +122,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 })
                 .build()));
 
-        PaladinFurnitureMod.FURNITURE_GROUP.setB(Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(MOD_ID, "furniture"), FabricItemGroup.builder()
+        PaladinFurnitureMod.FURNITURE_GROUP.setB(Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(MOD_ID, "furniture"), FabricItemGroup.builder()
                 .title(Component.translatable("itemGroup.pfm.furniture"))
                 .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultInstance())
                 .displayItems((displayContext, stacks) -> {

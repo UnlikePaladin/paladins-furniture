@@ -9,20 +9,17 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
+import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.util.math.Vector2f;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -161,9 +158,9 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return modelParts;
     }
 
-    final Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<>(1024, 0.75f, true) {
+    final Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<>(1024, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> eldest) {
             return size() > 250; // Adjust based on your mod's needs
         }
     });
@@ -187,7 +184,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
         for (BakedQuad quad : quads) {
             SpriteData sprite = new SpriteData(quad.sprite());
-            Pair<ResourceLocation, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
+            Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
 
             separatedQuads.compute(pair, (key, existingList) -> {
                 if (existingList == null) {
@@ -206,13 +203,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
 
         // Synchronize the snapshot creation, otherwise embeddium explodes
-        Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> snapshot;
+        Map<Pair<Identifier, SpriteData>, List<BakedQuad>> snapshot;
         synchronized (separatedQuads) {
             snapshot = new HashMap<>(separatedQuads);
         }
 
-        for (Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
-            ResourceLocation keyId = entry.getKey().getFirst();
+        for (Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
+            Identifier keyId = entry.getKey().getFirst();
             int index = IntStream.range(0, toReplace.size())
                     .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                     .findFirst()
@@ -303,13 +300,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     long[] ogUVs = {quad.packedUV0(), quad.packedUV1(), quad.packedUV2(), quad.packedUV3()};
                     TextureAtlasSprite originalSprite = quad.sprite();
                     for (int i = 0; i < 4; i++) {
-                        Vector2f unpacked = unpackUV(ogUVs[i]);
+                        UVPair unpacked = unpackUV(ogUVs[i]);
 
-                        float frameU = ModelHelper.getFrameFromU(originalSprite, unpacked.x());
-                        float frameV = ModelHelper.getFrameFromV(originalSprite, unpacked.y());
+                        float frameU = ModelHelper.getFrameFromU(originalSprite, unpacked.u());
+                        float frameV = ModelHelper.getFrameFromV(originalSprite, unpacked.v());
                         float newU = sprite.getU(frameU);
                         float newV = sprite.getV(frameV);
-                        newUVs[i] = Vector2f.toLong(newU, newV);
+                        newUVs[i] = UVPair.pack(newU, newV);
                     }
 
                     return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
@@ -322,10 +319,10 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    public static Vector2f unpackUV(long packed) {
+    public static UVPair unpackUV(long packed) {
         int ix = (int)(packed >>> 32);
         int iy = (int) packed;
-        return new Vector2f(Float.intBitsToFloat(ix), Float.intBitsToFloat(iy));
+        return new UVPair(Float.intBitsToFloat(ix), Float.intBitsToFloat(iy));
     }
 
     private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
@@ -380,7 +377,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     public static class SpriteData {
         float minU, maxU, minV, maxV;
         int x, y;
-        ResourceLocation id;
+        Identifier id;
         TextureAtlasSprite sprite;
 
         public SpriteData(TextureAtlasSprite sprite) {
@@ -403,7 +400,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             return sprite;
         }
 
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return id;
         }
 

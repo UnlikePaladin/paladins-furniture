@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
@@ -38,7 +38,7 @@ public class BathtubBlockEntity extends BedBlockEntity {
     }
 
     private CompoundTag writeIdentifyingTubData(CompoundTag nbt) {
-        ResourceLocation identifier = BlockEntityType.getKey(this.getType());
+        Identifier identifier = BlockEntityType.getKey(this.getType());
         if (identifier == null) {
             throw new RuntimeException(this.getClass() + " is missing a mapping! This is a bug!");
         }

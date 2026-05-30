@@ -19,7 +19,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -35,29 +35,29 @@ public record UnbakedKitchenSinkModel(Variant variant) implements PFMUnbakedBloc
 
     public static final Codec<UnbakedKitchenSinkModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] SINK_MODEL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_level1"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_level2"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_full"),
+    public static final Identifier[] SINK_MODEL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_level1"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_level2"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink/kitchen_sink_full"),
     };
 
-    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
-    public static final ResourceLocation SINK_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink");
-    public static final List<ResourceLocation> SINK_MODEL_IDS = new ArrayList<>() {
+    private static final Identifier PARENT = Identifier.parse("block/block");
+    public static final Identifier SINK_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_sink");
+    public static final List<Identifier> SINK_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_kitchen_sink"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_kitchen_sink"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
             }
             for(ExtraCounterVariant variant : ExtraCounterVariant.values()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_sink"));
             }
             add(SINK_MODEL_ID);
         }
@@ -75,7 +75,7 @@ public record UnbakedKitchenSinkModel(Variant variant) implements PFMUnbakedBloc
             PFMRuntimeResources.modelCacheMap.put(SINK_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : SINK_MODEL_PARTS_BASE) {
+        for (Identifier modelPart : SINK_MODEL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -84,13 +84,13 @@ public record UnbakedKitchenSinkModel(Variant variant) implements PFMUnbakedBloc
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : SINK_MODEL_PARTS_BASE)
+        for (Identifier c : SINK_MODEL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

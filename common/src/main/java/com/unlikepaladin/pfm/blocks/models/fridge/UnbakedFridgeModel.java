@@ -17,7 +17,7 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,34 +49,34 @@ public record UnbakedFridgeModel(Variant variant) implements PFMUnbakedBlockStat
         }
     };
 
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
             }
         }
     };
 
-    public static final ResourceLocation FRIDGE_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/fridge");
-    public static final List<ResourceLocation> FRIDGE_MODEL_IDS = new ArrayList<>() { {
-        add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
-        add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
+    public static final Identifier FRIDGE_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/fridge");
+    public static final List<Identifier> FRIDGE_MODEL_IDS = new ArrayList<>() { {
+        add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
+        add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
     }};
 
     @Nullable
     @Override
     public BlockStateModel bake(ModelBaker baker){
         ModelState settings = variant.modelState().asModelState();
-        ResourceLocation id = variant.modelLocation();
+        Identifier id = variant.modelLocation();
 
         Map<String, BlockModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
             if (id.getPath().contains("gray"))
                 modelPart = modelPart.replaceAll("white", "gray");
-            bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
+            bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
         }
         return getBakedModel(settings, bakedModels, bakedModels.keySet().stream().toList());
     }
@@ -88,7 +88,7 @@ public record UnbakedFridgeModel(Variant variant) implements PFMUnbakedBlockStat
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : ALL_MODEL_IDS)
+        for (Identifier c : ALL_MODEL_IDS)
             resolver.markDependency(c);
     }
 

@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -29,24 +29,24 @@ public record UnbakedModernStoolModel(Variant variant) implements PFMUnbakedBloc
 
     public static final Codec<UnbakedModernStoolModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] MODERN_STOOL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool/modern_stool"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool/modern_stool_tucked")
+    public static final Identifier[] MODERN_STOOL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool/modern_stool"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool/modern_stool_tucked")
     };
 
-    public static final ResourceLocation STOOL_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool");
-    public static final List<ResourceLocation> MODERN_STOOL_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier STOOL_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_stool");
+    public static final List<Identifier> MODERN_STOOL_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_modern_stool"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_modern_stool"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
             }
             for(ExtraStoolVariant variant : ExtraStoolVariant.values()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_modern_stool"));
             }
             add(STOOL_MODEL_ID);
         }
@@ -64,7 +64,7 @@ public record UnbakedModernStoolModel(Variant variant) implements PFMUnbakedBloc
             PFMRuntimeResources.modelCacheMap.put(STOOL_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : MODERN_STOOL_PARTS_BASE) {
+        for (Identifier modelPart : MODERN_STOOL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -73,13 +73,13 @@ public record UnbakedModernStoolModel(Variant variant) implements PFMUnbakedBloc
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : MODERN_STOOL_PARTS_BASE)
+        for (Identifier c : MODERN_STOOL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

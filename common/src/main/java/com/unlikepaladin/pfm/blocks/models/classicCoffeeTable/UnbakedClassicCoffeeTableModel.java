@@ -22,7 +22,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -36,25 +36,25 @@ public record UnbakedClassicCoffeeTableModel(Variant variant) implements PFMUnba
 
     public static final Codec<UnbakedClassicCoffeeTableModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] CLASSIC_MODEL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_middle"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_two"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_two_uved"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_one"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_one_uved"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic")
+    public static final Identifier[] CLASSIC_MODEL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_middle"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_two"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_two_uved"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_one"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic_one_uved"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic/coffee_table_classic")
     };
 
-    public static final ResourceLocation TABLE_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic");
-    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<>() {
+    public static final Identifier TABLE_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/coffee_table_classic");
+    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_coffee_table_classic"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_coffee_table_classic"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_coffee_table_classic"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_coffee_table_classic"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_coffee_table_classic"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_coffee_table_classic"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -72,7 +72,7 @@ public record UnbakedClassicCoffeeTableModel(Variant variant) implements PFMUnba
             PFMRuntimeResources.modelCacheMap.put(TABLE_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : CLASSIC_MODEL_PARTS_BASE) {
+        for (Identifier modelPart : CLASSIC_MODEL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -81,13 +81,13 @@ public record UnbakedClassicCoffeeTableModel(Variant variant) implements PFMUnba
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : CLASSIC_MODEL_PARTS_BASE)
+        for (Identifier c : CLASSIC_MODEL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

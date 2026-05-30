@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.networking.SyncRecipesPayload;
 import com.unlikepaladin.pfm.networking.forge.*;
 import io.netty.util.AttributeKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.function.TriConsumer;
 public class NetworkRegistryForge {
 
     public static final SimpleChannel PFM_CHANNEL = ChannelBuilder.named(
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "main_channel")
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "main_channel")
     ).networkProtocolVersion(1).simpleChannel();
     public static final AttributeKey<ForgePacketHandler> CONTEXT = AttributeKey.newInstance("pfm:handshake");
 

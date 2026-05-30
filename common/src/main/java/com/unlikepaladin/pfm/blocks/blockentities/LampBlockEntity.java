@@ -17,7 +17,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     protected void loadAdditional(ValueInput view) {
         this.color = DyeColor.byName(view.getStringOr("color", "white"), DyeColor.WHITE);
         view.getString("variant").ifPresent((variantName) -> {
-            WoodVariant woodVariant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName));
+            WoodVariant woodVariant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName));
             if (woodVariant != null)
                 this.variant = woodVariant;
             else {
@@ -65,7 +65,7 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
-        ResourceLocation variantName = components.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier);
+        Identifier variantName = components.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier);
         if (WoodVariantRegistry.getVariant(variantName) != null)
             this.variant = WoodVariantRegistry.getVariant(variantName);
         else {

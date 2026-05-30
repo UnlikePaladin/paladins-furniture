@@ -10,14 +10,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
 import java.util.List;
 /*
 
 public class EmiFreezingRecipe implements EmiRecipe {
-   private final ResourceLocation id;
+   private final Identifier id;
     private final EmiIngredient input;
     private final EmiStack output;
     private final AbstractCookingRecipe recipe;
@@ -26,7 +26,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return id;
     }
 

@@ -11,7 +11,7 @@ import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     private final Block plankBlock;
     private final Block logBlock;
 
-    WoodVariant(ResourceLocation identifier, Block plankBlock, Block logBlock) {
+    WoodVariant(Identifier identifier, Block plankBlock, Block logBlock) {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
@@ -35,7 +35,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public ResourceLocation getTextureLocation(BlockType type) {
+    public Identifier getTextureLocation(BlockType type) {
         if (type == BlockType.STRIPPED_LOG) {
             return ModelHelper.getTextureId((Block) this.getChild("stripped_log"));
         } else if (type == BlockType.LOG || type == BlockType.SECONDARY) {
@@ -56,17 +56,17 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     @Nullable
     protected Block findLogRelatedBlock(String append, String postpend) {
         String post = postpend.isEmpty() ? "" : "_" + postpend;
-        ResourceLocation id = this.getIdentifier();
+        Identifier id = this.getIdentifier();
         String logN = BuiltInRegistries.BLOCK.getKey(this.logBlock).getPath();
-        ResourceLocation[] targets = {
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + post),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + post),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + post),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + post),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
+        Identifier[] targets = {
+                Identifier.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + post),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + post),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + post),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + post),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
         };
         String postNether = "";
         switch (postpend) {
@@ -76,24 +76,24 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         postNether = postpend.isEmpty() ? "" : "_" + postNether;
         Block found = null;
         if (!postNether.isEmpty()) {
-            ResourceLocation[] nether_targets = {
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + postNether),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + postNether),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + postNether),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + postNether),
-                    ResourceLocation.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
+            Identifier[] nether_targets = {
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + postNether),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + postNether),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + postNether),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + postNether),
+                    Identifier.fromNamespaceAndPath(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
-            for (ResourceLocation r : nether_targets) {
+            for (Identifier r : nether_targets) {
                 if (BuiltInRegistries.BLOCK.containsKey(r)) {
                     found = BuiltInRegistries.BLOCK.getValue(r);
                     break;
                 }
             }
         }
-        for (ResourceLocation r : targets) {
+        for (Identifier r : targets) {
             if (BuiltInRegistries.BLOCK.containsKey(r)) {
                 found = BuiltInRegistries.BLOCK.getValue(r);
                 break;
@@ -187,32 +187,32 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     public static class Finder implements VariantBase.SetFinder<WoodVariant> {
 
-        private final Map<String, ResourceLocation> childNames = new HashMap<>();
+        private final Map<String, Identifier> childNames = new HashMap<>();
         private final Supplier<Block> planksFinder;
         private final Supplier<Block> logFinder;
-        private final ResourceLocation id;
+        private final Identifier id;
 
-        public Finder(ResourceLocation id, Supplier<Block> planks, Supplier<Block> log) {
+        public Finder(Identifier id, Supplier<Block> planks, Supplier<Block> log) {
             this.id = id;
             this.planksFinder = planks;
             this.logFinder = log;
         }
 
         public static Finder simple(String modId, String woodTypeName, String planksName, String logName) {
-            return simple(ResourceLocation.fromNamespaceAndPath(modId, woodTypeName), ResourceLocation.fromNamespaceAndPath(modId, planksName), ResourceLocation.fromNamespaceAndPath(modId, logName));
+            return simple(Identifier.fromNamespaceAndPath(modId, woodTypeName), Identifier.fromNamespaceAndPath(modId, planksName), Identifier.fromNamespaceAndPath(modId, logName));
         }
 
-        public static Finder simple(ResourceLocation woodTypeName, ResourceLocation planksName, ResourceLocation logName) {
+        public static Finder simple(Identifier woodTypeName, Identifier planksName, Identifier logName) {
             return new Finder(woodTypeName,
                     () -> BuiltInRegistries.BLOCK.getValue(planksName),
                     () -> BuiltInRegistries.BLOCK.getValue(logName));
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), childName));
+            addChild(childType, Identifier.fromNamespaceAndPath(id.getNamespace(), childName));
         }
 
-        public void addChild(String childType, ResourceLocation childName) {
+        public void addChild(String childType, Identifier childName) {
             this.childNames.put(childType, childName);
         }
 
@@ -221,10 +221,10 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                 try {
                     Block plank = planksFinder.get();
                     Block log = logFinder.get();
-                    Block d = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
-                        for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
+                        for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
                             Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.getValue(entry.getValue()) : BuiltInRegistries.ITEM.getValue(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }

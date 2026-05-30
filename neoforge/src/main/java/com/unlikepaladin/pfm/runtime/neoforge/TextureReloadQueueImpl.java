@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.runtime.neoforge;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,7 +22,7 @@ public class TextureReloadQueueImpl {
         if (list.isEmpty()) return;
 
         Minecraft.getInstance().execute(() -> {
-            List<ResourceLocation> spriteIdentifiers = new ArrayList<>(list);
+            List<Identifier> spriteIdentifiers = new ArrayList<>(list);
             list.clear();
             reloadSpritesOnClientThread(spriteIdentifiers);
         });

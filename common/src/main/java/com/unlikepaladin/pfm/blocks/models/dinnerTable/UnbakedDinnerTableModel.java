@@ -19,7 +19,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -35,24 +35,24 @@ public record UnbakedDinnerTableModel(Variant variant) implements PFMUnbakedBloc
 
     public static final Codec<UnbakedDinnerTableModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] DINNER_MODEL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_middle"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_right"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_left"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_legs"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table")
+    public static final Identifier[] DINNER_MODEL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_middle"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_right"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_left"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_legs"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table")
     };
 
-    public static final ResourceLocation TABLE_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table");
-    public static final List<ResourceLocation> TABLE_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier TABLE_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/dinner_table");
+    public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_dinner"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_dinner"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_table_dinner"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_table_dinner"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_dinner"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_dinner"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -72,7 +72,7 @@ public record UnbakedDinnerTableModel(Variant variant) implements PFMUnbakedBloc
             PFMRuntimeResources.modelCacheMap.put(TABLE_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : DINNER_MODEL_PARTS_BASE) {
+        for (Identifier modelPart : DINNER_MODEL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -81,13 +81,13 @@ public record UnbakedDinnerTableModel(Variant variant) implements PFMUnbakedBloc
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : DINNER_MODEL_PARTS_BASE)
+        for (Identifier c : DINNER_MODEL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

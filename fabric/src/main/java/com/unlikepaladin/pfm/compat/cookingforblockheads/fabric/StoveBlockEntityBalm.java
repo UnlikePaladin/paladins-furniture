@@ -237,8 +237,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements KitchenItemProc
                                 if (!smeltingResult.isEmpty()) {
                                     ItemStack resultStack = smeltingResult.copy();
                                     this.processingContainer.setItem(i, resultStack);
-                                    //TODO: FIX this as soon as CFBH updates
-                                    //OvenCookedEvent.EVENT.fireEvent(new OvenCookedEvent(level, this.getBlockPos(), resultStack));
+                                    OvenCookedEvent.EVENT.invoker().accept(new OvenCookedEvent(level, this.getBlockPos(), resultStack));
                                     this.slotCookTime[i] = -1;
                                     if (firstTransferSlot == -1) {
                                         firstTransferSlot = i;
@@ -288,7 +287,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements KitchenItemProc
 
     public ItemStack getSmeltingResult(ItemStack itemStack) {
         SingleRecipeInput recipeInput = new SingleRecipeInput(itemStack);
-        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipeType, recipeInput);
+        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipes.type(), recipeInput);
         return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, recipeInput);
     }
 

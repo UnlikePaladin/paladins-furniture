@@ -17,7 +17,6 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.*;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.LanguageInfo;
@@ -26,7 +25,7 @@ import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.client.resources.metadata.language.LanguageMetadataSection;
 import net.minecraft.data.HashCache;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.locale.Language;
 import net.minecraft.util.Unit;
 import net.minecraft.util.Tuple;
@@ -200,7 +199,7 @@ public class PFMLangProvider extends PFMProvider {
         boolean supported = false;
         for (PackResources pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             try {
-                IoSupplier<InputStream> sup = pack.getResource(PackType.CLIENT_RESOURCES, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
+                IoSupplier<InputStream> sup = pack.getResource(PackType.CLIENT_RESOURCES, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
                 if (sup == null)
                     continue;
                 InputStream stream = sup.get();
@@ -443,7 +442,7 @@ public class PFMLangProvider extends PFMProvider {
         }
 
         @Override
-        public Optional<Resource> getResource(ResourceLocation identifier) {
+        public Optional<Resource> getResource(Identifier identifier) {
             return this.activeManager.getResource(identifier);
         }
 
@@ -453,22 +452,22 @@ public class PFMLangProvider extends PFMProvider {
         }
 
         @Override
-        public List<Resource> getResourceStack(ResourceLocation resourceLocation) {
+        public List<Resource> getResourceStack(Identifier resourceLocation) {
             return activeManager.getResourceStack(resourceLocation);
         }
 
         @Override
-        public Map<ResourceLocation, Resource> listResources(String string, Predicate<ResourceLocation> predicate) {
+        public Map<Identifier, Resource> listResources(String string, Predicate<Identifier> predicate) {
             return activeManager.listResources(string, predicate);
         }
 
         @Override
-        public Map<ResourceLocation, List<Resource>> listResourceStacks(String string, Predicate<ResourceLocation> predicate) {
+        public Map<Identifier, List<Resource>> listResourceStacks(String string, Predicate<Identifier> predicate) {
             return Map.of();
         }
 
         @Override
-        public Resource getResourceOrThrow(ResourceLocation resourceLocation) throws FileNotFoundException {
+        public Resource getResourceOrThrow(Identifier resourceLocation) throws FileNotFoundException {
             return activeManager.getResourceOrThrow(resourceLocation);
         }
 

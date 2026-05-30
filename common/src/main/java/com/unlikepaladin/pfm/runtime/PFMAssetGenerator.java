@@ -11,7 +11,7 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.SharedConstants;
 import com.unlikepaladin.pfm.utilities.Version;
 import net.minecraft.server.packs.PackResources;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import org.apache.logging.log4j.LogManager;
 
@@ -49,7 +49,7 @@ public class PFMAssetGenerator extends PFMGenerator {
             }
             PFMCache cached = PFMCache.fromJson(JSON_PARSER.parse(Files.readString(pfmCacheDataFile)));
             List<String> hashToCompare = hashDirectory(output.toFile(), false, getLogger());
-            List<ResourceLocation> variants = new ArrayList<>();
+            List<Identifier> variants = new ArrayList<>();
 
             WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
             StoneVariantRegistry.getVariants().stream().sorted().forEach(stoneVariant -> variants.add(stoneVariant.identifier));

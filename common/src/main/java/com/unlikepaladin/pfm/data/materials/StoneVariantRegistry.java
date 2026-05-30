@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
-    public static final StoneVariant STONE = new StoneVariant(ResourceLocation.parse("stone"), Blocks.STONE, Blocks.COBBLESTONE);
+    public static final StoneVariant STONE = new StoneVariant(Identifier.parse("stone"), Blocks.STONE, Blocks.COBBLESTONE);
     public static final StoneVariantRegistry INSTANCE = new StoneVariantRegistry();
     public static Collection<String> getNamespaces() {
         return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
@@ -29,26 +29,26 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         return Collections.unmodifiableCollection(INSTANCE.variants.values());
     }
     @Nullable
-    public static StoneVariant getVariant(ResourceLocation name) {
+    public static StoneVariant getVariant(Identifier name) {
         return INSTANCE.variants.getOrDefault(name, STONE);
     }
 
-    public static Optional<StoneVariant> getOptionalVariant(ResourceLocation name) {
+    public static Optional<StoneVariant> getOptionalVariant(Identifier name) {
         return INSTANCE.variants.containsKey(name) ? Optional.of(INSTANCE.variants.get(name)) : Optional.empty();
     }
 
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>
      */
-    public Optional<StoneVariant> getVariantFromBlock(Block baseBlock, ResourceLocation blockId) {
+    public Optional<StoneVariant> getVariantFromBlock(Block baseBlock, Identifier blockId) {
         String name = null;
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("rock/polished/")) {
                 Optional<Block> cobble = BuiltInRegistries.BLOCK.getOptional(
-                        ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), path.replace("polished", "raw")));
+                        Identifier.fromNamespaceAndPath(blockId.getNamespace(), path.replace("polished", "raw")));
                 if (cobble.isPresent()) {
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), path.replace("rock/polished/", ""));
+                    Identifier id = Identifier.fromNamespaceAndPath(blockId.getNamespace(), path.replace("rock/polished/", ""));
                     return Optional.of(new StoneVariant(id, baseBlock, cobble.get()));
                 }
             }
@@ -82,7 +82,7 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
                 if (soundGroup == SoundType.DEEPSLATE || soundGroup == SoundType.POLISHED_DEEPSLATE || soundGroup == SoundType.STONE || instrument == NoteBlockInstrument.BASEDRUM) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), name);
+                    Identifier id = Identifier.fromNamespaceAndPath(blockId.getNamespace(), name);
                     Block rawBlock = findRaw(id);
                     if (rawBlock != null) {
                         return Optional.of(new StoneVariant(id, baseBlock, rawBlock));
@@ -104,29 +104,29 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
     }
 
     @Nullable
-    private static Block findRaw(ResourceLocation id) {
-        ResourceLocation[] test = {
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "raw"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_raw"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "raw_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "raw" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_cobble"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "cobble"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "cobble_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "cobble" + id.getPath()),
-                ResourceLocation.parse(id.getPath()),
-                ResourceLocation.parse(id.getPath() + "raw"),
-                ResourceLocation.parse(id.getPath() + "_raw"),
-                ResourceLocation.parse("raw_" + id.getPath()),
-                ResourceLocation.parse("raw" + id.getPath()),
-                ResourceLocation.parse(id.getPath() + "_cobble"),
-                ResourceLocation.parse(id.getPath() + "cobble"),
-                ResourceLocation.parse("cobble_" + id.getPath()),
-                ResourceLocation.parse("cobble" + id.getPath())
+    private static Block findRaw(Identifier id) {
+        Identifier[] test = {
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "raw"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_raw"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "raw_" + id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "raw" + id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_cobble"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "cobble"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "cobble_" + id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "cobble" + id.getPath()),
+                Identifier.parse(id.getPath()),
+                Identifier.parse(id.getPath() + "raw"),
+                Identifier.parse(id.getPath() + "_raw"),
+                Identifier.parse("raw_" + id.getPath()),
+                Identifier.parse("raw" + id.getPath()),
+                Identifier.parse(id.getPath() + "_cobble"),
+                Identifier.parse(id.getPath() + "cobble"),
+                Identifier.parse("cobble_" + id.getPath()),
+                Identifier.parse("cobble" + id.getPath())
         };
         Block temp = null;
-        for (ResourceLocation r : test) {
+        for (Identifier r : test) {
             if (BuiltInRegistries.BLOCK.containsKey(r)) {
                 temp = BuiltInRegistries.BLOCK.getValue(r);
                 break;

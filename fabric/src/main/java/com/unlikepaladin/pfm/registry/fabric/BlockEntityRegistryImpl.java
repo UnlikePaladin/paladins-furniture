@@ -9,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.util.Set;
@@ -17,6 +17,6 @@ import java.util.Set;
 public class BlockEntityRegistryImpl {
 
     public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntitySupplier<T> factory) {
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), new BlockEntityType<>(factory, Set.of(block)));
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), new BlockEntityType<>(factory, Set.of(block)));
     }
 }

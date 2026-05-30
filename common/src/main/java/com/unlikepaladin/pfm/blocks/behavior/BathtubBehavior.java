@@ -5,7 +5,6 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvent;
@@ -13,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -39,7 +39,7 @@ public interface BathtubBehavior {
 
     Codec<Map<Item, BathtubBehavior>> CODEC = MapCodec.unit(TUB_BEHAVIOR).codec();
     static Object2ObjectOpenHashMap<Item, BathtubBehavior> createMap() {
-        return (Object2ObjectOpenHashMap) Util.make(new Object2ObjectOpenHashMap(), (map) -> {
+        return Util.make(new Object2ObjectOpenHashMap<>(), (map) -> {
             map.defaultReturnValue(null);});
     }
 

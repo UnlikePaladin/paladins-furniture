@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +38,7 @@ import java.util.*;
 public class PaladinFurnitureMod {
 
 	public static final String MOD_ID = "pfm";
-	public static final ResourceLocation FURNITURE_DYED_ID = ResourceLocation.parse("pfm:furniture_dyed");
+	public static final Identifier FURNITURE_DYED_ID = Identifier.parse("pfm:furniture_dyed");
 	public static final HashMap<Class<? extends Block>, FurnitureEntry<?>> furnitureEntryMap = new LinkedHashMap<>();
 	public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.createVariableRangeEvent(FURNITURE_DYED_ID);
 

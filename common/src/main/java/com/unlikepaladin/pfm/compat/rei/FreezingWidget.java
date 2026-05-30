@@ -9,9 +9,7 @@ import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import java.util.Collections;
@@ -19,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FreezingWidget extends BurningFire {
-    private final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
+    private final Identifier background = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private Rectangle bounds;
     private double animationDuration = -1;
     private final NumberAnimator<Float> darkBackgroundAlpha = ValueAnimator.ofFloat()

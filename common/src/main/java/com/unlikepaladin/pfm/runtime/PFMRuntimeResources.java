@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.PackResources;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -38,7 +38,7 @@ public class PFMRuntimeResources {
     }
 
     public static volatile List<PackResources> RESOURCE_PACK_LIST;
-    public static Map<ResourceLocation, PFMBakedModelContainer> modelCacheMap = new ConcurrentHashMap<>();
+    public static Map<Identifier, PFMBakedModelContainer> modelCacheMap = new ConcurrentHashMap<>();
     private static boolean isAnyGeneratorRunning = false;
 
     public static byte[] getImageData() {

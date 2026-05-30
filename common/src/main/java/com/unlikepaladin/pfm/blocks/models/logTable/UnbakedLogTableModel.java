@@ -18,7 +18,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -32,27 +32,27 @@ public record UnbakedLogTableModel(Variant variant) implements PFMUnbakedBlockSt
 
     public static final Codec<UnbakedLogTableModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] LOG_MODEL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_middle"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_right"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_left"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_legs")
+    public static final Identifier[] LOG_MODEL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_middle"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_right"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_left"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table/log_table_legs")
     };
 
-    public static final ResourceLocation TABLE_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table");
-    public static final List<ResourceLocation> TABLE_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier TABLE_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_table");
+    public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_" + logType));
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_raw_table_" + logType));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_" + logType));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_raw_table_" + logType));
                 if (variant.hasStripped()) {
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_table_" + logType));
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_raw_table_" + logType));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_table_" + logType));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_raw_table_" + logType));
                 }
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_natural"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_natural"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -70,7 +70,7 @@ public record UnbakedLogTableModel(Variant variant) implements PFMUnbakedBlockSt
             PFMRuntimeResources.modelCacheMap.put(TABLE_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : LOG_MODEL_PARTS_BASE) {
+        for (Identifier modelPart : LOG_MODEL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -79,13 +79,13 @@ public record UnbakedLogTableModel(Variant variant) implements PFMUnbakedBlockSt
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : LOG_MODEL_PARTS_BASE)
+        for (Identifier c : LOG_MODEL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

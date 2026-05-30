@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.unlikepaladin.pfm.client.ColorRegistry;
-import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 public class ColorRegistryNeoForge {

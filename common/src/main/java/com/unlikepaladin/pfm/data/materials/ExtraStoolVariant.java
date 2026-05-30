@@ -8,7 +8,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +35,14 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
         return DEFAULT_VARIANTS;
     }
 
-    ExtraStoolVariant(ResourceLocation identifier, Block baseBlock, Block secondaryBlock) {
+    ExtraStoolVariant(Identifier identifier, Block baseBlock, Block secondaryBlock) {
         super(identifier);
         this.name = identifier.getPath();
         this.baseBlock = baseBlock;
         this.secondaryBlock = secondaryBlock;
     }
     ExtraStoolVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(ResourceLocation.fromNamespaceAndPath("minecraft", name), baseBlock, secondaryBlock);
+        this(Identifier.fromNamespaceAndPath("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
         return secondaryBlock;
     }
 
-    public static Optional<ExtraStoolVariant> getOptionalVariant(ResourceLocation name) {
+    public static Optional<ExtraStoolVariant> getOptionalVariant(Identifier name) {
         return DEFAULT_VARIANTS.stream().filter(extraStoolVariant -> extraStoolVariant.identifier.equals(name)).findFirst();
     }
 
@@ -107,7 +107,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public ResourceLocation getTextureLocation(BlockType type) {
+    public Identifier getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(getSecondaryBlock());
         return ModelHelper.getTextureId(getBaseBlock());

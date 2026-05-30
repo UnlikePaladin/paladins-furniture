@@ -54,8 +54,7 @@ public class StoveResultSlot extends Slot {
         stack.onCraftedBy(this.player, this.removeCount);
         this.removeCount = 0;
         if (this.tileEntity.getLevel() != null && !stack.isEmpty()) {
-            // TODO: FIX AS SOON AS CFBH updates
-            //Balm.getEvents().fireEvent(new OvenItemSmeltedEvent(this.player, this.tileEntity.getLevel(), this.tileEntity.getBlockPos(), stack));
+            OvenItemSmeltedEvent.EVENT.invoker().accept(new OvenItemSmeltedEvent(this.player, this.tileEntity.getLevel(), this.tileEntity.getBlockPos(), stack));
         }
 
     }

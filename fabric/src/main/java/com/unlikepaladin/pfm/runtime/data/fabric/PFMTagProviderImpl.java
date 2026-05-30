@@ -36,20 +36,20 @@ public class PFMTagProviderImpl {
         @Override
         public PFMTag<T> addKey(ResourceKey<T>... keys) {
             for (ResourceKey<T> key : keys){
-                tagBuilder.addElement(key.location());
+                tagBuilder.addElement(key.identifier());
             }
             return this;
         }
 
         @Override
         public TagAppender<ResourceKey<T>, T> add(ResourceKey<T> value) {
-            tagBuilder.addElement(value.location());
+            tagBuilder.addElement(value.identifier());
             return this;
         }
 
         @Override
         public TagAppender<ResourceKey<T>, T> addOptional(ResourceKey<T> value) {
-            tagBuilder.addOptionalElement(value.location());
+            tagBuilder.addOptionalElement(value.identifier());
             return this;
         }
 

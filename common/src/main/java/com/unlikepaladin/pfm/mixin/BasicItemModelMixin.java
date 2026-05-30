@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
@@ -43,7 +43,7 @@ public class BasicItemModelMixin {
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints == null) {
             Item item = ColorRegistry.itemColorProviders.get(stack.getItem()).asItem();
 
-            ResourceLocation parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
+            Identifier parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
 
             ItemModel parentModel = Minecraft.getInstance().getModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultInstance();
@@ -52,7 +52,7 @@ public class BasicItemModelMixin {
         if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             Item item = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)).getLogBlock().asItem();
 
-            ResourceLocation parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
+            Identifier parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
 
             ItemModel parentModel = Minecraft.getInstance().getModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultInstance();

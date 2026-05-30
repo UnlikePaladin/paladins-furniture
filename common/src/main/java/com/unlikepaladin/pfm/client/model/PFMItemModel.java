@@ -14,11 +14,14 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.client.color.item.Constant;
@@ -36,7 +39,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -53,16 +56,16 @@ public class PFMItemModel<T> implements ItemModel {
     private final List<ItemTintSource> tints;
     private final List<ItemTintSource> pfm$parentTints = new ArrayList<>();
 
-    private static final Function<ItemStack, RenderLayer> ITEMS_ATLAS_RENDER_LAYER_GETTER = stack -> TexturedRenderLayers.getItemTranslucentCull();
-    private static final Function<ItemStack, RenderLayer> BLOCKS_ATLAS_RENDER_LAYER_GETTER = stack -> {
+    private static final Function<ItemStack, RenderType> ITEMS_ATLAS_RENDER_LAYER_GETTER = stack -> Sheets.translucentItemSheet();
+    private static final Function<ItemStack, RenderType> BLOCKS_ATLAS_RENDER_LAYER_GETTER = stack -> {
         if (stack.getItem() instanceof BlockItem blockItem) {
-            BlockRenderLayer blockRenderLayer = BlockRenderLayers.getBlockLayer(blockItem.getBlock().getDefaultState());
-            if (blockRenderLayer != BlockRenderLayer.TRANSLUCENT) {
-                return TexturedRenderLayers.getEntityCutout();
+            ChunkSectionLayer blockRenderLayer = ItemBlockRenderTypes.getChunkRenderType(blockItem.getBlock().defaultBlockState());
+            if (blockRenderLayer != ChunkSectionLayer.TRANSLUCENT) {
+                return Sheets.cutoutBlockSheet();
             }
         }
 
-        return TexturedRenderLayers.getBlockTranslucentCull();
+        return Sheets.translucentBlockItemSheet();
     };
 
     public PFMItemModel(Supplier<BlockStateModel> model, SpecialModelRenderer<T> specialModelType, List<ItemTintSource> tints) {
@@ -94,13 +97,13 @@ public class PFMItemModel<T> implements ItemModel {
             layerRenderState.setFoilType(ItemStackRenderState.FoilType.STANDARD);
         }
 
-        RenderType renderLayer = ItemBlockRenderTypes.getRenderType(stack);
+        RenderType renderLayer = BLOCKS_ATLAS_RENDER_LAYER_GETTER.apply(stack);
         layerRenderState.setRenderType(renderLayer);
 
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints.isEmpty()) {
             Item item = ColorRegistry.itemColorProviders.get(stack.getItem()).asItem();
 
-            ResourceLocation parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
+            Identifier parentModelId = item.getDefaultInstance().get(DataComponents.ITEM_MODEL);
 
             ItemModel parentModel = Minecraft.getInstance().getModelManager().getItemModel(parentModelId);
             pfm$parentTints.addAll(exploreForTints(stack, parentModel, world, heldItemContext, seed, displayContext));

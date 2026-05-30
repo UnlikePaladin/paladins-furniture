@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -28,22 +28,22 @@ public record UnbakedHerringboneModel(Variant variant) implements PFMUnbakedBloc
 
     public static final Codec<UnbakedHerringboneModel> CODEC = MAP_CODEC.codec();
 
-    private static final List<ResourceLocation> TEMPLATE_MODEL = List.of(ResourceLocation.parse("minecraft:block/block"), ResourceLocation.parse("minecraft:block/cube_all"));
+    private static final List<Identifier> TEMPLATE_MODEL = List.of(Identifier.parse("minecraft:block/block"), Identifier.parse("minecraft:block/cube_all"));
 
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
-    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<>() {
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
+    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
             add(ID);
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_herringbone_planks"));
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getSerializedName() + "_herringbone_planks"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_herringbone_planks"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getSerializedName() + "_herringbone_planks"));
             }
         }
     };
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation modelPart : TEMPLATE_MODEL) {
+        for (Identifier modelPart : TEMPLATE_MODEL) {
             resolver.markDependency(modelPart);
         }
     }
@@ -61,7 +61,7 @@ public record UnbakedHerringboneModel(Variant variant) implements PFMUnbakedBloc
             PFMRuntimeResources.modelCacheMap.put(ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : TEMPLATE_MODEL) {
+        for (Identifier modelPart : TEMPLATE_MODEL) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -70,7 +70,7 @@ public record UnbakedHerringboneModel(Variant variant) implements PFMUnbakedBloc
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

@@ -18,20 +18,20 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
 
-    public static <T extends AbstractContainerMenu, D>  MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
+    public static <T extends AbstractContainerMenu, D>  MenuType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
         if (pac == null)
             return Registry.register(BuiltInRegistries.MENU, id, new MenuType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_FLAGS));
 
         return Registry.register(BuiltInRegistries.MENU, id, new ExtendedScreenHandlerType<>(factory::apply, pac));
     }
 
-    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(ResourceLocation id, BiFunction<Integer, Inventory, T> factory) {
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, Inventory, T> factory) {
         return Registry.register(BuiltInRegistries.MENU, id, new MenuType<>(factory::apply, FeatureFlags.DEFAULT_FLAGS));
     }
 

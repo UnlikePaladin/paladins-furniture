@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -81,7 +81,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         if (state.getValue(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.relative(state.getValue(FACING)))).getBlock() instanceof SimpleBedBlock)) {
             return InteractionResult.CONSUME;
         }
-        BedRule bedRule = world.getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.BED_RULE_GAMEPLAY, pos);
+        BedRule bedRule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
         if (bedRule.explodes()) {
             world.removeBlock(pos, false);
             BlockPos blockPos = pos.relative(state.getValue(FACING).getOpposite());

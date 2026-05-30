@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
+import com.unlikepaladin.pfm.mixin.PFMTextureAtlasSpriteMixin;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.*;
@@ -16,7 +17,7 @@ import net.minecraft.data.AtlasIds;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.util.*;
 
 public final class TextureReloadQueue {
 
-    public static void recolorAndWriteImage(ResourceLocation identifier, BufferedImage base, Map<Integer, Integer> palette) {
+    public static void recolorAndWriteImage(Identifier identifier, BufferedImage base, Map<Integer, Integer> palette) {
         try {
             BufferedImage recolored = new BufferedImage(base.getWidth(), base.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for(int y = 0; y < base.getHeight(); y++) {
@@ -71,9 +72,9 @@ public final class TextureReloadQueue {
         requestReload(identifier);
     }
 
-    public static final List<ResourceLocation> list = Collections.synchronizedList(new ArrayList<>());
+    public static final List<Identifier> list = Collections.synchronizedList(new ArrayList<>());
 
-    public static void requestReload(ResourceLocation id) {
+    public static void requestReload(Identifier id) {
         if (id != null) list.add(id);
     }
 
@@ -83,8 +84,8 @@ public final class TextureReloadQueue {
     }
 
 
-    static void reloadSingleSprite(ResourceManager resourceManager, TextureAtlas spriteAtlas, ResourceLocation id) throws IOException {
-        ResourceLocation path = ModelHelper.getTextureSpritePath(id);
+    static void reloadSingleSprite(ResourceManager resourceManager, TextureAtlas spriteAtlas, Identifier id) throws IOException {
+        Identifier path = ModelHelper.getTextureSpritePath(id);
         Optional<Resource> optionalResource = resourceManager.getResource(path);
 
         if (optionalResource.isEmpty()) {
@@ -109,21 +110,21 @@ public final class TextureReloadQueue {
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
-        for (int i = 0; i <= MinecraftClient.getInstance().options.getMipmapLevels().getValue(); i++) {
+        for (int i = 0; i <= Minecraft.getInstance().options.mipmapLevels().get(); i++) {
             original.uploadFirstFrame(spriteAtlas.getTexture(), i);
         }
     }
 
-    public static void reloadSpritesOnClientThread(List<ResourceLocation> id) {
+    public static void reloadSpritesOnClientThread(List<Identifier> id) {
         AtlasManager textureManager = Minecraft.getInstance().getAtlasManager();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
         try {
             TextureAtlas spriteAtlas = textureManager.getAtlasOrThrow(AtlasIds.BLOCKS);
-            for (ResourceLocation spriteId : id) {
+            for (Identifier spriteId : id) {
                 reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
             }
             if (!id.isEmpty())
-                ((PFMSpriteAtlasTextureAccessor) spriteAtlas).pfm$upload();
+                ((PFMSpriteAtlasTexturesExtensions) spriteAtlas).pfm$upload();
         } catch (IOException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to reload texture at {}", id, e);
         }
@@ -131,7 +132,7 @@ public final class TextureReloadQueue {
         Minecraft.getInstance().execute(
                 () -> {
                     Minecraft.getInstance().levelRenderer.allChanged();
-                    List<ResourceLocation> variants = new ArrayList<>();
+                    List<Identifier> variants = new ArrayList<>();
 
                     WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
                     StoneVariantRegistry.getVariants().stream().sorted().forEach(stoneVariant -> variants.add(stoneVariant.identifier));

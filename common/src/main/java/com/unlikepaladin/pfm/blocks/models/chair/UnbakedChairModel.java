@@ -19,7 +19,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -32,23 +32,23 @@ public record UnbakedChairModel(Variant variant) implements PFMUnbakedBlockState
 
     public static final Codec<UnbakedChairModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] CHAIR_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair/chair"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair/chair_tucked")
+    public static final Identifier[] CHAIR_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair/chair"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair/chair_tucked")
     };
 
-    public static final ResourceLocation CHAIR_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair");
-    public static final List<ResourceLocation> CHAIR_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier CHAIR_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair");
+    public static final List<Identifier> CHAIR_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_chair"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_chair"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair"));
             }
             add(CHAIR_MODEL_ID);
         }
@@ -67,7 +67,7 @@ public record UnbakedChairModel(Variant variant) implements PFMUnbakedBlockState
             PFMRuntimeResources.modelCacheMap.put(CHAIR_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : CHAIR_PARTS_BASE) {
+        for (Identifier modelPart : CHAIR_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -76,13 +76,13 @@ public record UnbakedChairModel(Variant variant) implements PFMUnbakedBlockState
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation model, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier model, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : CHAIR_PARTS_BASE)
+        for (Identifier c : CHAIR_PARTS_BASE)
             resolver.markDependency(c);
     }
 

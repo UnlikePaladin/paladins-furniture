@@ -13,7 +13,7 @@ import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -35,14 +35,14 @@ public class ItemGroupRegistryNeoForge {
             CreativeModeTab dyeGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.dye_kits"))
                         .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                         .displayItems((enabledFeatures, stacks) -> {}).build();
-            helper.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, "dye_kits"), dyeGroup);
+            helper.register(Identifier.fromNamespaceAndPath(MOD_ID, "dye_kits"), dyeGroup);
             PaladinFurnitureMod.DYE_KITS.setB(dyeGroup);
 
             CreativeModeTab furnitureGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.furniture"))
                     .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultInstance())
                     .displayItems((enabledFeatures, entries) -> {
                     }).build();
-            helper.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, "furniture"), furnitureGroup);
+            helper.register(Identifier.fromNamespaceAndPath(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setB(furnitureGroup);
             PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS));
         });

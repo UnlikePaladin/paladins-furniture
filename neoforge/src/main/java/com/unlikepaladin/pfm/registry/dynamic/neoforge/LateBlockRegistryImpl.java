@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.neoforge.BlockItemRegistryImpl;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -67,13 +67,13 @@ public class LateBlockRegistryImpl {
                  IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
-        blocks.forEach((blockName, block) -> Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), block));
+        blocks.forEach((blockName, block) -> Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), block));
     }
 
     public static void registerItems(Registry<Item> itemIForgeRegistry) {
         items.forEach((itemName, itemSup) -> {
             Item item = itemSup.get();
-            Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
+            Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
             if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(BlockItemRegistryImpl.itemNameToGroup.get(itemName))) {
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(BlockItemRegistryImpl.itemNameToGroup.get(itemName), new LinkedHashSet<>());
             }

@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
@@ -9,22 +8,14 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.level.Level;
-import java.util.Optional;
+import net.minecraft.resources.Identifier;
 
 public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHandler> {
-    private final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
+    private final Identifier background = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
     private boolean narrow;
     public boolean isActive;
     private MicrowaveBlockEntity microwaveBlockEntity;

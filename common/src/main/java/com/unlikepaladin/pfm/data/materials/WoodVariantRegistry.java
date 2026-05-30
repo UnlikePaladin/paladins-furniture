@@ -2,8 +2,7 @@ package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
-import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
@@ -18,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
-    public static final WoodVariant OAK = new WoodVariant(ResourceLocation.parse("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG);
+    public static final WoodVariant OAK = new WoodVariant(Identifier.parse("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG);
     public static final WoodVariantRegistry INSTANCE = new WoodVariantRegistry();
     public static Collection<String> getNamespaces() {
         return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
@@ -28,26 +27,26 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         return Collections.unmodifiableCollection(INSTANCE.variants.values());
     }
     @Nullable
-    public static WoodVariant getVariant(ResourceLocation name) {
+    public static WoodVariant getVariant(Identifier name) {
         return INSTANCE.variants.getOrDefault(name, OAK);
     }
 
-    public static Optional<WoodVariant> getOptionalVariant(ResourceLocation name) {
+    public static Optional<WoodVariant> getOptionalVariant(Identifier name) {
         return INSTANCE.variants.containsKey(name) ? Optional.of(INSTANCE.variants.get(name)) : Optional.empty();
     }
 
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>
      */
-    public Optional<WoodVariant> getVariantFromBlock(Block baseBlock, ResourceLocation blockId) {
+    public Optional<WoodVariant> getVariantFromBlock(Block baseBlock, Identifier blockId) {
         String name = null;
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("wood/planks/")) {
                 Optional<Block> log = BuiltInRegistries.BLOCK.getOptional(
-                        ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), path.replace("planks", "log")));
+                        Identifier.fromNamespaceAndPath(blockId.getNamespace(), path.replace("planks", "log")));
                 if (log.isPresent()) {
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), path.replace("wood/planks/", ""));
+                    Identifier id = Identifier.fromNamespaceAndPath(blockId.getNamespace(), path.replace("wood/planks/", ""));
                     return Optional.of(new WoodVariant(id, baseBlock, log.get()));
                 }
             }
@@ -83,7 +82,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
                 if (soundGroup == SoundType.BAMBOO_WOOD || soundGroup == SoundType.CHERRY_WOOD || soundGroup == SoundType.WOOD || soundGroup == SoundType.NETHER_WOOD || instrument == NoteBlockInstrument.BASS) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), name);
+                    Identifier id = Identifier.fromNamespaceAndPath(blockId.getNamespace(), name);
                     Block logBlock = findLog(id);
                     if (logBlock != null) {
                         return Optional.of(new WoodVariant(id, baseBlock, logBlock));
@@ -105,24 +104,24 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     }
 
     @Nullable
-    private static Block findLog(ResourceLocation id) {
-        ResourceLocation[] test = {
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_log"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "log_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "log"),
-                ResourceLocation.parse(id.getPath() + "_log"),
-                ResourceLocation.parse("log_" + id.getPath()),
-                ResourceLocation.parse(id.getPath() + "log"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_stem"),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "stem_" + id.getPath()),
-                ResourceLocation.parse(id.getPath() + "_stem"),
-                ResourceLocation.parse("stem_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "stalk_" + id.getPath()),
-                ResourceLocation.parse(id.getPath() + "_stalk"),
-                ResourceLocation.parse("stalk_" + id.getPath())
+    private static Block findLog(Identifier id) {
+        Identifier[] test = {
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_log"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "log_" + id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "log"),
+                Identifier.parse(id.getPath() + "_log"),
+                Identifier.parse("log_" + id.getPath()),
+                Identifier.parse(id.getPath() + "log"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_stem"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "stem_" + id.getPath()),
+                Identifier.parse(id.getPath() + "_stem"),
+                Identifier.parse("stem_" + id.getPath()),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "stalk_" + id.getPath()),
+                Identifier.parse(id.getPath() + "_stalk"),
+                Identifier.parse("stalk_" + id.getPath())
         };
         Block temp = null;
-        for (ResourceLocation r : test) {
+        for (Identifier r : test) {
             if (BuiltInRegistries.BLOCK.containsKey(r)) {
                 temp = BuiltInRegistries.BLOCK.getValue(r);
                 break;

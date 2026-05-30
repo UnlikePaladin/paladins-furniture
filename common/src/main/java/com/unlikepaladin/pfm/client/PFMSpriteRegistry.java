@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 
 import java.util.*;
@@ -17,8 +17,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
-    public static ResourceLocation HERRINGBONE_PLANKS = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
-    public static Map<ResourceLocation, Function<SpriteContents, List<Tuple<ResourceLocation, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new ConcurrentHashMap<>();
+    public static Identifier HERRINGBONE_PLANKS = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
+    public static Map<Identifier, Function<SpriteContents, List<Tuple<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new ConcurrentHashMap<>();
 
     public static void registerAdditionalSprites() {
         if (!DYNAMIC_SPRITE_GENERATORS.isEmpty())
@@ -32,12 +32,12 @@ public class PFMSpriteRegistry {
     }
 
     @ExpectPlatform
-    public static void registerSprite(ResourceLocation spriteId) {
+    public static void registerSprite(Identifier spriteId) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void registerDynamicSprite(ResourceLocation spriteId, List<VariantBase<?>> variantBaseList) {
+    public static void registerDynamicSprite(Identifier spriteId, List<VariantBase<?>> variantBaseList) {
         throw new AssertionError();
     }
 }

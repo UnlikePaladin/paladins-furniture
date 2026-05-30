@@ -2,9 +2,10 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.Balm;
-/*import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
+import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.util.ItemUtils;*/
+import net.blay09.mods.cookingforblockheads.util.ItemUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,9 +14,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -36,7 +34,7 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
         return CODEC;
     }
 
-    /*@Override
+    @Override
     public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult blockHitResult) {
         Object blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
@@ -53,7 +51,7 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
             }
 
             if (!world.isClientSide()) {
-                Balm.networking().openMenu(player, (NamedScreenHandlerFactory) cookingTable);
+                Balm.networking().openMenu(player, cookingTable);
             }
         }
 
@@ -75,18 +73,19 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
         return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
-    public void onStateReplaced(BlockState state, ServerWorld level, BlockPos pos, boolean isMoving) {
-        CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) (Object) level.getBlockEntity(pos);
+    @Override
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
+        CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
         ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
-        super.onStateReplaced(state, level, pos, isMoving);
+        super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return (BlockEntity) (Object) new CookingTableBlockEntity(pos, state);
+        return new CookingTableBlockEntity(pos, state);
     }
-*/
+
     private static final VoxelShape SHAPE = Shapes.or(box(3, 0, 3, 13,1,13));
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -96,10 +95,5 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
-    }
-
-    @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return null;
     }
 }

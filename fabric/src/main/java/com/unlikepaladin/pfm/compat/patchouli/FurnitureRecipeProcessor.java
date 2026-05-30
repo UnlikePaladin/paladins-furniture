@@ -16,15 +16,15 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
         return null;
     }
  /*   private FurnitureRecipe recipe;
-    private ResourceLocation variant;
+    private Identifier variant;
     private boolean isBase;
     @Override
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
         RecipeManager manager = level.recipeAccess();
-        Recipe<?> recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
+        Recipe<?> recipe = manager.byKey(Identifier.parse(recipeId)).map(RecipeHolder::value).orElse(null);
         this.recipe = recipe instanceof FurnitureRecipe ? (FurnitureRecipe) recipe : null;
-        this.variant = variables.has("variant") ? ResourceLocation.tryParse(variables.get("variant", level.registryAccess()).asString()) : null;
+        this.variant = variables.has("variant") ? Identifier.tryParse(variables.get("variant", level.registryAccess()).asString()) : null;
     }
 
     @Override

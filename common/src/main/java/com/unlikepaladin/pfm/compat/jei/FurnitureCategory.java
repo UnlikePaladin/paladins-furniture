@@ -22,14 +22,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final ResourceLocation TEXTURE_GUI_VANILLA = ResourceLocation.parse("pfm:textures/gui/gui_jei.png");
+    public static final Identifier TEXTURE_GUI_VANILLA = Identifier.parse("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
     public static final Component TITLE = Component.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
@@ -43,7 +43,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         craftingGridHelper = guiHelper.createCraftingGridHelper();
         this.set = Minecraft.getInstance().level.enabledFeatures();
     }
-    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "crafting");
+    public static final Identifier IDENTIFIER = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "crafting");
 
     @Override
     public IRecipeType<FurnitureRecipe> getRecipeType() {

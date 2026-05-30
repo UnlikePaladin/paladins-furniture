@@ -1,46 +1,29 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
-import com.unlikepaladin.pfm.items.PFMComponents;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Axis;
-import net.minecraft.util.RandomSource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, OfficeChairEntityRenderState, OfficeChairModelEmpty> {
-    public static final ResourceLocation[] MODEL_IDS = {ResourceLocation.parse("pfm:block/office_chair/office_chair"), ResourceLocation.parse("pfm:block/office_chair/office_chair_top"),
-    ResourceLocation.parse("pfm:block/office_chair/office_chair_bottom"), ResourceLocation.parse("pfm:block/office_chair/office_chair_wheels")};
+    public static final Identifier[] MODEL_IDS = {Identifier.parse("pfm:block/office_chair/office_chair"), Identifier.parse("pfm:block/office_chair/office_chair_top"),
+    Identifier.parse("pfm:block/office_chair/office_chair_bottom"), Identifier.parse("pfm:block/office_chair/office_chair_wheels")};
     // Wheel positions relative to center (x, z offsets)
     private static final float[][] WHEEL_OFFSETS = {
         {0f, 0.35f},   // front-right
@@ -150,7 +133,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
     }
 
     @Override
-    public ResourceLocation getTextureLocation(OfficeChairEntityRenderState state) {
+    public Identifier getTextureLocation(OfficeChairEntityRenderState state) {
         return null;
     }
 

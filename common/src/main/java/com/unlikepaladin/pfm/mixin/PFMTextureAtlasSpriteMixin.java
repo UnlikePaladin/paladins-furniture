@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.*;
 
 @Mixin(TextureAtlasSprite.class)
@@ -30,7 +30,7 @@ public abstract class PFMTextureAtlasSpriteMixin implements PFMSpriteExtensions 
     }
 
     @Override
-    public ResourceLocation pfm$getId() {
+    public Identifier pfm$getId() {
         return contents.name();
     }
 }

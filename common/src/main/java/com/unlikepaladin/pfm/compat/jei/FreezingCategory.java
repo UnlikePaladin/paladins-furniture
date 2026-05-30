@@ -23,7 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
@@ -31,9 +31,9 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     public static final Component TITLE = Component.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
-    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezing");
+    public static final Identifier IDENTIFIER = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
-    public static final ResourceLocation FREEZE_GUI = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
+    public static final Identifier FREEZE_GUI = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
     protected final IDrawableStatic staticFreezeIcon;
     protected final IDrawableAnimated animatedFreezeIcon;
     private final int regularFreezeTime;

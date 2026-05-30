@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.runtime.fabric;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class TextureReloadQueueImpl {
             if (list.isEmpty()) return;
 
             Minecraft.getInstance().execute(() -> {
-                List<ResourceLocation> spriteIdentifiers = new ArrayList<>(list);
+                List<Identifier> spriteIdentifiers = new ArrayList<>(list);
                 list.clear();
                 reloadSpritesOnClientThread(spriteIdentifiers);
             });

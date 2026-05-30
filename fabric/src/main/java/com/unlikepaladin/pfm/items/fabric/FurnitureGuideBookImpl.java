@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -25,7 +25,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
 
     public static InteractionResult openBook(Level world, Player user, InteractionHand hand) {
         if (!world.isClientSide() && FabricLoader.getInstance().isModLoaded("patchouli")) {
-                PatchouliAPI.get().openBookGUI((ServerPlayer) user, ResourceLocation.parse("pfm:guide_book"));
+                PatchouliAPI.get().openBookGUI((ServerPlayer) user, Identifier.parse("pfm:guide_book"));
             return InteractionResult.SUCCESS;
         }
         else if (world.isClientSide() && !FabricLoader.getInstance().isModLoaded("patchouli"))

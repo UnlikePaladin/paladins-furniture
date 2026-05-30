@@ -15,7 +15,7 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 /*
 @EmiEntrypoint
 public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
@@ -28,9 +28,9 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     protected static EmiRecipeCategory FREEZER;
 
     public static EmiIngredient WORKBENCH_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
-    public static ResourceLocation WORKBENCH_ID = ResourceLocation.parse("pfm:furniture");
+    public static Identifier WORKBENCH_ID = Identifier.parse("pfm:furniture");
     public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static ResourceLocation FREEZER_ID = ResourceLocation.parse("pfm:freezer");
+    public static Identifier FREEZER_ID = Identifier.parse("pfm:freezer");
     @Override
     public void register(EmiRegistry registry) {
         FURNITURE  = new EmiRecipeCategory(WORKBENCH_ID, WORKBENCH_ICON, simplifiedRenderer(240, 240));
@@ -55,7 +55,7 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (context, x, y, delta) -> {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            context.blit(ResourceLocation.fromNamespaceAndPath("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
+            context.blit(Identifier.fromNamespaceAndPath("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
         };
     }
 }

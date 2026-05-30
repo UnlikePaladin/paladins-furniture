@@ -40,22 +40,22 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
 public class FurnitureDisplay implements Display {
-    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture"));
+    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
-    public Optional<ResourceLocation> location;
+    public Optional<Identifier> location;
     public FurnitureDisplay(RecipeHolder<FurnitureRecipe> recipeEntry, FeatureFlagSet set) {
         this(recipeEntry.value(), set);
-        this.location = Optional.of(recipeEntry.id().location());
+        this.location = Optional.of(recipeEntry.id().identifier());
     }
 
-    public FurnitureDisplay(List<EntryIngredient> input, List<EntryIngredient> output, Optional<ResourceLocation> location, int itemsPerInnerRecipe) {
+    public FurnitureDisplay(List<EntryIngredient> input, List<EntryIngredient> output, Optional<Identifier> location, int itemsPerInnerRecipe) {
         this.input = input;
         this.output = output;
         this.location = location;
@@ -108,7 +108,7 @@ public class FurnitureDisplay implements Display {
     }
 
     @Override
-    public Optional<ResourceLocation> getDisplayLocation() {
+    public Optional<Identifier> getDisplayLocation() {
         return location;
     }
 
@@ -121,7 +121,7 @@ public class FurnitureDisplay implements Display {
             RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntryIngredient.codec().listOf().fieldOf("inputs").forGetter(FurnitureDisplay::getInputEntries),
                     EntryIngredient.codec().listOf().fieldOf("outputs").forGetter(FurnitureDisplay::getOutputEntries),
-                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(FurnitureDisplay::getDisplayLocation),
+                    Identifier.CODEC.optionalFieldOf("location").forGetter(FurnitureDisplay::getDisplayLocation),
                     Codec.INT.fieldOf("itemsPerInnerRecipe").forGetter(FurnitureDisplay::itemsPerInnerRecipe)
             ).apply(instance, FurnitureDisplay::new)),
             StreamCodec.composite(
@@ -129,7 +129,7 @@ public class FurnitureDisplay implements Display {
                     FurnitureDisplay::getInputEntries,
                     EntryIngredient.streamCodec().apply(ByteBufCodecs.list()),
                     FurnitureDisplay::getOutputEntries,
-                    ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC),
+                    ByteBufCodecs.optional(Identifier.STREAM_CODEC),
                     FurnitureDisplay::getDisplayLocation,
                     ByteBufCodecs.INT,
                     FurnitureDisplay::itemsPerInnerRecipe,

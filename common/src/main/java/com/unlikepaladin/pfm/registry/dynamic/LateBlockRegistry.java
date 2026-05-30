@@ -28,7 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 
 import net.minecraft.world.level.material.MapColor;
@@ -65,7 +65,7 @@ public class LateBlockRegistry {
 
 
     public static <T> ResourceKey<T> getRootRegistryKey(ResourceKey<? extends Registry<T>> setId, String id) {
-        return ResourceKey.create(setId, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id));
+        return ResourceKey.create(setId, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id));
     }
 
     public static ResourceKey<Block> getBlockRegistryKey(String id) {

@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class FreezingRecipe extends AbstractCookingRecipe {
 

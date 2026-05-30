@@ -1,9 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-//import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-/*import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
+import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
@@ -31,7 +32,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
             this.addSlot(new Slot(container, i, 84 + i * 18 + offsetX, 19));
         }
 
-     /*   this.addSlot(new StoveFuelSlot(this, container, 3, 61 + offsetX, 59));
+        this.addSlot(new StoveFuelSlot(this, container, 3, 61 + offsetX, 59));
 
         for(i = 0; i < 3; ++i) {
             this.addSlot(new StoveResultSlot(playerInventory.player, oven, container, i + 4, 142 + offsetX, 41 + i * 18));
@@ -45,7 +46,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
         for(i = 0; i < 4; ++i) {
             this.addSlot(new SlotOvenTool(container, 16 + i, 8, 19 + i * 18, i));
-        }*/
+        }
 
         for(i = 0; i < 3; ++i) {
             for(j = 0; j < 9; ++j) {

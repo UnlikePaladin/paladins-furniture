@@ -22,7 +22,6 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -239,8 +238,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements KitchenItemProc
                                 if (!smeltingResult.isEmpty()) {
                                     ItemStack resultStack = smeltingResult.copy();
                                     this.processingContainer.setItem(i, resultStack);
-                                    //TODO: Also fix this as soon as CFBH updates
-                                    //Balm.getEvents().fireEvent(new OvenCookedEvent(level, this.worldPosition, resultStack));
+                                    OvenCookedEvent.EVENT.invoker().accept(new OvenCookedEvent(level, this.worldPosition, resultStack));
                                     this.slotCookTime[i] = -1;
                                     if (firstTransferSlot == -1) {
                                         firstTransferSlot = i;
@@ -290,7 +288,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements KitchenItemProc
 
     public ItemStack getSmeltingResult(ItemStack itemStack) {
         SingleRecipeInput recipeInput = new SingleRecipeInput(itemStack);
-        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipeType, recipeInput);
+        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipes.type(), recipeInput);
         return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, recipeInput);
     }
 

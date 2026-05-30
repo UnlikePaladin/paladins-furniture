@@ -17,7 +17,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.nio.file.Path;
@@ -266,7 +266,7 @@ public class PFMTagProvider extends PFMProvider {
         throw new AssertionError();
     }
 
-    private static final Map<ResourceLocation, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<Identifier, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
 
     public static <T> TagBuilder getTagBuilder(TagKey<T> tag) {
         return tagBuilders.computeIfAbsent(tag.location(), (id) -> new TagBuilder());
@@ -293,7 +293,7 @@ public class PFMTagProvider extends PFMProvider {
         endProviderRun();
     }
 
-    protected Path getResultItem(ResourceLocation id) {
+    protected Path getResultItem(Identifier id) {
         return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/block/" + id.getPath() + ".json");
     }
 }

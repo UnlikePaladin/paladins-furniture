@@ -4,14 +4,18 @@ import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TextureAtlas.class)
-public class PFMSpriteAtlasTextureMixin implements PFMSpriteAtlasTexturesExtensions {
-    @Inject(method = "create", at = @At(value = "HEAD"))
+public abstract class PFMSpriteAtlasTextureMixin implements PFMSpriteAtlasTexturesExtensions {
+    @Shadow
+    protected abstract void uploadInitialContents();
+
+    @Inject(method = "upload", at = @At(value = "HEAD"))
     public void saveMipLevel(SpriteLoader.Preparations stitchResult, CallbackInfo ci) {
         pfm$maxLevel = stitchResult.mipLevel();
     }
@@ -22,5 +26,10 @@ public class PFMSpriteAtlasTextureMixin implements PFMSpriteAtlasTexturesExtensi
     @Override
     public Integer pfm$getMaxLevel() {
         return pfm$maxLevel;
+    }
+
+    @Override
+    public void pfm$upload() {
+        uploadInitialContents();
     }
 }

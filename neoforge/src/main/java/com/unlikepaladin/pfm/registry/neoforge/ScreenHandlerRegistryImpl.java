@@ -12,7 +12,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Tuple;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 
@@ -21,20 +21,20 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
-    public static final Map<ResourceLocation, MenuType<?>> screenHandlerMap = new LinkedHashMap<>();
-    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, FriendlyByteBuf, T> factory) {
+    public static final Map<Identifier, MenuType<?>> screenHandlerMap = new LinkedHashMap<>();
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, Inventory, FriendlyByteBuf, T> factory) {
         MenuType<T> type = IMenuTypeExtension.create(factory::apply);
         screenHandlerMap.put(id, type);
         return type;
     }
 
-    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(ResourceLocation id, BiFunction<Integer, Inventory, T> factory) {
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, Inventory, T> factory) {
         MenuType<T> type = new MenuType<>(factory::apply, FeatureFlags.DEFAULT_FLAGS);
         screenHandlerMap.put(id, type);
         return type;
     }
 
-    public static <T extends AbstractContainerMenu, D> MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
+    public static <T extends AbstractContainerMenu, D> MenuType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
         if (pac == null) {
             MenuType<T> type = new MenuType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_FLAGS);
             screenHandlerMap.put(id, type);

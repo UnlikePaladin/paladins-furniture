@@ -215,7 +215,7 @@ public class BasicBathtubBlock extends BedBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
-        if (world.isDarkOutside() && world.getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.BED_RULE_GAMEPLAY, pos).canSleep().test(world)) {
+        if (world.isDarkOutside() && world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos).canSleep().test(world)) {
             super.useWithoutItem(state, world, pos, player, hit);
             return InteractionResult.SUCCESS;
         }

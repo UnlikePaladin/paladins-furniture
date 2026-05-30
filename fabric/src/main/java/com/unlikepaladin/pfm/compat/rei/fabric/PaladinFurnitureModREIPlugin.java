@@ -13,7 +13,7 @@ import me.shedaniel.rei.api.common.registry.display.ServerDisplayRegistry;
 import me.shedaniel.rei.plugin.client.displays.ClientsidedCraftingDisplay;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PaladinFurnitureModREIPlugin implements REICommonPlugin {
     @Override

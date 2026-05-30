@@ -12,7 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.Items;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
@@ -27,14 +27,14 @@ import java.util.function.Supplier;
 
 public abstract class VariantBase<T> implements StringRepresentable, Comparable<VariantBase<T>> {
     private final BiMap<String, Object> children = HashBiMap.create();
-    public final ResourceLocation identifier;
+    public final Identifier identifier;
 
-    protected VariantBase(ResourceLocation id) {
+    protected VariantBase(Identifier id) {
         this.identifier = id;
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract ResourceLocation getTextureLocation(BlockType type);
+    public abstract Identifier getTextureLocation(BlockType type);
 
     public abstract String getPath();
     public abstract Block getBaseBlock();
@@ -51,7 +51,7 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
         return this.identifier.getNamespace();
     }
 
-    public ResourceLocation getIdentifier() {
+    public Identifier getIdentifier() {
         return identifier;
     }
 
@@ -71,14 +71,14 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
     protected <V> V findRelatedEntry(String append, String postPend, Registry<V> reg) {
         if (this.identifier.getNamespace().equals("tfc")) {
             var o = reg.getOptional(
-                    ResourceLocation.fromNamespaceAndPath(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
+                    Identifier.fromNamespaceAndPath(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
             if (o.isPresent()) return o.get();
         }
         String post = postPend.isEmpty() ? "" : "_" + postPend;
-        ResourceLocation[] targets = {
-                ResourceLocation.fromNamespaceAndPath(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
-                ResourceLocation.fromNamespaceAndPath(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
-                ResourceLocation.fromNamespaceAndPath(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
+        Identifier[] targets = {
+                Identifier.fromNamespaceAndPath(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
+                Identifier.fromNamespaceAndPath(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
+                Identifier.fromNamespaceAndPath(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
         };
         V found = null;
         for (var r : targets) {

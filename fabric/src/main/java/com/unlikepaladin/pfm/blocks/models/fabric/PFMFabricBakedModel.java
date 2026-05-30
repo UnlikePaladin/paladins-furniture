@@ -18,7 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -38,8 +38,8 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
             TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS)).find(quad);
             if (originalSprite.contents().name() != sprite.contents().name()) {
                 for (int index = 0; index < 4; index++) {
-                    float frameU = ModelHelper.getUOffset(originalSprite, quad.u(index));
-                    float frameV = ModelHelper.getVOffset(originalSprite, quad.v(index));
+                    float frameU = ModelHelper.getFrameFromU(originalSprite, quad.u(index));
+                    float frameV = ModelHelper.getFrameFromV(originalSprite, quad.v(index));
                     quad.uv(index, sprite.getU(frameU), sprite.getV(frameV));
                 }
             }
@@ -49,11 +49,11 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement) {
         pushTextureTransform(context, toReplace, replacement, AtlasIds.BLOCKS);
     }
-    public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement, ResourceLocation atlasId) {
+    public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement, Identifier atlasId) {
         context.pushTransform(quad -> {
             if (replacement != null && toReplace != null ){
                 TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(atlasId)).find(quad, 0);
-                ResourceLocation keyId = originalSprite.contents().name();
+                Identifier keyId = originalSprite.contents().name();
                 int textureIndex = IntStream.range(0, toReplace.size())
                         .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                         .findFirst()
@@ -62,8 +62,8 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
                 if (textureIndex != -1 && !toReplace.equals(replacement)) {
                     TextureAtlasSprite sprite = replacement.get(textureIndex);
                     for (int index = 0; index < 4; index++) {
-                        float frameU = ModelHelper.getUOffset(originalSprite, quad.u(index));
-                        float frameV = ModelHelper.getVOffset(originalSprite, quad.v(index));
+                        float frameU = ModelHelper.getFrameFromU(originalSprite, quad.u(index));
+                        float frameV = ModelHelper.getFrameFromV(originalSprite, quad.v(index));
                         quad.uv(index, sprite.getU(frameU), sprite.getV(frameV));
                     }
                 }

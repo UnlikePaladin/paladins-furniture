@@ -1,25 +1,20 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
-import net.blay09.mods.cookingforblockheads.menu.OvenMenu;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
 
 public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerBalm> {
-    private static final ResourceLocation texture = ResourceLocation.fromNamespaceAndPath("cookingforblockheads", "textures/gui/oven.png");
+    private static final Identifier texture = Identifier.fromNamespaceAndPath("cookingforblockheads", "textures/gui/oven.png");
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
         super(container, playerInventory, displayName);

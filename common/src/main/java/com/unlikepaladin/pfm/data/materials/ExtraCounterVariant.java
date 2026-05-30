@@ -9,7 +9,7 @@ import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +45,14 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         return DEFAULT_VARIANTS;
     }
 
-    ExtraCounterVariant(ResourceLocation identifier, Block baseBlock, Block secondaryBlock) {
+    ExtraCounterVariant(Identifier identifier, Block baseBlock, Block secondaryBlock) {
         super(identifier);
         this.name = identifier.getPath();
         this.baseBlock = baseBlock;
         this.secondaryBlock = secondaryBlock;
     }
     ExtraCounterVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(ResourceLocation.fromNamespaceAndPath("minecraft", name), baseBlock, secondaryBlock);
+        this(Identifier.fromNamespaceAndPath("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         return secondaryBlock;
     }
 
-    public static Optional<ExtraCounterVariant> getOptionalVariant(ResourceLocation name) {
+    public static Optional<ExtraCounterVariant> getOptionalVariant(Identifier name) {
         return DEFAULT_VARIANTS.stream().filter(extraStoolVariant -> extraStoolVariant.identifier.equals(name)).findFirst();
     }
 
@@ -116,7 +116,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public ResourceLocation getTextureLocation(BlockType type) {
+    public Identifier getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(getSecondaryBlock());
         return ModelHelper.getTextureId(baseBlock);

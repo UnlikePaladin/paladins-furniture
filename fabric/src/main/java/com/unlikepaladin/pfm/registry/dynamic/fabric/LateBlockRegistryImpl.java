@@ -15,7 +15,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 public class LateBlockRegistryImpl {
 
     public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Tuple<String, CreativeModeTab> group) {
-        T block = Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
+        T block = Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);
@@ -45,7 +45,7 @@ public class LateBlockRegistryImpl {
     }
     public static void registerLateItem(String itemName, Supplier<Item> itemSup, Tuple<String, CreativeModeTab> group) {
         Item item = itemSup.get();
-        Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new LinkedHashSet<>());
         }
@@ -81,7 +81,7 @@ public class LateBlockRegistryImpl {
     }
 
     public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Tuple<String, CreativeModeTab> group) {
-        Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), block);
+        Registry.register(BuiltInRegistries.BLOCK, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), block);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);

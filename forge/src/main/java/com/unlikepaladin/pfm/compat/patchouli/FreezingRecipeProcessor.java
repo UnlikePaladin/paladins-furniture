@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -28,7 +28,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
         RecipeManager manager = level.recipeAccess();
-        recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
+        recipe = manager.byKey(Identifier.parse(recipeId)).map(RecipeHolder::value).orElse(null);
     }
 
     @Override

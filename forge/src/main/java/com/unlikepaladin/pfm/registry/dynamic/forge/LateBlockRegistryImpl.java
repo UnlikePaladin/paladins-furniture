@@ -97,7 +97,7 @@ public class LateBlockRegistryImpl {
     @SubscribeEvent
     public static void registerPOI(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper -> {
-            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PoiTypes.HOME.location()).matchingStates();
+            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PoiTypes.HOME.identifier()).matchingStates();
             Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateDefinition().getPossibleStates().stream().filter(state -> state.getValue(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
             Set<BlockState> newBedStates = new HashSet<>();
             newBedStates.addAll(originalBedStates);

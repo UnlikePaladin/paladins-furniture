@@ -18,7 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Registry;
@@ -48,7 +48,7 @@ public class DyeKit extends Item {
                 level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                BlockState blockState1 = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(newBlock)).withPropertiesOf(blockState);
+                BlockState blockState1 = BuiltInRegistries.BLOCK.getValue(Identifier.parse(newBlock)).withPropertiesOf(blockState);
                 level.setBlock(blockPos, blockState1, 3);
                 stack.shrink(1);
                 dyed = true;

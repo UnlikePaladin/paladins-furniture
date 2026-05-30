@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -29,15 +29,15 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
         return null;
     }
     /*private FurnitureRecipe recipe;
-    private ResourceLocation variant;
+    private Identifier variant;
     private boolean isBase;
     @Override
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
         RecipeManager manager = level.recipeAccess();
-        Recipe<?> recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
+        Recipe<?> recipe = manager.byKey(Identifier.parse(recipeId)).map(RecipeHolder::value).orElse(null);
         this.recipe = recipe instanceof FurnitureRecipe ? (FurnitureRecipe) recipe : null;
-        this.variant = variables.has("variant") ? ResourceLocation.tryParse(variables.get("variant", level.registryAccess()).asString()) : null;
+        this.variant = variables.has("variant") ? Identifier.tryParse(variables.get("variant", level.registryAccess()).asString()) : null;
     }
 
     @Override

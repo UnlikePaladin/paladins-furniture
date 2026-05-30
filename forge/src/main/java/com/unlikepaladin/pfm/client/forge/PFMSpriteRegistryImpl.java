@@ -11,23 +11,23 @@ import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PFMSpriteRegistryImpl {
 
-    public static void registerSprite(ResourceLocation spriteId) {
+    public static void registerSprite(Identifier spriteId) {
     }
 
-    public static void registerDynamicSprite(ResourceLocation spriteId, List<VariantBase<?>> variantBaseList) {
+    public static void registerDynamicSprite(Identifier spriteId, List<VariantBase<?>> variantBaseList) {
         PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.put(spriteId, (info) -> {
-            List<Tuple<ResourceLocation, SpriteContents>> infos = new ArrayList<>();
+            List<Tuple<Identifier, SpriteContents>> infos = new ArrayList<>();
             NativeImage image = PFMMissingSpriteAccessor.pfm$invokeCreateImage(info.width(), info.height());
             for (VariantBase<?> variantBase : variantBaseList) {
-                ResourceLocation templateId = info.name();
-                ResourceLocation variantSpriteId = ResourceLocation.fromNamespaceAndPath(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
+                Identifier templateId = info.name();
+                Identifier variantSpriteId = Identifier.fromNamespaceAndPath(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
                 SpriteContents variantInfo = new SpriteContents(variantSpriteId, new FrameSize(info.width(), info.height()),
                         image);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);

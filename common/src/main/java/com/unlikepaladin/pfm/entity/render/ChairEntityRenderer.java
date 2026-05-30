@@ -6,10 +6,10 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ChairEntityRenderer extends EntityRenderer<ChairEntity, EntityRenderState> {
-    private static final ResourceLocation EMPTY_TEXTURE = ResourceLocation.parse("minecraft:textures/block/stone.png");
+    private static final Identifier EMPTY_TEXTURE = Identifier.parse("minecraft:textures/block/stone.png");
     public ChairEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }

@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.items.neoforge;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -13,8 +13,8 @@ import java.util.Map;
 
 @EventBusSubscriber(modid = "pfm")
 public class PFMComponentsImpl {
-    public static Map<ResourceLocation, DataComponentType<?>> components = new HashMap<>();
-    public static <T> DataComponentType<T> register(ResourceLocation id, DataComponentType<T> type) {
+    public static Map<Identifier, DataComponentType<?>> components = new HashMap<>();
+    public static <T> DataComponentType<T> register(Identifier id, DataComponentType<T> type) {
         components.put(id, type);
         return type;
     }

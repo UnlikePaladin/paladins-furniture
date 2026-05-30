@@ -68,7 +68,7 @@ import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
@@ -86,7 +86,7 @@ import java.util.function.Consumer;
 
 public class PFMBlockstateModelProvider extends PFMProvider {
 
-    public static Map<Block, ResourceLocation> modelPathMap = new HashMap<>();
+    public static Map<Block, Identifier> modelPathMap = new HashMap<>();
 
     public PFMBlockstateModelProvider(PFMGenerator parent) {
         super(parent, "PFM Blockstates and Models");
@@ -107,19 +107,19 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        BiConsumer<ResourceLocation, ModelInstance> identifierSupplierBiConsumer = (identifier, supplier) -> {
+        BiConsumer<Identifier, ModelInstance> identifierSupplierBiConsumer = (identifier, supplier) -> {
             Path jsonPath = getModelJsonPath(path, identifier);
             String jsonContent = PFMDataGenerator.GSON.toJson(supplier.get());
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        Set<ResourceLocation> models = new HashSet<>();
+        Set<Identifier> models = new HashSet<>();
         new PFMBlockStateModelGenerator(this, blockStateSupplierConsumer, identifierSupplierBiConsumer).registerModelsAndStates();
         List<Item> generateModelFor = new ArrayList<>();
         modelPathMap.keySet().forEach(block -> {
             Item item = Item.BY_BLOCK.get(block);
             if (item != null) {
-                ResourceLocation identifier = ModelLocationUtils.getModelLocation(item);
+                Identifier identifier = ModelLocationUtils.getModelLocation(item);
                 if (!models.contains(identifier)) {
                     Path jsonPath = getModelJsonPath(path, identifier);
                     enqueueJsonWrite(getWriteQueue(), jsonPath, new DelegatedModel(modelPathMap.get(block)).get());
@@ -130,8 +130,8 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         });
 
 
-        Set<ResourceLocation> itemModels = new HashSet<>();
-        BiConsumer<ResourceLocation, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
+        Set<Identifier> itemModels = new HashSet<>();
+        BiConsumer<Identifier, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
             ClientItem asset = new ClientItem(unbakedModel, ClientItem.Properties.DEFAULT);
             DataResult<JsonElement> result = ClientItem.CODEC.encodeStart(JsonOps.INSTANCE, asset);
             Path dest = getItemsJsonPath(path, id);
@@ -149,25 +149,25 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
     private static Path getBlockStateJsonPath(Path root, Block block) {
-        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
+        Identifier identifier = BuiltInRegistries.BLOCK.getKey(block);
         return root.resolve("assets/" + identifier.getNamespace() + "/blockstates/" + identifier.getPath() + ".json");
     }
 
-    private static Path getModelJsonPath(Path root, ResourceLocation id) {
+    private static Path getModelJsonPath(Path root, Identifier id) {
         return root.resolve("assets/" + id.getNamespace() + "/models/" + id.getPath() + ".json");
     }
 
-    private static Path getItemsJsonPath(Path root, ResourceLocation id) {
+    private static Path getItemsJsonPath(Path root, Identifier id) {
         return root.resolve("assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json");
     }
 
-    private static final ResourceLocation replaceable = ResourceLocation.parse("block/stone");
+    private static final Identifier replaceable = Identifier.parse("block/stone");
 
     static class PFMItemModelGenerator {
-        final BiConsumer<ResourceLocation, ItemModel.Unbaked> output;
-        public final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
+        final BiConsumer<Identifier, ItemModel.Unbaked> output;
+        public final BiConsumer<Identifier, ModelInstance> modelCollector;
 
-        PFMItemModelGenerator(BiConsumer<ResourceLocation, ItemModel.Unbaked> output, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
+        PFMItemModelGenerator(BiConsumer<Identifier, ItemModel.Unbaked> output, BiConsumer<Identifier, ModelInstance> modelCollector) {
             this.output = output;
             this.modelCollector = modelCollector;
         }
@@ -226,15 +226,15 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
     static class PFMBlockStateModelGenerator {
-        public static Map<ModelTemplate, ResourceLocation> ModelIDS = new HashMap<>();
+        public static Map<ModelTemplate, Identifier> ModelIDS = new HashMap<>();
 
         final Consumer<BlockModelDefinitionGenerator> blockStateCollector;
-        final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
+        final BiConsumer<Identifier, ModelInstance> modelCollector;
 
-        final List<ResourceLocation> generatedStates = new ArrayList<>();
+        final List<Identifier> generatedStates = new ArrayList<>();
         final PFMBlockstateModelProvider provider;
 
-        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockModelDefinitionGenerator> blockStateCollector, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
+        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockModelDefinitionGenerator> blockStateCollector, BiConsumer<Identifier, ModelInstance> modelCollector) {
             this.provider = provider;
             this.blockStateCollector = blockStateCollector;
             this.modelCollector = modelCollector;
@@ -412,62 +412,62 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void registerAppliances() {
             provider.getParent().log("Fridges");
-            ResourceLocation grayFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+            Identifier grayFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(grayFridgeID), 180));
-            ResourceLocation whiteFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+            Identifier whiteFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(whiteFridgeID), 180));
-            ResourceLocation ironFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+            Identifier ironFridgeID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.IRON_FRIDGE);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.IRON_FRIDGE, UnbakedIronFridgeModel.IRON_FRIDGE_ID, List.of(ironFridgeID), 180));
 
             provider.getParent().log("Freezers");
-            ResourceLocation whiteFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
+            Identifier whiteFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(whiteFreezerID), 180));
-            ResourceLocation grayFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FREEZER);
+            Identifier grayFreezerID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_FREEZER);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(grayFreezerID), 180));
         }
 
         public void registerDecorations() {
             provider.getParent().log("Mirrors");
-            ResourceLocation grayMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_MIRROR);
+            Identifier grayMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.GRAY_MIRROR);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(grayMirrorID)));
-            ResourceLocation whiteMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_MIRROR);
+            Identifier whiteMirrorID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.WHITE_MIRROR);
             this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(whiteMirrorID)));
         }
 
         public void registerLamp() {
             provider.getParent().log("Basic Lamps");
-            ResourceLocation modelID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.BASIC_LAMP);
+            Identifier modelID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.BASIC_LAMP);
             this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.LAMP_MODEL_ID, List.of(modelID)));
             PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getModelLocation());
         }
 
         public static TextureMapping createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            ResourceLocation top = ModelHelper.getTextureId(variantBase.getBaseBlock());
-            ResourceLocation legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
+            Identifier top = ModelHelper.getTextureId(variantBase.getBaseBlock());
+            Identifier legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
             return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
 
         }
 
         public static TextureMapping createRawBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            ResourceLocation legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
         }
 
         public static TextureMapping createPlankLogBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
-            ResourceLocation legs = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
+            Identifier legs = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
         }
 
         public static TextureMapping createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            ResourceLocation counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
-            ResourceLocation counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            Identifier counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
+            Identifier counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             if (variantBase.identifier.getPath().equals("granite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_GRANITE);
                 counterBase = ModelHelper.getTextureId(Blocks.WHITE_TERRACOTTA);
             } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
-                ResourceLocation temp = counterBase;
+                Identifier temp = counterBase;
                 counterBase = counterTop;
                 counterTop  = temp;
             } else if (variantBase.identifier.getPath().equals("andesite")) {
@@ -484,17 +484,17 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public static TextureMapping createLogLogTopBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
-            ResourceLocation legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            ResourceLocation top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log"), "_top") : ModelHelper.getTextureId(variantBase.getSecondaryBlock(), "_top");
+            Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
+            Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log"), "_top") : ModelHelper.getTextureId(variantBase.getSecondaryBlock(), "_top");
             return new TextureMapping().put(LOG_KEY, legs).put(LOG_TOP_KEY, top);
         }
 
-        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
+        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
                 if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
-                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
-                    List<ResourceLocation> ids = new ArrayList<>(1);
+                    Identifier modelID = ModelLocationUtils.getModelLocation(block);
+                    Identifier id = Identifier.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
+                    List<Identifier> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
@@ -503,14 +503,14 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
                 blockList.forEach(block1 -> {
                 Block block = (Block) block1;
                 if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
-                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
-                    ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
-                    List<ResourceLocation> ids = new ArrayList<>(1);
+                    Identifier modelID = ModelLocationUtils.getModelLocation(block);
+                    Identifier id = Identifier.fromNamespaceAndPath(modelID.getNamespace(), "block/" + blockName);
+                    List<Identifier> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
@@ -520,14 +520,14 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         }
 
-        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, ModelTemplate[] models, BiFunction<Block, List<ResourceLocation>, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
+        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, ModelTemplate[] models, BiFunction<Block, List<Identifier>, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
                 if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                     String blockName2 = blockName;
 
                     boolean stripped = block.getDescriptionId().contains("stripped");
                     TextureMapping blockTexture = textureBiFunction.apply(stripped, variantBase);
-                    List<ResourceLocation> ids = new ArrayList<>();
+                    List<Identifier> ids = new ArrayList<>();
                     String strippedprefix  = stripped ? "stripped_" : "";
                     if (block instanceof RawLogTableBlock) {
                         blockName2 = "raw_log_table";
@@ -537,9 +537,9 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     } else if (variantBase.isNetherWood() && block instanceof LogTableBlock) {
                         blockName2 = blockName2.replace("log", "stem");
                     }
-                    ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                    Identifier modelID = ModelLocationUtils.getModelLocation(block);
                     for (ModelTemplate model : models) {
-                        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.getSerializedName() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
+                        Identifier id = Identifier.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.getSerializedName() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
                         model.create(id, blockTexture, this.modelCollector);
                         ids.add(id);
                     }
@@ -550,19 +550,19 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, ModelTemplate[] models, TriFunc<Block, List<ResourceLocation>, String, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, ModelTemplate[] models, TriFunc<Block, List<Identifier>, String, BlockModelDefinitionGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
-                List<ResourceLocation> allids = new ArrayList<>();
+                List<Identifier> allids = new ArrayList<>();
                 blockList.forEach(block1 -> {
                     Block block = (Block) block1;
                     if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                         boolean stripped = block.getDescriptionId().contains("stripped");
                         TextureMapping blockTexture = textureBiFunction.apply(stripped, variantBase);
-                        ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
+                        Identifier modelID = ModelLocationUtils.getModelLocation(block);
                         String color = block instanceof SimpleBedBlock ? ((SimpleBedBlock) block).getPFMColor().getSerializedName() : "";
-                        List<ResourceLocation> ids = new ArrayList<>();
+                        List<Identifier> ids = new ArrayList<>();
                         for (ModelTemplate model : models) {
-                            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.getSerializedName()));
+                            Identifier id = Identifier.fromNamespaceAndPath(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.getSerializedName()));
 
                             if (allids.contains(id))
                                 continue;
@@ -615,18 +615,18 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         private static ModelTemplate block(String parent, TextureSlot ... requiredTextures) {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent);
+            Identifier id = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent);
             ModelTemplate model = new ModelTemplate(Optional.of(id), Optional.empty(), requiredTextures);
             ModelIDS.put(model, id);
             return model;
         }
 
         private static ModelTemplate item(String parent, TextureSlot ... requiredTextures) {
-            return new ModelTemplate(Optional.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
+            return new ModelTemplate(Optional.of(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
         }
 
         private static ModelTemplate block(String parent, String variant, TextureSlot ... requiredTextures) {
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
+            Identifier id = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
             ModelTemplate model = new ModelTemplate(Optional.of(id), Optional.of(variant), requiredTextures);
             ModelIDS.put(model, id);
             return model;
@@ -640,23 +640,23 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             return PFMTextureSlotFactory.newTextureKey(name, parent);
         }
 
-        private static BlockModelDefinitionGenerator createSingleStateBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createSingleStateBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
             String path = modelIdentifiers.get(0).getPath();
             //Ugly hack to get the folder name for the Baked Block Model
-            ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+            Identifier id = Identifier.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             Variant var = new Variant(id);
             ((PFMModelVariantExtension)(Object)var).pfm$setCustomType(typeId);
             return MultiVariantGenerator.dispatch(block, new MultiVariant(WeightedList.of(var)));
         }
-        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation) {
+        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
             Map<Direction.Axis, Quadrant> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath();
-            ResourceLocation id;
+            Identifier id;
 
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = Identifier.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -676,19 +676,19 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 return null;
             }));
         }
-        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
             return createAxisOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
             return createOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation) {
+        private static BlockModelDefinitionGenerator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
             String path = modelIdentifiers.get(0).getPath();
-            ResourceLocation id;
+            Identifier id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = Identifier.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -712,21 +712,21 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
             return MultiVariantGenerator.dispatch(block).with(variant);
         }
-        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers){
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers){
             return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", 0);
         }
-        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, int rotation){
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation){
             return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", rotation);
         }
 
-        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
+        private static BlockModelDefinitionGenerator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
             String path = modelIdentifiers.get(0).getPath().replaceAll(override, "");
             String name = path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/'));
-            ResourceLocation id;
+            Identifier id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = ResourceLocation.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
+                id = Identifier.fromNamespaceAndPath(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -751,7 +751,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             return MultiVariantGenerator.dispatch(block).with(variant);
         }
 
-        private static BlockModelDefinitionGenerator createKitchenSink(Block block, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createKitchenSink(Block block, List<Identifier> modelIdentifiers) {
             Map<Direction, Quadrant> rotationMap = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
 
@@ -765,7 +765,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             })));
         }
 
-        private static BlockModelDefinitionGenerator createSmallKitchenDrawer(Block block, List<ResourceLocation> modelIdentifiers, String override, String furnitureName, String replacement) {
+        private static BlockModelDefinitionGenerator createSmallKitchenDrawer(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement) {
             Map<Direction, Variant> variantMap = new HashMap<>();
             Map<Direction, Variant> variantMapOpen = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
@@ -790,7 +790,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
 
-        private static BlockModelDefinitionGenerator createLadderBlockState(Block block, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createLadderBlockState(Block block, List<Identifier> modelIdentifiers) {
             Condition northFalse = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, false).build()));
             Condition northTrue = new CombinedCondition(CombinedCondition.Operation.AND, List.of(new ConditionBuilder().term(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).term(net.minecraft.world.level.block.state.properties.BlockStateProperties.UP, true).build()));
 
@@ -814,9 +814,9 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     .with(southTrue, new MultiVariant(WeightedList.of(new Variant(modelIdentifiers.get(1)).withYRot(Quadrant.R180))));
         }
 
-        private static BlockModelDefinitionGenerator createBedBlockState(Block block, ResourceLocation typeId, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createBedBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
             Map<Direction, Quadrant> variantMap = new HashMap<>();
-            ResourceLocation id;
+            Identifier id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
@@ -839,10 +839,10 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 return null;
             }));
         }
-        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<ResourceLocation> modelIdentifiers) {
+        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers) {
             return createOrientableTuckableBlockState(block, modelIdentifiers, 0);
         }
-        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<ResourceLocation> modelIdentifiers, int rotation) {
+        private static BlockModelDefinitionGenerator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
             Map<TuckableVariant, Variant> variantList = new HashMap<>();
             Integer[] rotationArray = new Integer[]{90, 270, 180, 0};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -850,7 +850,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             }
             for (int i = 0; i <= 1; i++) {
                 boolean tucked =  i == 1;
-                ResourceLocation id = tucked ? modelIdentifiers.get(1) : modelIdentifiers.get(0);
+                Identifier id = tucked ? modelIdentifiers.get(1) : modelIdentifiers.get(0);
                 for (Direction direction : Direction.values())
                 {
                     if (direction.getAxis().isVertical())

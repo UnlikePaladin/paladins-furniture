@@ -4,8 +4,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.Item;
 
 import java.util.HashMap;
 import java.util.Map;

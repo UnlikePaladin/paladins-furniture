@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -10,7 +9,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -20,14 +18,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
@@ -36,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHandler> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.parse("pfm:textures/gui/container/working_table.png");
+    private static final Identifier TEXTURE = Identifier.parse("pfm:textures/gui/container/working_table.png");
     private static final int SCROLLBAR_WIDTH = 12;
     private static final int SCROLLBAR_HEIGHT = 15;
     private static final int RECIPE_LIST_COLUMNS = 6;
@@ -136,7 +133,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
 
     private void searchForTags(String id) {
         int i = id.indexOf(58);
-        Predicate<ResourceLocation> predicate;
+        Predicate<Identifier> predicate;
         if (i == -1) {
             predicate = (idx) -> idx.getPath().contains(id);
         } else {

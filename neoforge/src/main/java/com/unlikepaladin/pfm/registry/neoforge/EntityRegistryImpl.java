@@ -4,13 +4,13 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 
 public class EntityRegistryImpl {
     public static Map<EntityType<? extends LivingEntity>, AttributeSupplier.Builder> attributeMap = new HashMap<>();
-    public static Map<ResourceLocation, EntityType<?>> entityTypeList = new LinkedHashMap<>() {
+    public static Map<Identifier, EntityType<?>> entityTypeList = new LinkedHashMap<>() {
     };
 
     public static void registerAttribute(EntityType<? extends LivingEntity> entityType, AttributeSupplier.Builder builder) {
@@ -18,6 +18,6 @@ public class EntityRegistryImpl {
     }
 
     public static void registerEntityType(String id, EntityType<?> entityType) {
-        entityTypeList.put(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), entityType);
+        entityTypeList.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), entityType);
     }
 }

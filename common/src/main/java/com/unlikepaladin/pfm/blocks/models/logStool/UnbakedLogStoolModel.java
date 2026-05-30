@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -29,22 +29,22 @@ public record UnbakedLogStoolModel(Variant variant) implements PFMUnbakedBlockSt
 
     public static final Codec<UnbakedLogStoolModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] LOG_STOOL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool/log_stool"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool/log_stool_tucked")
+    public static final Identifier[] LOG_STOOL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool/log_stool"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool/log_stool_tucked")
     };
 
-    public static final ResourceLocation STOOL_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool");
-    public static final List<ResourceLocation> LOG_STOOL_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier STOOL_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/log_stool");
+    public static final List<Identifier> LOG_STOOL_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + logType + "_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + logType + "_stool"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_" + logType + "_stool"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_" + logType + "_stool"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_log_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_log_stool"));
             }
             add(STOOL_MODEL_ID);
         }
@@ -62,7 +62,7 @@ public record UnbakedLogStoolModel(Variant variant) implements PFMUnbakedBlockSt
             PFMRuntimeResources.modelCacheMap.put(STOOL_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : LOG_STOOL_PARTS_BASE) {
+        for (Identifier modelPart : LOG_STOOL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -71,13 +71,13 @@ public record UnbakedLogStoolModel(Variant variant) implements PFMUnbakedBlockSt
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : LOG_STOOL_PARTS_BASE)
+        for (Identifier c : LOG_STOOL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

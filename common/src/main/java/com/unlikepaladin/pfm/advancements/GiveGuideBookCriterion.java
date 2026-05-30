@@ -3,17 +3,17 @@ package com.unlikepaladin.pfm.advancements;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.EntityPredicate;
+import net.minecraft.advancements.criterion.SimpleCriterionTrigger;
+import net.minecraft.advancements.criterion.ContextAwarePredicate;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.Optional;
 
 public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBookCriterion.Conditions> {
-    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "give_book");
+    public static final Identifier ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "give_book");
 
     public void trigger(ServerPlayer player) {
         this.trigger(player, conditions -> true);

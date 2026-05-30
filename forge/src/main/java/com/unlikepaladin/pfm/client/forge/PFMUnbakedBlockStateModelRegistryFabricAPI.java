@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.WeightedVariants;
 import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
@@ -39,10 +39,10 @@ import java.util.stream.Stream;
 // This was taken from Fabric API as Forge has no way of loading custom blockstate models
 public class PFMUnbakedBlockStateModelRegistryFabricAPI {
 	private static final String TYPE_KEY = "pfm:type";
-	private static final ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends PFMUnbakedBlockStateModel>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
+	private static final ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends PFMUnbakedBlockStateModel>> ID_MAPPER = new ExtraCodecs.LateBoundIdMapper<>();
 
 	/** Map codec for a custom model. Must be a map codec to allow combining with weighted model entry's "weight" field. */
-	private static final MapCodec<PFMUnbakedBlockStateModel> CUSTOM_MODEL_MAP_CODEC = ID_MAPPER.codec(ResourceLocation.CODEC).dispatchMap(TYPE_KEY, PFMUnbakedBlockStateModel::codecc, codec -> codec);
+	private static final MapCodec<PFMUnbakedBlockStateModel> CUSTOM_MODEL_MAP_CODEC = ID_MAPPER.codec(Identifier.CODEC).dispatchMap(TYPE_KEY, PFMUnbakedBlockStateModel::codecc, codec -> codec);
 	/** Map codec for a simple model. Must be a map codec to allow checking presence of type key before parsing. */
 	private static final MapCodec<SingleVariant.Unbaked> SIMPLE_MODEL_MAP_CODEC = Variant.MAP_CODEC
 			.xmap(SingleVariant.Unbaked::new, SingleVariant.Unbaked::variant);
@@ -95,7 +95,7 @@ public class PFMUnbakedBlockStateModelRegistryFabricAPI {
 				};
 			});
 
-	public static void register(ResourceLocation id, MapCodec<? extends PFMUnbakedBlockStateModel> codec) {
+	public static void register(Identifier id, MapCodec<? extends PFMUnbakedBlockStateModel> codec) {
 		ID_MAPPER.put(id, codec);
 	}
 

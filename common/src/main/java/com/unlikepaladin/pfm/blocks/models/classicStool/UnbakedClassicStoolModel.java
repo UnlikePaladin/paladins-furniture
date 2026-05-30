@@ -20,7 +20,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -33,21 +33,21 @@ public record UnbakedClassicStoolModel(Variant variant) implements PFMUnbakedBlo
 
     public static final Codec<UnbakedClassicStoolModel> CODEC = MAP_CODEC.codec();
 
-    public static final ResourceLocation[] CLASSIC_STOOL_PARTS_BASE = new ResourceLocation[] {
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool"),
-            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool_tucked")
+    public static final Identifier[] CLASSIC_STOOL_PARTS_BASE = new Identifier[] {
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool"),
+            Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool/classic_stool_tucked")
     };
 
-    public static final ResourceLocation STOOL_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool");
-    public static final List<ResourceLocation> CLASSIC_STOOL_MODEL_IDS = new ArrayList<>() {
+    public static final Identifier STOOL_MODEL_ID = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_stool");
+    public static final List<Identifier> CLASSIC_STOOL_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
                 if (variant.hasStripped())
-                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_classic_stool"));
+                    add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_classic_stool"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
+                add(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_classic_stool"));
             }
             add(STOOL_MODEL_ID);
         }
@@ -65,7 +65,7 @@ public record UnbakedClassicStoolModel(Variant variant) implements PFMUnbakedBlo
             PFMRuntimeResources.modelCacheMap.put(STOOL_MODEL_ID, new PFMBakedModelContainer());
 
         List<BlockModelPart> bakedModelList = new ArrayList<>();
-        for (ResourceLocation modelPart : CLASSIC_STOOL_PARTS_BASE) {
+        for (Identifier modelPart : CLASSIC_STOOL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
 
@@ -74,13 +74,13 @@ public record UnbakedClassicStoolModel(Variant variant) implements PFMUnbakedBlo
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolveDependencies(Resolver resolver) {
-        for (ResourceLocation c : CLASSIC_STOOL_PARTS_BASE)
+        for (Identifier c : CLASSIC_STOOL_PARTS_BASE)
             resolver.markDependency(c);
     }
 

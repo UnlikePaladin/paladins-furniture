@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks.models.ladder.forge;
 
 import com.unlikepaladin.pfm.blocks.SimpleBunkLadderBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,7 +10,6 @@ import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;

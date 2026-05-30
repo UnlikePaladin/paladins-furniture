@@ -35,7 +35,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,7 +50,7 @@ import java.util.Optional;
 public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder {
     public boolean isActive = false;
     private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
-    private static final Codec<Map<ResourceLocation, Integer>> CODEC = Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT);
+    private static final Codec<Map<Identifier, Integer>> CODEC = Codec.unboundedMap(Identifier.CODEC, Codec.INT);
 
     public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.MICROWAVE_BLOCK_ENTITY, pos, state);
@@ -143,7 +143,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
             return 2;
         }
     };
-    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap();
+    private final Object2IntOpenHashMap<Identifier> recipesUsed = new Object2IntOpenHashMap();
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     @Override
@@ -331,7 +331,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     @Override
     public void setRecipeUsed(@Nullable RecipeHolder<?> recipe) {
         if (recipe != null) {
-            ResourceLocation identifier = recipe.id().location();
+            Identifier identifier = recipe.id().identifier();
             this.recipesUsed.addTo(identifier, 1);
         }
     }

@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.client.ColorRegistry;
-import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 

@@ -3,9 +3,8 @@ package com.unlikepaladin.pfm.registry.dynamic;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -52,7 +51,7 @@ public class FurnitureEntry<T extends Block> {
         return getEntryFromVariant(variant, false);
     }
 
-    public List<ResourceLocation> getVariants() {
+    public List<Identifier> getVariants() {
         return variantToBlockMap.keySet().stream().map(variantBase -> variantBase.identifier).toList();
     }
 
@@ -104,7 +103,7 @@ public class FurnitureEntry<T extends Block> {
         return variantToBlockMapNonBase;
     }
 
-    public Optional<T> getFromIdentifier(ResourceLocation identifier, boolean base) {
+    public Optional<T> getFromIdentifier(Identifier identifier, boolean base) {
         if (base){
             for (VariantBase<?> variantBase : variantToBlockMap.keySet()) {
                 if (variantBase.identifier.equals(identifier)) {
