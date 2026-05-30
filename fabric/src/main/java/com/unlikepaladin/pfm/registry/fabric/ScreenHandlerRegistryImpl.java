@@ -12,12 +12,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 import java.util.function.BiFunction;
@@ -43,7 +40,7 @@ public class ScreenHandlerRegistryImpl {
             return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 
-    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
-        return new Tuple<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+    public static Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
+        return new Tuple<>(OvenScreenHandler::new, StoveScreenHandler.PACKET_CODEC);
     }
 }

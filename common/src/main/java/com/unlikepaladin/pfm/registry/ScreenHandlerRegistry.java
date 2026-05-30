@@ -22,7 +22,7 @@ public class ScreenHandlerRegistry {
         ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"furniture"), WorkbenchScreenHandler::new);
         Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, AbstractContainerMenu>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> stoveHandler = getStoveMenuFactory();
         ScreenHandlerIDs.STOVE_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), stoveHandler.getA(), stoveHandler.getB());
-        Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, AbstractContainerMenu>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> ovenMenuFactory = getOvenMenuFactory();
+        Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> ovenMenuFactory = getOvenMenuFactory();
         ScreenHandlerIDs.OVEN_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"oven_block_entity"), ovenMenuFactory.getA(), ovenMenuFactory.getB());
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), MicrowaveScreenHandler::new, MicrowaveScreenHandler.PACKET_CODEC);
         ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"trashcan_block_entity"), TrashcanScreenHandler::new, TrashcanScreenHandler.PACKET_CODEC);
@@ -45,7 +45,7 @@ public class ScreenHandlerRegistry {
     }
 
     @ExpectPlatform
-    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
+    public static Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
         throw new AssertionError();
     }
 }

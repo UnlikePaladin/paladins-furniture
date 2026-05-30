@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.fabric.CounterOvenBlockEntityImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.CounterOvenBlockEntityBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class KitchenCounterOvenBlockImpl {
     public static BlockEntityType.BlockEntitySupplier<? extends CounterOvenBlockEntity> getFactory() {
-        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? CounterOvenBlockEntityBalm::new : CounterOvenBlockEntity::new;
+        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? CounterOvenBlockEntityBalm::new : CounterOvenBlockEntityImpl::new;
     }
 
     public static void openMenuScreen(Level world, BlockPos pos, Player player) {

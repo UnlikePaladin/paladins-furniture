@@ -87,4 +87,6 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
     public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayer player) {
         return new StoveScreenHandler.StoveData(this.worldPosition);
     }
+
+
 }

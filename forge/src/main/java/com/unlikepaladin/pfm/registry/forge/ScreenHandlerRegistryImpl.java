@@ -49,7 +49,7 @@ public class ScreenHandlerRegistryImpl {
             return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 
-    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
-        return new Tuple<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+    public static Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
+        return new Tuple<>(OvenScreenHandler::new, StoveScreenHandler.PACKET_CODEC);
     }
 }
