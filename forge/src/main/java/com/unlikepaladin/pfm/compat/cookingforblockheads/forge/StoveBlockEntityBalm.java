@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
@@ -20,6 +21,7 @@ import net.blay09.mods.cookingforblockheads.block.OvenBlock;
 import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.blay09.mods.cookingforblockheads.tile.IMutableNameable;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -49,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSmeltingProvider, BalmMenuProvider, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
+public class StoveBlockEntityBalm extends OvenBlockEntity implements IKitchenSmeltingProvider, BalmMenuProvider, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
     private static final int COOK_TIME = 200;
     private final DefaultContainer container = new DefaultContainer(20) {
         public boolean canPlaceItem(int slot, ItemStack itemStack) {
@@ -532,5 +534,23 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    public void balmSync() {
+        if (this.level != null && !this.level.isClientSide) {
+            List<? extends Player> playerList = this.level.players();
+            ClientboundBlockEntityDataPacket updatePacket = this.getUpdatePacket();
+            if (updatePacket == null) {
+                return;
+            }
+
+            for(Object obj : playerList) {
+                ServerPlayer player = (ServerPlayer)obj;
+                if (Math.hypot(player.getX() - (double)this.worldPosition.getX() + (double)0.5F, player.getZ() - (double)this.worldPosition.getZ() + (double)0.5F) < (double)64.0F) {
+                    player.connection.send(updatePacket);
+                }
+            }
+        }
+
     }
 }

@@ -1,11 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
-import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
-import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
@@ -35,11 +34,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
+public class CounterOvenBlockEntityBalm extends OvenBlockEntity implements BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
 
     public CounterOvenBlockEntityBalm(BlockPos pos, BlockState state) {
-        super(pos, state);
+        super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
         this.itemProvider = new DefaultKitchenItemProvider(this);
     }
 
