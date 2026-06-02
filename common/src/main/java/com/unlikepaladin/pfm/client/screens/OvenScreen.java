@@ -35,6 +35,36 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
         int y = this.topPos;
         this.blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
         this.blit(poseStack, x+58, y+18, 176, 50, 76, 76);
+        this.blit(poseStack, x+36, y+43, 176, 17, 17, 33);
 
+        if (this.menu.isLit()) {
+            int litProgress = this.menu.getLitProgress();
+            this.blit(poseStack, x + 36, y + 41 + (14 - litProgress), 176, 14 - litProgress, 14, litProgress + 1);
+        }
+
+        int gridX = this.leftPos + 58;
+        int gridY = this.topPos + 40;
+
+        for (int slotIndex = 0; slotIndex < 9; slotIndex++) {
+            int row = slotIndex / 3;
+            int col = slotIndex % 3;
+
+            int slotX = gridX + (col * 18);
+            int slotY = gridY + (row * 18);
+
+            if (this.menu.isSlotOverheating(slotIndex)) {
+                // we are overcooking with this one
+                int burnHeight = this.menu.getOverovercookProgress(slotIndex, 18);
+                if (burnHeight > 0) {
+                    this.blit(poseStack, slotX, slotY + (18 - burnHeight), 212, 32 + (18 - burnHeight), 18, burnHeight);
+
+                }
+            } else {
+                int cookHeight = this.menu.getCookProgress(slotIndex, 18);
+                if (cookHeight > 0) {
+                    this.blit(poseStack, slotX, slotY + (18 - cookHeight), 194, 32 + (18 - cookHeight), 18, cookHeight);
+                }
+            }
+        }
     }
 }

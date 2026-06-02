@@ -261,10 +261,50 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
         this.container.stopOpen(player);
     }
 
-    public int getBurnProgress() {
-        int i = this.data.get(2);
-        int j = this.data.get(3);
-        return j != 0 && i != 0 ? i * 24 / j : 0;
+    // badumm tss, get it, overcooked, not that funnny...
+    public int getOverovercookProgress(int slotIndex, int scale) {
+        int dataIdx = 2 + (slotIndex * 2);
+        int cookTime = this.data.get(dataIdx);
+        int cookTimeTotal = this.data.get(dataIdx + 1);
+
+        if (cookTimeTotal == 0 || cookTime <= cookTimeTotal) {
+            return 0;
+        }
+
+        // The burning phase spans from cookTimeTotal to (cookTimeTotal * 2)
+        // So the progress inside this phase is: current - total
+        int burnProgress = cookTime - cookTimeTotal;
+
+        return Math.min(scale, (burnProgress * scale) / cookTimeTotal);
+    }
+
+    public int getCookProgress(int slotIndex, int scale) {
+        // Map the 0-8 slot index back to the ContainerData array positions
+        int dataIdx = 2 + (slotIndex * 2);
+
+        int cookTime = this.data.get(dataIdx);
+        int cookTimeTotal = this.data.get(dataIdx + 1);
+
+        if (cookTimeTotal == 0 || cookTime == 0) {
+            return 0;
+        }
+
+        return cookTime * scale / cookTimeTotal;
+    }
+
+    public boolean isSlotOverheating(int slotIndex) {
+        int dataIdx = 2 + (slotIndex * 2);
+        int cookTime = this.data.get(dataIdx);
+        int cookTimeTotal = this.data.get(dataIdx + 1);
+
+        // If cookTime is greater than cookTimeTotal, it means it's already cooked
+        // and is currently burning/charring down toward charcoal.
+        return cookTime > cookTimeTotal;
+    }
+
+    public boolean isSlotCooking(int slotIndex) {
+        int dataIdx = 2 + (slotIndex * 2);
+        return this.data.get(dataIdx) > 0;
     }
 
     public int getLitProgress() {

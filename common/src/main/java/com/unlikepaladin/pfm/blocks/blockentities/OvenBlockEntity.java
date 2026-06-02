@@ -432,9 +432,23 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
 
         boolean hasChanged = false;
 
+        // process cooking slots
+        int processingStart = INPUT_COUNT;
+        int processingEnd = processingStart + PROCESSING_COUNT;
+
+        int activeCookingSlots = 0;
+        for (int i = processingStart; i < processingEnd; i++) {
+            int slotIdx = i - processingStart;
+            if (!be.getItem(i).isEmpty() && !be.getItem(i).is(Items.CHARCOAL) && be.slotCookTime[slotIdx] < be.slotCookTimeTotal[slotIdx]) {
+                activeCookingSlots++;
+            }
+        }
+
         // decrement burn time if burning
         if (be.furnaceBurnTime > 0) {
-            be.furnaceBurnTime--;
+            // Scale burn time consumption, each item consumes an extra tick of burn time
+            int fuelCost = Math.max(1, activeCookingSlots);
+            be.furnaceBurnTime = Math.max(0, be.furnaceBurnTime - fuelCost);
         }
 
         // try to consume fuel if not burning and there is something that needs burning
@@ -459,20 +473,25 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             }
         }
 
-        // process cooking slots
-        int processingStart = INPUT_COUNT;
-        int processingEnd = processingStart + PROCESSING_COUNT; // exclusive
 
         // first, advance cooking timers and for slots that reach their total, prepare the result
         for (int i = processingStart; i < processingEnd; i++) {
             ItemStack procStack = be.getItem(i);
             int slotIdx = i - processingStart;
-            if (procStack.isEmpty()) continue;
+            if (procStack.isEmpty() || procStack.is(Items.CHARCOAL)) continue;
 
-            // advance cooking progress while burning
             if (be.slotCookTime[slotIdx] >= 0) {
                 if (be.furnaceBurnTime > 0) {
-                    be.slotCookTime[slotIdx]++;
+                    // Instead of a flat ++, cook slower if the oven is packed
+                    // If activeCookingSlots is 1-3 -> +1 tick progress
+                    // If 4-6 -> +1 progress every 2 ticks
+                    // If 7-9 -> +1 progress every 3 ticks
+                    int delayFactor = (activeCookingSlots - 1) / 3 + 1;
+
+                    // Only advance if the world's game time matches the step
+                    if (level.getGameTime() % delayFactor == 0) {
+                        be.slotCookTime[slotIdx]++;
+                    }
                 }
             }
 
@@ -495,7 +514,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
 
         for (int i = processingStart; i < processingEnd; i++) {
             int slotIdx = i - processingStart;
-            if (be.slotCookTime[slotIdx] < be.slotCookTimeTotal[slotIdx]) continue; // not finished yet
+            if (be.slotCookTime[slotIdx] < be.slotCookTimeTotal[slotIdx] && !be.getItem(i).is(Items.CHARCOAL)) continue; // not finished yet
 
             ItemStack toTransfer = be.getItem(i);
             if (toTransfer.isEmpty()) {
