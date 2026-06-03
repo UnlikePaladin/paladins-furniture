@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.google.common.collect.Lists;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -111,6 +112,8 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     private int currentItemBurnTime;
     private int[] slotCookTime;
     private int[] slotCookTimeTotal;
+    private double burnTimeRemainder = 0.0D;
+    private double[] slotCookTimeRemainder;
     private final ResourceLocation[] slotRecipes;
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     private final Container singleSlotRecipeWrapper;
@@ -119,6 +122,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         super(type, pos, state);
         this.slotCookTime = new int[PROCESSING_COUNT];
         this.slotCookTimeTotal = new int[PROCESSING_COUNT];
+        this.slotCookTimeRemainder = new double[PROCESSING_COUNT];
         this.slotRecipes = new ResourceLocation[PROCESSING_COUNT];
         for (int i = 0; i < this.slotCookTimeTotal.length; i++) this.slotCookTimeTotal[i] = 200;
         this.singleSlotRecipeWrapper = new SimpleContainer(1);
@@ -198,18 +202,42 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
 
     @Override
     public ItemStack removeItem(int i, int j) {
-        return ContainerHelper.removeItem(this.items, i, j);
+        ItemStack itemStack = ContainerHelper.removeItem(this.items, i, j);
+        if (!itemStack.isEmpty() && i >= INPUT_COUNT && i < INPUT_COUNT + PROCESSING_COUNT) {
+            int slotIdx = i - INPUT_COUNT;
+            if (this.getItem(i).isEmpty()) {
+                this.slotCookTime[slotIdx] = 0;
+                this.slotCookTimeRemainder[slotIdx] = 0.0D;
+                this.slotRecipes[slotIdx] = null;
+            }
+        }
+        return itemStack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int i) {
-        return ContainerHelper.takeItem(this.items, i);
+        ItemStack itemStack = ContainerHelper.takeItem(this.items, i);
+        if (i >= INPUT_COUNT && i < INPUT_COUNT + PROCESSING_COUNT) {
+            int slotIdx = i - INPUT_COUNT;
+            this.slotCookTime[slotIdx] = 0;
+            this.slotCookTimeRemainder[slotIdx] = 0.0D;
+            this.slotRecipes[slotIdx] = null;
+        }
+        return itemStack;
     }
 
     @Override
     public void setItem(int i, ItemStack itemStack) {
         if (i >= 0 && i < this.items.size()) {
             this.items.set(i, itemStack);
+            if (i >= INPUT_COUNT && i < INPUT_COUNT + PROCESSING_COUNT) {
+                int slotIdx = i - INPUT_COUNT;
+                if (itemStack.isEmpty()) {
+                    this.slotCookTime[slotIdx] = 0;
+                    this.slotCookTimeRemainder[slotIdx] = 0.0D;
+                    this.slotRecipes[slotIdx] = null;
+                }
+            }
         }
     }
 
@@ -284,6 +312,9 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     @Override
     public void clearContent() {
         this.items.clear();
+        Arrays.fill(this.slotCookTime, 0);
+        Arrays.fill(this.slotCookTimeRemainder, 0.0D);
+        Arrays.fill(this.slotRecipes, null);
     }
 
     @Override
@@ -444,11 +475,30 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             }
         }
 
+        int delayFactor = Math.max(1, (activeCookingSlots - 1) / 3 + 1);
+
         // decrement burn time if burning
         if (be.furnaceBurnTime > 0) {
-            // Scale burn time consumption, each item consumes an extra tick of burn time
-            int fuelCost = Math.max(1, activeCookingSlots);
-            be.furnaceBurnTime = Math.max(0, be.furnaceBurnTime - fuelCost);
+            double totalFuelCost = 0.0D;
+            if (activeCookingSlots > 0) {
+                double speedMultiplier = PaladinFurnitureMod.getPFMConfig().getOvenSpeedMultiplier();
+                double progressIncrement = (1.0D / delayFactor) * speedMultiplier;
+                for (int i = processingStart; i < processingEnd; i++) {
+                    int slotIdx = i - processingStart;
+                    if (!be.getItem(i).isEmpty() && !be.getItem(i).is(Items.CHARCOAL) && be.slotCookTime[slotIdx] < be.slotCookTimeTotal[slotIdx]) {
+                        double slotFuelFactor = be.slotCookTimeTotal[slotIdx] > 0 ? 200.0D / be.slotCookTimeTotal[slotIdx] : 1.0D;
+                        totalFuelCost += progressIncrement * slotFuelFactor;
+                    }
+                }
+            } else {
+                totalFuelCost = 1.0D;
+            }
+
+            double fuelCost = totalFuelCost * PaladinFurnitureMod.getPFMConfig().getFuelConsumptionMultiplier();
+            be.burnTimeRemainder += fuelCost;
+            int intFuelCost = (int) be.burnTimeRemainder;
+            be.burnTimeRemainder -= intFuelCost;
+            be.furnaceBurnTime = Math.max(0, be.furnaceBurnTime - intFuelCost);
         }
 
         // try to consume fuel if not burning and there is something that needs burning
@@ -478,7 +528,15 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         for (int i = processingStart; i < processingEnd; i++) {
             ItemStack procStack = be.getItem(i);
             int slotIdx = i - processingStart;
-            if (procStack.isEmpty() || procStack.is(Items.CHARCOAL)) continue;
+            if (procStack.isEmpty() || procStack.is(Items.CHARCOAL)) {
+                if (procStack.isEmpty() && (be.slotCookTime[slotIdx] > 0 || be.slotCookTimeRemainder[slotIdx] > 0.0D)) {
+                    be.slotCookTime[slotIdx] = 0;
+                    be.slotCookTimeRemainder[slotIdx] = 0.0D;
+                    be.slotRecipes[slotIdx] = null;
+                    hasChanged = true;
+                }
+                continue;
+            }
 
             if (be.slotCookTime[slotIdx] >= 0) {
                 if (be.furnaceBurnTime > 0) {
@@ -486,11 +544,12 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                     // If activeCookingSlots is 1-3 -> +1 tick progress
                     // If 4-6 -> +1 progress every 2 ticks
                     // If 7-9 -> +1 progress every 3 ticks
-                    int delayFactor = (activeCookingSlots - 1) / 3 + 1;
-
-                    // Only advance if the world's game time matches the step
-                    if (level.getGameTime() % delayFactor == 0) {
-                        be.slotCookTime[slotIdx]++;
+                    double progressIncrement = (1.0D / delayFactor) * PaladinFurnitureMod.getPFMConfig().getOvenSpeedMultiplier();
+                    be.slotCookTimeRemainder[slotIdx] += progressIncrement;
+                    int advance = (int) be.slotCookTimeRemainder[slotIdx];
+                    be.slotCookTimeRemainder[slotIdx] -= advance;
+                    if (advance > 0) {
+                        be.slotCookTime[slotIdx] += advance;
                     }
                 }
             }
@@ -519,6 +578,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             ItemStack toTransfer = be.getItem(i);
             if (toTransfer.isEmpty()) {
                 be.slotCookTime[slotIdx] = 0;
+                be.slotCookTimeRemainder[slotIdx] = 0.0D;
                 continue;
             }
 
@@ -558,6 +618,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 ResourceLocation usedRecipeId = be.slotRecipes[slotIdx];
                 be.setItem(i, ItemStack.EMPTY);
                 be.slotCookTime[slotIdx] = 0;
+                be.slotCookTimeRemainder[slotIdx] = 0.0D;
                 be.slotRecipes[slotIdx] = null;
                 if (usedRecipeId != null) {
                     Recipe<?> usedRecipe = level.getRecipeManager().byKey(usedRecipeId).orElse(null);
@@ -574,6 +635,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                     int count = be.getItem(i).getCount();
                     be.setItem(i, new ItemStack(Items.CHARCOAL, Math.max(1, count)));
                     be.slotCookTime[slotIdx] = 0;
+                    be.slotCookTimeRemainder[slotIdx] = 0.0D;
                     be.slotRecipes[slotIdx] = null;
                     hasChanged = true;
                 }
@@ -611,6 +673,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                     be.slotRecipes[slotIdx] = recipe.getId();
                     be.setItem(firstEmptyProcessing, moved);
                     be.slotCookTime[slotIdx] = 0;
+                    be.slotCookTimeRemainder[slotIdx] = 0.0D;
                     be.setItem(in, inStack.isEmpty() ? ItemStack.EMPTY : inStack);
                     hasChanged = true;
                     break;

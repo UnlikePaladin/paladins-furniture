@@ -247,6 +247,10 @@
   "pfm.option.disableGeneratingScreen.tooltip": "Si es verdadero, esto desactivará la superposición de PFM cuando se estén generando assets o datos.",
   "pfm.option.disableSinytraWarning": "Desactivar advertencia de Sinytra",
   "pfm.option.disableSinytraWarning.tooltip": "Si es verdadero, esto desactivará la advertencia cuando Sinytra Connector esté instalado.",
+  "pfm.option.fuelConsumptionMultiplier": "Multiplicador de consumo de combustible",
+  "pfm.option.fuelConsumptionMultiplier.tooltip": "Multiplicador para la velocidad a la que se quema el combustible en el horno. Por defecto es 1.0.",
+  "pfm.option.ovenSpeedMultiplier": "Multiplicador de velocidad del horno",
+  "pfm.option.ovenSpeedMultiplier.tooltip": "Multiplicador para la velocidad a la que se cocinan los objetos en el horno. Por defecto es 1.0.",
   "pfm.issue.disableWarning": "No volver a mostrar esta advertencia",
 
   "pfm.config.title": "Configuración del mod Paladin's Furniture",

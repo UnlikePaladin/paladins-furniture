@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.config.option.DoubleConfigOption;
 import net.minecraft.network.chat.TranslatableComponent;
 
 import java.io.*;
@@ -43,7 +44,9 @@ public class PaladinFurnitureModConfig {
             renderImmersivePortalsMirrors = new BooleanConfigOption(new TranslatableComponent("pfm.option.renderImmersivePortalsMirrors"), new TranslatableComponent("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
             spawnImmersivePortalsMirror  = new BooleanConfigOption(new TranslatableComponent("pfm.option.spawnImmersivePortalsMirror"), new TranslatableComponent("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             disableGeneratingScreen  = new BooleanConfigOption(new TranslatableComponent("pfm.option.disableGeneratingScreen"), new TranslatableComponent("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            disableSinytraWarning  = new BooleanConfigOption(new TranslatableComponent("pfm.option.disableSinytraWarning"), new TranslatableComponent("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
+            disableSinytraWarning  = new BooleanConfigOption(new TranslatableComponent("pfm.option.disableSinytraWarning"), new TranslatableComponent("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            fuelConsumptionMultiplier = new DoubleConfigOption(new TranslatableComponent("pfm.option.fuelConsumptionMultiplier"), new TranslatableComponent("pfm.option.fuelConsumptionMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER),
+            ovenSpeedMultiplier = new DoubleConfigOption(new TranslatableComponent("pfm.option.ovenSpeedMultiplier"), new TranslatableComponent("pfm.option.ovenSpeedMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -117,6 +120,17 @@ public class PaladinFurnitureModConfig {
         return disableSinytraWarning.getValue();
     }
 
+    public double getFuelConsumptionMultiplier() {
+        return fuelConsumptionMultiplier.getValue();
+    }
+
+    public double getOvenSpeedMultiplier() {
+        return ovenSpeedMultiplier.getValue();
+    }
+
+    private DoubleConfigOption fuelConsumptionMultiplier;
+    private DoubleConfigOption ovenSpeedMultiplier;
+
     private BooleanConfigOption checkForUpdates;
 
     private BooleanConfigOption shaderSolidFix;
@@ -177,12 +191,28 @@ public class PaladinFurnitureModConfig {
         spawnImmersivePortalsMirror.setValue(getFromJsonElement(config.get("spawnImmersivePortalsMirror"), true));
         disableGeneratingScreen.setValue(getFromJsonElement(config.get("disableGeneratingScreen"), false));
         disableSinytraWarning.setValue(getFromJsonElement(config.get("disableSinytraWarning"), false));
+        boolean needsSave = false;
+        if (config.has("fuelConsumptionMultiplier") && config.get("fuelConsumptionMultiplier").isJsonPrimitive()) {
+            fuelConsumptionMultiplier.setValue(getFromJsonElement(config.get("fuelConsumptionMultiplier"), 1.0D));
+        } else {
+            fuelConsumptionMultiplier.setValue(1.0D);
+            needsSave = true;
+        }
+        if (config.has("ovenSpeedMultiplier") && config.get("ovenSpeedMultiplier").isJsonPrimitive()) {
+            ovenSpeedMultiplier.setValue(getFromJsonElement(config.get("ovenSpeedMultiplier"), 1.0D));
+        } else {
+            ovenSpeedMultiplier.setValue(1.0D);
+            needsSave = true;
+        }
         for (String key : options.keySet()) {
             if (!config.has(key.replace("pfm.option.", ""))){
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
                 options.get(key).setValue(options.get(key).getDefaultValue());
                 save();
             }
+        }
+        if (needsSave) {
+            save();
         }
     }
 
@@ -229,6 +259,8 @@ public class PaladinFurnitureModConfig {
         spawnImmersivePortalsMirror.setValue("true".equals(properties.getProperty("spawnImmersivePortalsMirror")));
         disableGeneratingScreen.setValue("true".equals(properties.get("disableGeneratingScreen")));
         disableSinytraWarning.setValue("true".equals(properties.get("disableSinytraWarning")));
+        fuelConsumptionMultiplier.setValue(1.0D);
+        ovenSpeedMultiplier.setValue(1.0D);
         save();
         Files.delete(legacyConfigFile);
         PaladinFurnitureMod.GENERAL_LOGGER.info("Successfully migrated to new config");
@@ -254,6 +286,8 @@ public class PaladinFurnitureModConfig {
         object.addProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue());
         object.addProperty("disableGeneratingScreen", disableGeneratingScreen.getValue());
         object.addProperty("disableSinytraWarning", disableSinytraWarning.getValue());
+        object.addProperty("fuelConsumptionMultiplier", fuelConsumptionMultiplier.getValue());
+        object.addProperty("ovenSpeedMultiplier", ovenSpeedMultiplier.getValue());
 
         try (FileWriter writer = new FileWriter(propertiesPath.toString())) {
             GSON.toJson(object, writer);
