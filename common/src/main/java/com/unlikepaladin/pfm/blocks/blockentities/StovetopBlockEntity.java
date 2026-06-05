@@ -34,8 +34,8 @@ import java.util.function.Supplier;
 public class StovetopBlockEntity extends BlockEntity implements Clearable, TickableBlockEntity {
 
     public final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
-    private final int[] cookingTimes = new int[4];
-    private final int[] cookingTotalTimes = new int[4];
+    protected final int[] cookingTimes = new int[4];
+    protected final int[] cookingTotalTimes = new int[4];
     public StovetopBlockEntity() {
         super(BlockEntities.STOVE_TOP_BLOCK_ENTITY);
     }
@@ -143,6 +143,8 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     public ItemStack removeItemNoUpdate(int slot) {
         ItemStack stack = this.itemsBeingCooked.get(slot).copy();
         this.itemsBeingCooked.set(slot, ItemStack.EMPTY);
+        this.cookingTimes[slot] = 0;
+        this.cookingTotalTimes[slot] = 0;
         sendBlockUpdated();
         return stack;
     }
@@ -167,7 +169,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         return false;
     }
 
-    private void sendBlockUpdated() {
+    protected void sendBlockUpdated() {
         this.setChanged();
         this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
@@ -175,6 +177,10 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     @Override
     public void clearContent() {
         this.itemsBeingCooked.clear();
+        for (int i = 0; i < 4; i++) {
+            this.cookingTimes[i] = 0;
+            this.cookingTotalTimes[i] = 0;
+        }
         sendBlockUpdated();
     }
 

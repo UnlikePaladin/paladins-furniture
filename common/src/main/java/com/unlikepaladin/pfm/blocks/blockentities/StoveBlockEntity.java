@@ -3,14 +3,14 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
@@ -39,26 +39,12 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements TickableBlockEntity {
+public class StoveBlockEntity extends OvenBlockEntity {
     public StoveBlockEntity() {
-        super(BlockEntities.STOVE_BLOCK_ENTITY, RecipeType.SMOKING);
+        super(BlockEntities.STOVE_BLOCK_ENTITY);
     }
-    public StoveBlockEntity(BlockEntityType<?> entity) {
-        super(entity, RecipeType.SMOKING);
-    }
-
-    @Override
-    protected Component getDefaultName() {
-        if (this.getBlockState().getBlock() instanceof KitchenCounterOvenBlock) {
-            return new TranslatableComponent("container.pfm.kitchen_counter_oven");
-        }
-        String blockname = this.getBlockState().getBlock().getDescriptionId().replace("block.pfm", "");
-        return new TranslatableComponent("container.pfm" + blockname);
-    }
-
-    @Override
-    protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
-        return new StoveScreenHandler(syncId, playerInventory, this, this.dataAccess);
+    public StoveBlockEntity(BlockEntityType<? extends OvenBlockEntity> blockEntityType) {
+        super(blockEntityType);
     }
 
     protected void onContainerOpen(Level world, BlockPos pos, BlockState state) {
@@ -99,6 +85,20 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        String blockname = getBlockState().getBlock().getDescriptionId().replace("block.pfm", "");
+        if (this.getBlockState().getBlock() instanceof KitchenCounterOvenBlock) {
+            return new TranslatableComponent("container.pfm.kitchen_counter_oven");
+        }
+        return new TranslatableComponent("container.pfm" + blockname);
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
+        return new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, containerId, playerInventory, this, this.dataAccess);
     }
 
     protected final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -216,7 +216,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
         if (bl) {
             setChanged();
         }
-        super.tick();
+        super.serverTick();
     }
 
     @Override
@@ -275,7 +275,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
     }
 
     @ExpectPlatform
-    public static Supplier<? extends BlockEntity> getFactory() {
+    public static Supplier<? extends OvenBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

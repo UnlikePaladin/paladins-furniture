@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.CounterOvenBlockEntityBalm;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

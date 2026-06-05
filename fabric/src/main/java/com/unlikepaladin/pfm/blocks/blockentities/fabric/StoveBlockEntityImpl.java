@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -20,7 +21,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
         super();
     }
 
-    public StoveBlockEntityImpl(BlockEntityType<?> entity) {
+    public StoveBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> entity) {
         super(entity);
     }
 
@@ -33,7 +34,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
         return save(tag);
     }
 
-    public static Supplier<? extends BlockEntity> getFactory() {
+    public static Supplier<? extends OvenBlockEntity> getFactory() {
         return StoveBlockEntityImpl::new;
     }
 

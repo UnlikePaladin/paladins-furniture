@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,10 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
 
     public StoveBlockEntityImpl() {
         super();
+    }
+
+    public StoveBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> entity) {
+        super(entity);
     }
 
     @Nullable
@@ -48,7 +53,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         ContainerHelper.loadAllItems(pkt.getTag(), this.itemsBeingCooked);
     }
 
-    public static Supplier<? extends BlockEntity> getFactory() {
+    public static Supplier<? extends OvenBlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
     }
 }

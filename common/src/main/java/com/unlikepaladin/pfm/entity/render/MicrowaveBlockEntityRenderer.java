@@ -52,7 +52,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> extend
             matrices.translate(x, y ,z);
             matrices.mulPose(Vector3f.YP.rotationDegrees(-facing.toYRot()));
             if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
-                matrices.mulPose(Vector3f.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
+                matrices.mulPose(Vector3f.YP.rotationDegrees((blockEntity.getLevel().getGameTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
             Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.GROUND, lightAbove, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers);
             matrices.popPose();

@@ -73,7 +73,7 @@ public class ConfigIO {
 
     protected static void write(AbstractConfigOption element, DataOutput output) throws IOException {
         output.writeByte(element.getConfigType());
-        if (element.getType() != Boolean.class) {
+        if (element.getType() != Boolean.class && element.getType() != Double.class) {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Type: " + element.getType());
             return;
         }

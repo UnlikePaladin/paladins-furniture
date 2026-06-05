@@ -25,7 +25,7 @@ public class BlockEntityRegistry {
         BlockEntities.FRIDGE_BLOCK_ENTITY = registerBlockEntity("fridge_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE}, FridgeBlockEntity.getFactory());
         BlockEntities.FREEZER_BLOCK_ENTITY = registerBlockEntity("freezer_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_FREEZER, PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER}, FreezerBlockEntity.getFactory());
         Block[] counterOvens = PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getAllBlocks().toArray(new Block[0]);
-        BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = registerBlockEntity("kitchen_counter_oven_block_entity", counterOvens, KitchenCounterOvenBlock.getFactory());
+        BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = registerBlockEntity("kitchen_counter_oven_block_entity", counterOvens, OvenBlockEntity.getFactory());
         BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY = registerBlockEntity("light_switch_block_entity", new Block[]{PaladinFurnitureModBlocksItems.LIGHT_SWITCH}, LightSwitchBlockEntity::new);
         BlockEntities.STOVE_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("stove_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE}, StoveBlockEntity.getFactory());
         BlockEntities.STOVE_TOP_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("stovetop_block_entity", new Block[]{PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP}, StovetopBlockEntity.getFactory());

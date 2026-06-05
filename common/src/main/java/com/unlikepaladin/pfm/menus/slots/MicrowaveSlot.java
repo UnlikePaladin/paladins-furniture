@@ -5,10 +5,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
 
-public class SizeableSlot extends Slot {
+public class MicrowaveSlot extends Slot {
     private int amount;
     private final Player player;
-    public SizeableSlot(Player player, Container inventory, int index, int x, int y) {
+    public MicrowaveSlot(Player player, Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
         this.player = player;
     }

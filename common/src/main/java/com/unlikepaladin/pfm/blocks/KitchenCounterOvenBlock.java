@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SmokerBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,12 +63,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     @Override
     public BlockEntity newBlockEntity(BlockGetter world) {
-        return getFactory().get();
-    }
-
-    @ExpectPlatform
-    public static Supplier<? extends CounterOvenBlockEntity> getFactory() {
-        throw new AssertionError();
+        return OvenBlockEntity.getFactory().get();
     }
 
     @Override
@@ -102,8 +98,8 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     @Override
     public void openContainer(Level world, BlockPos pos, Player player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CounterOvenBlockEntity) {
-            player.openMenu((MenuProvider)blockEntity);
+        if (blockEntity instanceof OvenBlockEntity) {
+            OvenBlockEntity.openScreen(player, world.getBlockState(pos), world, pos);
             player.awardStat(Statistics.STOVE_OPENED);
         }
     }
