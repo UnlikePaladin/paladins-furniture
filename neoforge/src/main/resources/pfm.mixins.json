@@ -12,7 +12,7 @@
   "mixins": [
     "MappedRegistryAccessor",
     "PFMCFBModBlockEntitiesMixin",
-    "PFMCookingPotBlockEntityMixin",
+    "PFMHeatableBlockEntityMixin",
     "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
     "PFMReloadableResourceManagerImplMixin",
