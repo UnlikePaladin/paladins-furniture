@@ -14,7 +14,7 @@
   ],
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",
-    "PFMCookingPotBlockEntityMixin",
+    "PFMHeatableBlockEntityMixin",
     "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
     "PFMSaveLoaderMixin",
