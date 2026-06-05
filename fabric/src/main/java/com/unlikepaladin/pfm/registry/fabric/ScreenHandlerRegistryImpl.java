@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,6 +23,6 @@ public class ScreenHandlerRegistryImpl {
     }
 
     public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveMenuFactory() {
-        return (integer, playerInventory, packetByteBuf) -> (T) new OvenScreenHandler(integer, playerInventory, packetByteBuf);
+        return (integer, playerInventory, packetByteBuf) -> (T) new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, packetByteBuf);
     }
 }

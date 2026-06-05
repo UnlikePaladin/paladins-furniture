@@ -130,6 +130,7 @@
   "container.pfm.iron_stove": "Estufa de hierro",
   "container.pfm.kitchen_counter_oven": "Horno empotrado",
   "container.pfm.working_table.ingredient_required" : "Ingredientes requeridos:",
+  "container.pfm.oven": "Horno",
 
   "block.pfm.kitchen_stovetop": "Parrilla de cocina",
   "block.pfm.white_stove": "Estufa blanca",

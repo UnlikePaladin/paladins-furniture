@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -97,7 +98,7 @@ public class StoveBlockEntity extends OvenBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
-        return new OvenScreenHandler(containerId, playerInventory, this, this.dataAccess);
+        return new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, containerId, playerInventory, this, this.dataAccess);
     }
 
     protected final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);

@@ -17,6 +17,13 @@ import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
@@ -34,11 +41,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CounterOvenBlockEntityBalm extends OvenBlockEntity implements BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
+public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
 
-    public CounterOvenBlockEntityBalm(BlockPos pos, BlockState state) {
+    public OvenBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
+        this.itemProvider = new DefaultKitchenItemProvider(this);
+    }
+
+    public OvenBlockEntityBalm(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
         this.itemProvider = new DefaultKitchenItemProvider(this);
     }
 
@@ -48,7 +60,7 @@ public class CounterOvenBlockEntityBalm extends OvenBlockEntity implements BalmC
     }
 
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider));
+        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
     }
 
     private boolean capabilitiesInitialized;
@@ -123,6 +135,39 @@ public class CounterOvenBlockEntityBalm extends OvenBlockEntity implements BalmC
 
     @Override
     public void balmSync() {
+        if (this.level != null && !this.level.isClientSide) {
+            List<? extends Player> playerList = this.level.players();
+            ClientboundBlockEntityDataPacket updatePacket = this.getUpdatePacket();
+            if (updatePacket == null) {
+                return;
+            }
 
+            for(Player obj : playerList) {
+                ServerPlayer player = (ServerPlayer)obj;
+                if (Math.hypot(player.getX() - (double)this.worldPosition.getX() + (double)0.5F, player.getZ() - (double)this.worldPosition.getZ() + (double)0.5F) < (double)64.0F) {
+                    player.connection.send(updatePacket);
+                }
+            }
+        }
+    }
+
+    @Override
+    public ItemStack smeltItem(ItemStack itemStack) {
+        int firstEmptyProcessing = -1;
+        int processingStart = INPUT_COUNT;
+        int processingEnd = processingStart + PROCESSING_COUNT;
+        for (int i = processingStart; i < processingEnd; i++) {
+            if (getItem(i).isEmpty()) { firstEmptyProcessing = i; break; }
+        }
+
+        if (firstEmptyProcessing != -1) {
+            if (!itemStack.isEmpty()) {
+                ItemStack moved = itemStack.split(1);
+                setItem(firstEmptyProcessing, moved);
+                return itemStack.isEmpty() ? ItemStack.EMPTY : itemStack;
+            }
+        }
+
+        return itemStack;
     }
 }

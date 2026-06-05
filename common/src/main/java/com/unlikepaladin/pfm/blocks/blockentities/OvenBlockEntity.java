@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -108,12 +109,12 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         }
     };
 
-    private int furnaceBurnTime;
-    private int currentItemBurnTime;
-    private int[] slotCookTime;
-    private int[] slotCookTimeTotal;
-    private double burnTimeRemainder = 0.0D;
-    private double[] slotCookTimeRemainder;
+    protected int furnaceBurnTime;
+    protected int currentItemBurnTime;
+    protected int[] slotCookTime;
+    protected int[] slotCookTimeTotal;
+    protected double burnTimeRemainder = 0.0D;
+    protected double[] slotCookTimeRemainder;
     private final ResourceLocation[] slotRecipes;
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     private final Container singleSlotRecipeWrapper;
@@ -140,7 +141,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
         // pass both the block-entity (stoveBlockEntity parameter) and this as the backing Container
-        return new OvenScreenHandler(containerId, playerInventory, this, this.dataAccess);
+        return new OvenScreenHandler(ScreenHandlerIDs.OVEN_SCREEN_HANDLER, containerId, playerInventory, this, this.dataAccess);
     }
 
 
@@ -434,7 +435,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         ExperienceOrb.award(serverLevel, vec3, j);
     }
     
-    private boolean shouldConsumeFuel() {
+    protected boolean shouldConsumeFuel() {
         int processingStart = INPUT_COUNT;
         int processingEnd = processingStart + PROCESSING_COUNT;
         for (int i = processingStart; i < processingEnd; i++) {
