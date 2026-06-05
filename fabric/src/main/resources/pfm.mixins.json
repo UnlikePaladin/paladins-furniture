@@ -12,7 +12,7 @@
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCFBModBlockEntitiesMixin",
-    "PFMCookingPotBlockEntityMixin",
+    "PFMHeatableBlockEntityMixin",
     "PFMModResourcePackCreatorMixin",
     "PFMSaveLoaderMixin",
     "PFMSimpleReloadableResourceManagerMixin"
