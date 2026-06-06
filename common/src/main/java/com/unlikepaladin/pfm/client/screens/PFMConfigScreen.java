@@ -75,20 +75,11 @@ public class PFMConfigScreen extends Screen {
         this.addWidget(this.optionListWidget);
         this.resetButton = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("pfm.option.resetAll"), button -> {
             options.forEach((title, option) -> {
-                if (option.getSide() == Side.CLIENT){
-                    if (option.getType() == Boolean.class) {
-                        if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
-                            this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
-                        }
-                        this.optionListWidget.newConfigValues.put(option, (Boolean) option.getDefaultValue());
+                if (option.getSide() == Side.CLIENT || (!isOnServer && option.getSide() == Side.SERVER)) {
+                    if (!option.getDefaultValue().equals(this.optionListWidget.newConfigValues.get(option))) {
+                        this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
                     }
-                } else if (!isOnServer && option.getSide() == Side.SERVER) {
-                    if (option.getType() == Boolean.class) {
-                        if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
-                            this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
-                        }
-                        this.optionListWidget.newConfigValues.put(option, (Boolean) option.getDefaultValue());
-                    }
+                    this.optionListWidget.newConfigValues.put(option, option.getDefaultValue());
                 }
             });
         }));
@@ -104,6 +95,14 @@ public class PFMConfigScreen extends Screen {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        if (this.optionListWidget != null) {
+            this.optionListWidget.tick();
+        }
+    }
+
+    @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         if (this.optionListWidget != null)
@@ -111,8 +110,8 @@ public class PFMConfigScreen extends Screen {
 
         drawCenteredString(matrices, this.font, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
         boolean bl = false;
-        for (Map.Entry<AbstractConfigOption, Boolean> optionEntry : optionListWidget.newConfigValues.entrySet()) {
-            if (optionEntry.getValue() == optionEntry.getKey().getDefaultValue()) continue;
+        for (Map.Entry<AbstractConfigOption, Object> optionEntry : optionListWidget.newConfigValues.entrySet()) {
+            if (optionEntry.getValue().equals(optionEntry.getKey().getDefaultValue())) continue;
             bl = true;
             break;
         }

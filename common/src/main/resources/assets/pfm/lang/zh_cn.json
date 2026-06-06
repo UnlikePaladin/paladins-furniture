@@ -1241,5 +1241,9 @@
   "text.autoconfig.pfm.option.foodPopsOffStove.@Tooltip": "如果为true，炉灶完成烹饪时将像营火一样把食物弹出。",
   "text.autoconfig.pfm.option.checkForUpdates": "检查更新",
   "text.autoconfig.pfm.option.checkForUpdates.@Tooltip": "如果为true，模组将检查更新并在有新版本可用时通知您.",
+  "pfm.option.fuelConsumptionMultiplier": "Fuel Consumption Multiplier",
+  "pfm.option.fuelConsumptionMultiplier.tooltip": "Multiplier for the rate at which fuel burns in the oven. Default is 1.0.",
+  "pfm.option.ovenSpeedMultiplier": "Oven Cooking Speed Multiplier",
+  "pfm.option.ovenSpeedMultiplier.tooltip": "Multiplier for the speed at which items cook in the oven. Default is 1.0.",
   "text.autoconfig.pfm.title": "Paladin的家具模组配置"
 }

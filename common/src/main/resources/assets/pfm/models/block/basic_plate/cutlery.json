@@ -2,7 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"0": "pfm:block/cutlery",
-		"particle": "pfm:block/cutlery"
+		"particle": "#0"
 	},
 	"elements": [
 		{
