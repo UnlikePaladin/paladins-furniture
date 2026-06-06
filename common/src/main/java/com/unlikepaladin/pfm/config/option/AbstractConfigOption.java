@@ -18,6 +18,7 @@ import java.util.Objects;
 public abstract class AbstractConfigOption<T> implements Comparable<String> {
     public static final byte NULL_TYPE = 0;
     public static final byte BOOL_TYPE = 1;
+    public static final byte DOUBLE_TYPE = 2;
 
     public abstract Component getTitle();
 

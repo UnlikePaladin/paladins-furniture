@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/white_fridge/fridge_single"
-    
+	"parent": "pfm:block/white_fridge/fridge_single"
 }
