@@ -76,11 +76,12 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
 
     @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
+        if (capability == CapabilityKitchenSmeltingProvider.CAPABILITY) {
+            return this.smeltingProviderCap.cast();
+        }
         LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(capability, this.itemHandlerCap);
         if (!result.isPresent()) {
             result = CapabilityKitchenItemProvider.CAPABILITY.orEmpty(capability, this.itemProviderCap);
-        } else if (capability == CapabilityKitchenSmeltingProvider.CAPABILITY) {
-            return this.smeltingProviderCap.cast();
         }
         return result.isPresent() ? result : super.getCapability(capability, facing);
     }

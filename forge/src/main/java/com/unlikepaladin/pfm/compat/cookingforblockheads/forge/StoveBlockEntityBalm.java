@@ -461,12 +461,14 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements MenuPro
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public void setCustomName(Component customName) {
         this.customName = customName;
         this.setChanged();
     }
 
-    public boolean hasCustomHoverName() {
+    @Override
+    public boolean hasCustomName() {
         return this.customName != null;
     }
 
@@ -480,6 +482,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements MenuPro
         return this.getName();
     }
 
+    @Override
     public Component getDefaultName() {
         return new TranslatableComponent("container.cookingforblockheads.oven");
     }
@@ -573,6 +576,4 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements MenuPro
             serverTick();
         }
     }
-
-
 }

@@ -32,6 +32,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PFMCookingForBlockHeadsCompat {
 
@@ -48,6 +49,7 @@ public class PFMCookingForBlockHeadsCompat {
         connectorBlocks.addAll(Arrays.asList(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE));
         connectorBlocks.addAll(Arrays.asList(PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE));
         connectorBlocks.addAll(Arrays.asList(PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER, PaladinFurnitureModBlocksItems.WHITE_FREEZER));
+        connectorBlocks.addAll(KitchenStovetopBlock.streamKitchenStovetop().collect(Collectors.toList()));
         connectorBlocks.forEach(KitchenMultiBlock::registerConnectorBlock);
     }
 

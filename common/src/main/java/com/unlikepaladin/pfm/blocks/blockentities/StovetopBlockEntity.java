@@ -25,13 +25,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
 
-public class StovetopBlockEntity extends BlockEntity implements Clearable, TickableBlockEntity {
+public class StovetopBlockEntity extends BlockEntity implements Clearable, Container, TickableBlockEntity {
 
     public final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
     protected final int[] cookingTimes = new int[4];
@@ -102,12 +103,68 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         return this.itemsBeingCooked;
     }
 
-    public Container getContainer(){
-        SimpleContainer inventory = new SimpleContainer(itemsBeingCooked.size());
-        for (int i = 0; i < itemsBeingCooked.size(); i++) {
-            inventory.setItem(i, itemsBeingCooked.get(i));
+    @Override
+    public int getContainerSize() {
+        return this.itemsBeingCooked.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        for (ItemStack itemStack : this.itemsBeingCooked) {
+            if (!itemStack.isEmpty()) {
+                return false;
+            }
         }
-        return inventory;
+        return true;
+    }
+
+    @Override
+    public ItemStack getItem(int slot) {
+        return this.itemsBeingCooked.get(slot);
+    }
+
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        ItemStack itemStack = ContainerHelper.removeItem(this.itemsBeingCooked, slot, amount);
+        if (!itemStack.isEmpty()) {
+            if (this.getItem(slot).isEmpty()) {
+                this.cookingTimes[slot] = 0;
+                this.cookingTotalTimes[slot] = 0;
+            }
+            this.sendBlockUpdated();
+        }
+        return itemStack;
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        this.itemsBeingCooked.set(slot, stack);
+        if (stack.isEmpty()) {
+            this.cookingTimes[slot] = 0;
+            this.cookingTotalTimes[slot] = 0;
+        } else {
+            this.cookingTimes[slot] = 0;
+            int cookTime = 200;
+            if (this.level != null) {
+                cookTime = this.level.getRecipeManager()
+                    .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), this.level)
+                    .map(CampfireCookingRecipe::getCookingTime)
+                    .orElse(200);
+            }
+            this.cookingTotalTimes[slot] = cookTime;
+        }
+        this.sendBlockUpdated();
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        if (this.level == null) return false;
+        if (this.level.getBlockEntity(this.worldPosition) != this) return false;
+        return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
+    }
+
+    public Container getContainer(){
+        return this;
     }
 
     @Override
@@ -140,9 +197,9 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         return nbt;
     }
 
+    @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        ItemStack stack = this.itemsBeingCooked.get(slot).copy();
-        this.itemsBeingCooked.set(slot, ItemStack.EMPTY);
+        ItemStack stack = ContainerHelper.takeItem(this.itemsBeingCooked, slot);
         this.cookingTimes[slot] = 0;
         this.cookingTotalTimes[slot] = 0;
         sendBlockUpdated();
