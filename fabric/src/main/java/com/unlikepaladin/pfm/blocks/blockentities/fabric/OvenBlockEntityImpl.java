@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.OvenBlockEntityBalm;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,7 +23,7 @@ public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScre
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends OvenBlockEntity> getFactory() {
-        return OvenBlockEntityImpl::new;
+        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? OvenBlockEntityBalm::new : OvenBlockEntityImpl::new;
     }
 
     @Override
