@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
 import com.mojang.datafixers.util.Pair;
-import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
-import com.unlikepaladin.pfm.blocks.blockentities.fabric.OvenBlockEntityImpl;
-import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.blocks.blockentities.fabric.StovetopBlockEntityImpl;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.provider.BalmProvider;
@@ -14,25 +12,24 @@ import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvi
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
-public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
+public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
     private final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
     private final Map<Pair<Direction, Class<?>>, BalmProvider<?>> sidedProviders = new HashMap<>();
     private boolean providersInitialized;
 
-    public OvenBlockEntityBalm(BlockPos pos, BlockState state) {
-        super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(this);
-    }
-
-    public OvenBlockEntityBalm(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public StovetopBlockEntityBalm(BlockPos pos, BlockState state) {
+        super(pos, state);
         this.itemProvider = new DefaultKitchenItemProvider(this);
     }
 
@@ -41,7 +38,6 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
         return this;
     }
 
-    @Override
     public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
     }
@@ -49,9 +45,8 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
     @Override
     public ItemStack smeltItem(ItemStack itemStack) {
         int firstEmptyProcessing = -1;
-        int processingStart = INPUT_COUNT;
-        int processingEnd = processingStart + PROCESSING_COUNT;
-        for (int i = processingStart; i < processingEnd; i++) {
+        int processingStart = 0;
+        for (int i = processingStart; i < this.itemsBeingCooked.size(); i++) {
             if (getItem(i).isEmpty()) { firstEmptyProcessing = i; break; }
         }
 
@@ -65,6 +60,60 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
 
         return itemStack;
     }
+
+    @Override
+    public int getContainerSize() {
+        return this.itemsBeingCooked.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.itemsBeingCooked.isEmpty();
+    }
+
+    @Override
+    public ItemStack getItem(int i) {
+        return this.itemsBeingCooked.get(i);
+    }
+
+    @Override
+    public ItemStack removeItem(int i, int j) {
+        ItemStack stack = ContainerHelper.removeItem(this.itemsBeingCooked, i, j);
+        if (this.itemsBeingCooked.get(i).isEmpty()) {
+            this.cookingTimes[i] = 0;
+            this.cookingTotalTimes[i] = 0;
+        }
+        this.sendBlockUpdated();
+        return stack;
+    }
+
+    @Override
+    public void setItem(int i, ItemStack arg) {
+        this.itemsBeingCooked.set(i, arg);
+        if (arg.isEmpty()) {
+            this.cookingTimes[i] = 0;
+            this.cookingTotalTimes[i] = 0;
+        } else {
+            this.cookingTimes[i] = 0;
+            int cookTime = 200;
+            if (this.level != null) {
+                cookTime = this.level.getRecipeManager()
+                    .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(arg), this.level)
+                    .map(CampfireCookingRecipe::getCookingTime)
+                    .orElse(200);
+            }
+            this.cookingTotalTimes[i] = cookTime;
+        }
+        this.sendBlockUpdated();
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        if (this.level == null) return false;
+        if (this.level.getBlockEntity(this.worldPosition) != this) return false;
+        return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
+    }
+
 
 
     @Override

@@ -4,6 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.forge.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
@@ -43,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
+public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
 
     public OvenBlockEntityBalm(BlockPos pos, BlockState state) {

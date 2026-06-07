@@ -239,7 +239,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, OvenBlockEntity blockEntity) {
         if (blockEntity instanceof StoveBlockEntityBalm stoveBlockEntityBalm) {
             stoveBlockEntityBalm.serverTick(level, pos, state);
         }
@@ -399,11 +399,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         if (side == null) {
             return this.getContainer();
         } else {
-            switch (side) {
-                case UP: return this.inputContainer;
-                case DOWN: return this.outputContainer;
-                default: return this.fuelContainer;
-            }
+            return switch (side) {
+                case UP -> this.inputContainer;
+                case DOWN -> this.outputContainer;
+                default -> this.fuelContainer;
+            };
         }
     }
 
@@ -434,6 +434,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public void setCustomName(Component customName) {
         this.customName = customName;
         this.setChanged();
