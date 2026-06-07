@@ -125,11 +125,12 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
 
     @Override
     public void balmFromClientTag(CompoundTag nbtCompound) {
-        return;
+        this.load(nbtCompound);
     }
 
     @Override
     public CompoundTag balmToClientTag(CompoundTag nbtCompound) {
+        this.save(nbtCompound);
         return nbtCompound;
     }
 
@@ -168,58 +169,5 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
         }
 
         return itemStack;
-    }
-
-    @Override
-    public int getContainerSize() {
-        return this.itemsBeingCooked.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.itemsBeingCooked.isEmpty();
-    }
-
-    @Override
-    public ItemStack getItem(int i) {
-        return this.itemsBeingCooked.get(i);
-    }
-
-    @Override
-    public ItemStack removeItem(int i, int j) {
-        ItemStack stack = ContainerHelper.removeItem(this.itemsBeingCooked, i, j);
-        if (this.itemsBeingCooked.get(i).isEmpty()) {
-            this.cookingTimes[i] = 0;
-            this.cookingTotalTimes[i] = 0;
-        }
-        this.sendBlockUpdated();
-        return stack;
-    }
-
-    @Override
-    public void setItem(int i, ItemStack arg) {
-        this.itemsBeingCooked.set(i, arg);
-        if (arg.isEmpty()) {
-            this.cookingTimes[i] = 0;
-            this.cookingTotalTimes[i] = 0;
-        } else {
-            this.cookingTimes[i] = 0;
-            int cookTime = 200;
-            if (this.level != null) {
-                cookTime = this.level.getRecipeManager()
-                    .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(arg), this.level)
-                    .map(CampfireCookingRecipe::getCookingTime)
-                    .orElse(200);
-            }
-            this.cookingTotalTimes[i] = cookTime;
-        }
-        this.sendBlockUpdated();
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        if (this.level == null) return false;
-        if (this.level.getBlockEntity(this.worldPosition) != this) return false;
-        return player.distanceToSqr((double)this.worldPosition.getX() + 0.5D, (double)this.worldPosition.getY() + 0.5D, (double)this.worldPosition.getZ() + 0.5D) <= 64.0D;
     }
 }
