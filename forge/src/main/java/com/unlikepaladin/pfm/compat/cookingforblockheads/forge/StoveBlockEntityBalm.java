@@ -236,11 +236,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         this.itemProvider = new DefaultKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+    public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity be) {
     }
 
-    public static void serverTick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
-        if (blockEntity instanceof StoveBlockEntityBalm stoveBlockEntityBalm) {
+    public static void serverTick(Level level, BlockPos pos, BlockState state, OvenBlockEntity be) {
+        if (be instanceof StoveBlockEntityBalm stoveBlockEntityBalm) {
             stoveBlockEntityBalm.serverTick(level, pos, state);
         }
     }
@@ -397,11 +397,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         if (side == null) {
             return this.getContainer();
         } else {
-            switch (side) {
-                case UP: return this.inputContainer;
-                case DOWN: return this.outputContainer;
-                default: return this.fuelContainer;
-            }
+            return switch (side) {
+                case UP -> this.inputContainer;
+                case DOWN -> this.outputContainer;
+                default -> this.fuelContainer;
+            };
         }
     }
 
@@ -437,12 +437,14 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
+    @Override
     public void setCustomName(Component customName) {
         this.customName = customName;
         this.setChanged();
     }
 
-    public boolean hasCustomHoverName() {
+    @Override
+    public boolean hasCustomName() {
         return this.customName != null;
     }
 
@@ -456,6 +458,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return this.getName();
     }
 
+    @Override
     public Component getDefaultName() {
         return new TranslatableComponent("container.cookingforblockheads.oven");
     }
