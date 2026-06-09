@@ -66,6 +66,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
     }
 
     private boolean capabilitiesInitialized;
+
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (!this.capabilitiesInitialized) {
             List<BalmProviderHolder> providers = new ArrayList<>();
@@ -76,7 +77,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
                     this.addCapabilities(provider, this.capabilities);
                 }
 
-                for(Pair<Direction, BalmProvider<?>> providerPair : providerHolder.getSidedProviders()) {
+                for (Pair<Direction, BalmProvider<?>> providerPair : providerHolder.getSidedProviders()) {
                     Direction direction = providerPair.getFirst();
                     BalmProvider<?> provider = providerPair.getSecond();
                     Map<Capability<?>, LazyOptional<?>> sidedCapabilities = this.sidedCapabilities.column(direction);
@@ -101,17 +102,18 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
 
     private final Map<Capability<?>, LazyOptional<?>> capabilities = new HashMap<>();
     private final Table<Capability<?>, Direction, LazyOptional<?>> sidedCapabilities = HashBasedTable.create();
+
     private void addCapabilities(BalmProvider<?> provider, Map<Capability<?>, LazyOptional<?>> capabilities) {
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders) Balm.getProviders();
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
         Objects.requireNonNull(provider);
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
         if (provider.getProviderClass() == Container.class) {
-            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new InvWrapper((Container)provider.getInstance())));
+            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new InvWrapper((Container) provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
-            capabilities.put(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, LazyOptional.of(() -> new ForgeFluidTank((FluidTank)provider.getInstance())));
+            capabilities.put(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, LazyOptional.of(() -> new ForgeFluidTank((FluidTank) provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {
-            capabilities.put(CapabilityEnergy.ENERGY, LazyOptional.of(() -> new ForgeEnergyStorage((EnergyStorage)provider.getInstance())));
+            capabilities.put(CapabilityEnergy.ENERGY, LazyOptional.of(() -> new ForgeEnergyStorage((EnergyStorage) provider.getInstance())));
         }
     }
 
@@ -121,7 +123,10 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
         int processingStart = INPUT_COUNT;
         int processingEnd = processingStart + PROCESSING_COUNT;
         for (int i = processingStart; i < processingEnd; i++) {
-            if (getItem(i).isEmpty()) { firstEmptyProcessing = i; break; }
+            if (getItem(i).isEmpty()) {
+                firstEmptyProcessing = i;
+                break;
+            }
         }
 
         if (firstEmptyProcessing != -1) {
@@ -133,12 +138,5 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
         }
 
         return itemStack;
-    }
-
-    @Override
-    public <T> T getProvider(Class<T> clazz) {
-        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
-        Capability<?> capability = forgeProviders.getCapability(clazz);
-        return (T) this.getCapability(capability).resolve().orElse(null);
     }
 }

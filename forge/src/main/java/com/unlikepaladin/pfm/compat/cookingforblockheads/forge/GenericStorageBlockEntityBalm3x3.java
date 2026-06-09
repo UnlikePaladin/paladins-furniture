@@ -99,11 +99,4 @@ public class GenericStorageBlockEntityBalm3x3 extends GenericStorageBlockEntity3
             capabilities.put(CapabilityEnergy.ENERGY, LazyOptional.of(() -> new ForgeEnergyStorage((EnergyStorage)provider.getInstance())));
         }
     }
-
-    @Override
-    public <T> T getProvider(Class<T> clazz) {
-        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
-        Capability<?> capability = forgeProviders.getCapability(clazz);
-        return (T) this.getCapability(capability).resolve().orElse(null);
-    }
 }
