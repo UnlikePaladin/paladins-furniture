@@ -13,10 +13,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Vec3i;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -383,12 +380,12 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         super.saveAdditional(compoundTag);
     }
 
-    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack) {
+    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
         this.singleSlotRecipeWrapper.setItem(0, itemStack);
         AbstractCookingRecipe recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this.singleSlotRecipeWrapper, this.level).orElse(null);
         ItemStack result;
         if (recipe != null) {
-            result = recipe.getResultItem();
+            result = recipe.getResultItem(registryAccess);
             if (!result.isEmpty() && result.getItem().isEdible()) {
                 return recipe;
             }
@@ -449,7 +446,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 return true;
             }
 
-            if (this.getSmokingRecipe(cookingStack) != null) {
+            if (this.getSmokingRecipe(cookingStack, level.registryAccess()) != null) {
                 return true;
             }
         }
@@ -557,10 +554,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             // when we reach or exceed the required cook time, replace processing slot with the recipe result
             if (be.slotCookTime[slotIdx] >= be.slotCookTimeTotal[slotIdx]) {
                 // attempted to produce result
-                Recipe<?> recipe = be.getSmokingRecipe(procStack);
-                if (recipe != null && !recipe.getResultItem().isEmpty()) {
+                Recipe<?> recipe = be.getSmokingRecipe(procStack, level.registryAccess());
+                if (recipe != null && !recipe.getResultItem(level.registryAccess()).isEmpty()) {
                     // replace the processing input with the result item so transfer logic can move it
-                    be.setItem(i, recipe.getResultItem().copy());
+                    be.setItem(i, recipe.getResultItem(level.registryAccess()).copy());
                     be.slotRecipes[slotIdx] = recipe.getId();
                     hasChanged = true;
                 }
@@ -663,7 +660,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 ItemStack inStack = be.getItem(in);
                 if (!inStack.isEmpty()) {
                     // determine cook time from recipe if available
-                    AbstractCookingRecipe recipe = be.getSmokingRecipe(inStack);
+                    AbstractCookingRecipe recipe = be.getSmokingRecipe(inStack, level.registryAccess());
                     int slotIdx = firstEmptyProcessing - processingStart;
                     if (recipe == null) {
                         continue;

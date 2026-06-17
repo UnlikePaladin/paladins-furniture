@@ -9,33 +9,25 @@ import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.container.SubContainer;
-import net.blay09.mods.balm.api.container.*;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
 import net.blay09.mods.cookingforblockheads.block.OvenBlock;
 import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
@@ -50,13 +42,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider {
@@ -266,7 +255,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack) {
+    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
         if (itemStack.isEmpty()) {
             return null;
         }
@@ -281,9 +270,9 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return null;
     }
 
-    public ItemStack getSmeltingResult(ItemStack itemStack) {
-        AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack);
-        return recipe != null ? recipe.getResultItem() : ItemStack.EMPTY;
+    public ItemStack getSmeltingResult(ItemStack itemStack, RegistryAccess registryAccess) {
+        AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, registryAccess);
+        return recipe != null ? recipe.getResultItem(registryAccess) : ItemStack.EMPTY;
     }
 
     public static boolean isItemFuel(ItemStack itemStack) {
