@@ -18,14 +18,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.*;
 
 public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
-    private final DefaultKitchenItemProvider itemProvider;
     private final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
     private final Map<Pair<Direction, Class<?>>, BalmProvider<?>> sidedProviders = new HashMap<>();
     private boolean providersInitialized;
 
     public StovetopBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(this);
     }
 
     @Override
@@ -34,7 +32,7 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     }
 
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
+        return List.of(new BalmProvider<>(IKitchenSmeltingProvider.class, this));
     }
 
     @Override
