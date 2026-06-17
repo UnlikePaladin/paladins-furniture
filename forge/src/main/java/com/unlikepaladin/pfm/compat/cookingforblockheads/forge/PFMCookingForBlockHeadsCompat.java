@@ -51,6 +51,7 @@ public class PFMCookingForBlockHeadsCompat {
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE));
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE));
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER, PaladinFurnitureModBlocksItems.WHITE_FREEZER));
+        connectorBlocks.addAll(KitchenStovetopBlock.streamKitchenStovetop().toList());
         connectorBlocks.forEach(KitchenMultiBlock::registerConnectorBlock);
     }
 

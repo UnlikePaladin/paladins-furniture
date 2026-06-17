@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "block/white_concrete",
 		"1": "block/light_gray_concrete",
-		"particle": "block/white_concrete"
+		"particle": "#0"
 	},
 	"elements": [
 		{

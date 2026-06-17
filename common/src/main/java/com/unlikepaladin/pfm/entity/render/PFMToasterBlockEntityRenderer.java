@@ -32,7 +32,7 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                     }
                 }
 
-                matrices.translate(0.5D, 0.2D, 0.5D);
+                matrices.translate(0.5D, 0.3D, 0.5D);
                 int rot = 45;
                 switch(dir) {
                     case NORTH:

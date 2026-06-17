@@ -17,11 +17,11 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
         super(container, playerInventory, displayName);
-        this.width += 22;
-        this.height = 193;
+        this.imageWidth += 22;
+        this.imageHeight = 193;
         this.titleLabelX += 22;
         this.inventoryLabelX += 22;
-        this.inventoryLabelY = this.height - 94;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, texture);
-        this.blit(poseStack, this.leftPos + 22, this.topPos, 0, 0, this.width - 22, this.height);
+        this.blit(poseStack, this.leftPos + 22, this.topPos, 0, 0, this.imageWidth - 22, this.imageHeight);
         this.blit(poseStack, this.leftPos, this.topPos + 10, 176, 30, 25, 87);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         int offsetX = tileEntity.hasPowerUpgrade() ? -5 : 0;
@@ -69,10 +69,10 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         }
 
         if (tileEntity.hasPowerUpgrade()) {
-            this.blit(poseStack, this.leftPos + this.width - 25, this.topPos + 22, 205, 0, 18, 72);
+            this.blit(poseStack, this.leftPos + this.imageWidth - 25, this.topPos + 22, 205, 0, 18, 72);
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
             float energyPercentage = (float)energyStorage.getEnergy() / (float)energyStorage.getCapacity();
-            this.blit(poseStack, this.leftPos + this.width - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F));
+            this.blit(poseStack, this.leftPos + this.imageWidth - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F));
         }
 
     }

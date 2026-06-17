@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/shower/shower_handle"
-    
+	"parent": "pfm:block/shower/shower_handle"
 }
