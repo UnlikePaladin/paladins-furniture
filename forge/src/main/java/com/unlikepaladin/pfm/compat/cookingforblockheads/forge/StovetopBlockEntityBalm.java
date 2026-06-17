@@ -20,11 +20,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, IKitchenSmeltingProvider {
-    private final DefaultKitchenItemProvider itemProvider;
     private final InventoryHandler inventoryHandler;
     private final LazyOptional<IItemHandler> itemHandlerCap;
     private final LazyOptional<IKitchenSmeltingProvider> smeltingProviderCap;
-    private final LazyOptional<IKitchenItemProvider> itemProviderCap;
 
     public StovetopBlockEntityBalm() {
         super();
@@ -35,10 +33,9 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
                 super.onContentsChanged(slot);
             }
         };
-        this.itemProvider = new KitchenItemProvider(inventoryHandler);
+
         this.itemHandlerCap = LazyOptional.of(() -> inventoryHandler);
         this.smeltingProviderCap = LazyOptional.of(() -> this);
-        this.itemProviderCap = LazyOptional.of(() -> this.itemProvider);
     }
 
     @Override
@@ -50,9 +47,6 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandlerCap.cast();
-        }
-        if (capability == CapabilityKitchenItemProvider.CAPABILITY) {
-            return this.itemProviderCap.cast();
         } else {
             return capability == CapabilityKitchenSmeltingProvider.CAPABILITY ? this.smeltingProviderCap.cast() : super.getCapability(capability, facing);
         }

@@ -25,10 +25,8 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmeltingProvider {
-    private final DefaultKitchenItemProvider itemProvider;
     private final InventoryHandler inventoryHandler;
     private final LazyOptional<IItemHandler> itemHandlerCap;
-    private final LazyOptional<IKitchenItemProvider> itemProviderCap;
     private final LazyOptional<IKitchenSmeltingProvider> smeltingProviderCap;
 
     public OvenBlockEntityBalm() {
@@ -40,9 +38,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
                 super.onContentsChanged(slot);
             }
         };
-        this.itemProvider = new KitchenItemProvider(inventoryHandler);
         this.itemHandlerCap = LazyOptional.of(() -> this.inventoryHandler);
-        this.itemProviderCap = LazyOptional.of(() -> this.itemProvider);
         this.smeltingProviderCap = LazyOptional.of(() -> this);
     }
 
@@ -55,9 +51,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
                 super.onContentsChanged(slot);
             }
         };
-        this.itemProvider = new KitchenItemProvider(inventoryHandler);
         this.itemHandlerCap = LazyOptional.of(() -> this.inventoryHandler);
-        this.itemProviderCap = LazyOptional.of(() -> this.itemProvider);
         this.smeltingProviderCap = LazyOptional.of(() -> this);
     }
 
@@ -80,9 +74,6 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
             return this.smeltingProviderCap.cast();
         }
         LazyOptional<T> result = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(capability, this.itemHandlerCap);
-        if (!result.isPresent()) {
-            result = CapabilityKitchenItemProvider.CAPABILITY.orEmpty(capability, this.itemProviderCap);
-        }
         return result.isPresent() ? result : super.getCapability(capability, facing);
     }
 
