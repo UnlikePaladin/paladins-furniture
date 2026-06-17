@@ -1,7 +1,6 @@
 {
 	"format_version": "1.21.6",
 	"credit": "By UnlikePaladin",
-	"parent": "block/block",
 	"textures": {
 		"particle": "block/oak_planks",
 		"legs": "block/oak_log"

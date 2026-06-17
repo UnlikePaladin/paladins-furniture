@@ -1,9 +1,9 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "pfm:block/shower_towel/white_towel",
 		"towel": "pfm:block/shower_towel/white_towel",
-		"handle": "block/light_gray_concrete"
+		"handle": "block/light_gray_concrete",
+		"particle": "#towel"
 	},
 	"elements": [
 		{
