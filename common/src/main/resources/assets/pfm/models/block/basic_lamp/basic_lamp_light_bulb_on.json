@@ -1,8 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"1": "pfm:block/light_on",
-		"particle": "pfm:block/light_on"
+		"bulb": "pfm:block/light_on",
+		"particle": "#bulb"
 	},
 	"elements": [
 		{
@@ -11,8 +11,8 @@
 			"shade": false,
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 13, 8]},
 			"faces": {
-				"north": {"uv": [4, 0, 13, 15], "texture": "#1"},
-				"south": {"uv": [4, 0, 13, 15], "texture": "#1"}
+				"north": {"uv": [4, 0, 13, 15], "texture": "#bulb"},
+				"south": {"uv": [4, 0, 13, 15], "texture": "#bulb"}
 			}
 		},
 		{
@@ -21,8 +21,8 @@
 			"shade": false,
 			"rotation": {"angle": -45, "axis": "y", "origin": [8, 13, 8]},
 			"faces": {
-				"north": {"uv": [4, 0, 13, 15], "texture": "#1"},
-				"south": {"uv": [4, 0, 13, 15], "texture": "#1"}
+				"north": {"uv": [4, 0, 13, 15], "texture": "#bulb"},
+				"south": {"uv": [4, 0, 13, 15], "texture": "#bulb"}
 			}
 		}
 	],

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
@@ -21,7 +22,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
         super(pos, state);
     }
 
-    public StoveBlockEntityImpl(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
+    public StoveBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> entity, BlockPos pos, BlockState state) {
         super(entity, pos, state);
     }
 
@@ -35,7 +36,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
         return saveWithoutMetadata();
     }
 
-    public static BlockEntityType.BlockEntitySupplier<? extends BlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends OvenBlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
     }
 

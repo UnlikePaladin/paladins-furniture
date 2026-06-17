@@ -5,7 +5,7 @@
 		"3": "pfm:block/working_table_tools",
 		"4": "pfm:block/working_table_top",
 		"5": "block/stripped_dark_oak_log",
-		"particle": "block/stripped_dark_oak_log"
+		"particle": "#5"
 	},
 	"elements": [
 		{

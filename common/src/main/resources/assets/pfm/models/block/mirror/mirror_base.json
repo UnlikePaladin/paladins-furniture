@@ -4,7 +4,7 @@
 		"4": "pfm:block/mirror",
 		"5": "block/white_concrete",
 		"6": "block/glass",
-		"particle": "block/white_concrete"
+		"particle": "#5"
 	},
 	"elements": [
 		{

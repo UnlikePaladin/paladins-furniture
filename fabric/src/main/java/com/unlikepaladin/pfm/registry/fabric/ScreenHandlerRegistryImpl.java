@@ -2,15 +2,14 @@ package com.unlikepaladin.pfm.registry.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiFunction;
@@ -30,6 +29,6 @@ public class ScreenHandlerRegistryImpl {
             return PFMCookingForBlockHeadsCompat.getStoveScreenHandler();
         }
         else
-            return (integer, playerInventory, packetByteBuf) -> (T) new StoveScreenHandler(integer, playerInventory);
+            return (integer, playerInventory, packetByteBuf) -> (T) new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, packetByteBuf);
     }
 }
