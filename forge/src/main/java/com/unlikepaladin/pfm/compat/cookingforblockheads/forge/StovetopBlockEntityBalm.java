@@ -17,8 +17,6 @@ import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,11 +45,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
-    private final DefaultKitchenItemProvider itemProvider;
 
     public StovetopBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(this);
     }
 
     @Override
@@ -60,7 +56,7 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     }
 
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
+        return List.of(new BalmProvider<>(IKitchenSmeltingProvider.class, this));
     }
 
     private boolean capabilitiesInitialized;
