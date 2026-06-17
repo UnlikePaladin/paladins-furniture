@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
@@ -49,12 +50,12 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
 
     public OvenBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(this);
+        this.itemProvider = new DefaultKitchenItemProvider(new SubContainer(this, 12, 15));
     }
 
     public OvenBlockEntityBalm(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(this);
+        this.itemProvider = new DefaultKitchenItemProvider(new SubContainer(this, 12, 15));
     }
 
     @Override
