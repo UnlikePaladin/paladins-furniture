@@ -19,7 +19,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -135,7 +134,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
 
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("container.pfm.oven");
+        return Component.translatable("container.pfm.oven");
     }
 
     @Override

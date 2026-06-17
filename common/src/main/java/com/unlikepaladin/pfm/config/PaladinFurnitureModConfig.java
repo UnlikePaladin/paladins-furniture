@@ -46,8 +46,8 @@ public class PaladinFurnitureModConfig {
             spawnImmersivePortalsMirror  = new BooleanConfigOption(Component.translatable("pfm.option.spawnImmersivePortalsMirror"), Component.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             disableGeneratingScreen  = new BooleanConfigOption(Component.translatable("pfm.option.disableGeneratingScreen"), Component.translatable("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
             disableSinytraWarning  = new BooleanConfigOption(Component.translatable("pfm.option.disableSinytraWarning"), Component.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            fuelConsumptionMultiplier = new DoubleConfigOption(new TranslatableComponent("pfm.option.fuelConsumptionMultiplier"), new TranslatableComponent("pfm.option.fuelConsumptionMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER),
-            ovenSpeedMultiplier = new DoubleConfigOption(new TranslatableComponent("pfm.option.ovenSpeedMultiplier"), new TranslatableComponent("pfm.option.ovenSpeedMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER)
+            fuelConsumptionMultiplier = new DoubleConfigOption(Component.translatable("pfm.option.fuelConsumptionMultiplier"), Component.translatable("pfm.option.fuelConsumptionMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER),
+            ovenSpeedMultiplier = new DoubleConfigOption(Component.translatable("pfm.option.ovenSpeedMultiplier"), Component.translatable("pfm.option.ovenSpeedMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;

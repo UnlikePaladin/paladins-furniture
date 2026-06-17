@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.config.option;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,7 +20,7 @@ public class DoubleConfigOption extends AbstractConfigOption<Double> {
             nbtTagSizeTracker.add(224L + 16L * tooltip.length());
             nbtTagSizeTracker.add(224L + 16L * category.length());
             nbtTagSizeTracker.add(64L);
-            return new DoubleConfigOption(new TranslatableComponent(title), new TranslatableComponent(tooltip), category, value, side);
+            return new DoubleConfigOption(Component.translatable(title), Component.translatable(tooltip), category, value, side);
         }
 
         public String getCrashReportName() {
@@ -100,8 +100,8 @@ public class DoubleConfigOption extends AbstractConfigOption<Double> {
 
     @Override
     public void write(DataOutput output) throws IOException {
-        output.writeUTF(((TranslatableComponent)title).getKey());
-        output.writeUTF(((TranslatableComponent)tooltip).getKey());
+        output.writeUTF(((TranslatableContents)title.getContents()).getKey());
+        output.writeUTF(((TranslatableContents)tooltip.getContents()).getKey());
         output.writeUTF(category);
         output.writeDouble(value);
         output.writeUTF(side.getSerializedName());

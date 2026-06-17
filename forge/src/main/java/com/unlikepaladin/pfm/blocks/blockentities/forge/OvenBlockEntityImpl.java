@@ -29,7 +29,7 @@ public class OvenBlockEntityImpl extends OvenBlockEntity {
     public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
         if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof OvenBlockEntity ovenBlockEntity){
             MenuProvider namedScreenHandlerFactory = state.getMenuProvider(world, pos);
-            NetworkHooks.openGui((ServerPlayer) player, namedScreenHandlerFactory, packetByteBuf -> {
+            NetworkHooks.openScreen((ServerPlayer) player, namedScreenHandlerFactory, packetByteBuf -> {
                 packetByteBuf.writeBlockPos(ovenBlockEntity.getBlockPos());
             } );
         }

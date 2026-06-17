@@ -245,9 +245,9 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             this.optionName = optionName;
             this.index = index;
             this.supplier = new Button.OnTooltip() {
-                final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? new TranslatableComponent("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableComponent("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
                 final MutableComponent styledTooltip = ((MutableComponent)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
-                final MutableComponent combinedText = new TextComponent("").append(sideText).append(new TextComponent("\n")).append(styledTooltip);
+                final MutableComponent combinedText = Component.literal("").append(sideText).append(Component.literal("\n")).append(styledTooltip);
                 @Override
                 public void onTooltip(Button button, PoseStack matrices, int mouseX, int mouseY) {
                     PFMOptionListWidget.this.parent.renderTooltip(matrices, PFMOptionListWidget.this.minecraft.font.split(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);
@@ -273,7 +273,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             });
             this.valueEditBox.setEditable(this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer);
 
-            this.resetButton = new Button(0, 0, 50, 20, new TranslatableComponent("controls.reset"), button -> {
+            this.resetButton = new Button(0, 0, 50, 20, Component.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
                 this.valueEditBox.setValue(String.valueOf(configOption.getDefaultValue()));
                 hasChanges = true;
@@ -282,7 +282,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
 
                 @Override
                 protected MutableComponent createNarrationMessage() {
-                    return new TranslatableComponent("narrator.controls.reset", optionName);
+                    return Component.translatable("narrator.controls.reset", optionName);
                 }
             };
         }
