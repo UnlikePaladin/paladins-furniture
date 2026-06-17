@@ -140,4 +140,11 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
 
         return itemStack;
     }
+
+    @Override
+    public <T> T getProvider(Class<T> clazz) {
+        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
+        Capability<?> capability = forgeProviders.getCapability(clazz);
+        return (T) this.getCapability(capability).resolve().orElse(null);
+    }
 }

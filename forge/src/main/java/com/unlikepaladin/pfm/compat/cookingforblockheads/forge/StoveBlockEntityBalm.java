@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.provider.BalmProvider;
+import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
@@ -48,6 +49,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -544,5 +546,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         double e = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @Override
+    public <T> T getProvider(Class<T> clazz) {
+        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
+        Capability<?> capability = forgeProviders.getCapability(clazz);
+        return (T) this.getCapability(capability).resolve().orElse(null);
     }
 }
