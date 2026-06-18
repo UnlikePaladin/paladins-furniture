@@ -403,7 +403,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     public void awardUsedRecipesAndPopExperience(ServerPlayer serverPlayer) {
-        List<Recipe<?>> list = this.getRecipesToAwardAndPopExperience((ServerLevel) serverPlayer.level, serverPlayer.position());
+        List<Recipe<?>> list = this.getRecipesToAwardAndPopExperience((ServerLevel) serverPlayer.level(), serverPlayer.position());
         serverPlayer.awardRecipes(list);
         this.recipesUsed.clear();
     }

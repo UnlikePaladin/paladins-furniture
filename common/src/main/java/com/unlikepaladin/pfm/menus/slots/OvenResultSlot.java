@@ -48,7 +48,7 @@ public class OvenResultSlot<T extends OvenBlockEntity> extends Slot {
     }
 
     protected void checkTakeAchievements(ItemStack stack) {
-        stack.onCraftedBy(this.player.level, this.player, this.removeCount);
+        stack.onCraftedBy(this.player.level(), this.player, this.removeCount);
         this.removeCount = 0;
         if (this.container instanceof OvenBlockEntity ovenBlockEntity && ovenBlockEntity.getLevel() != null && !stack.isEmpty()) {
             if (this.player instanceof ServerPlayer) {

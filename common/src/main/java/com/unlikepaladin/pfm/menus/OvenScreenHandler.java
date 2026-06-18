@@ -55,7 +55,7 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
         // client-side menu: create a PropertyDelegate sized to match the server-side layout
         this(menuType, containerId, inventory, new SimpleContainer(SLOT_COUNT), new SimpleContainerData(2 + PROCESSING_SLOT_COUNT * 2));
         BlockPos pos = byteBuf.readBlockPos();
-        if (inventory.player.level.getBlockEntity(pos) instanceof OvenBlockEntity oven) {
+        if (inventory.player.level().getBlockEntity(pos) instanceof OvenBlockEntity oven) {
             this.container = oven;
         }
     }
@@ -66,7 +66,7 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
         this.recipeBookType = RecipeBookType.SMOKER;
         checkContainerSize(container, SLOT_COUNT);
         this.data = containerData;
-        this.level = inventory.player.level;
+        this.level = inventory.player.level();
         this.container = container;
         this.container.startOpen(inventory.player);
         // input slots

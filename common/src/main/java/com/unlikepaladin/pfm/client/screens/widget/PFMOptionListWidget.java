@@ -264,15 +264,15 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         }
 
         @Override
-        public void render(PoseStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            PFMOptionListWidget.this.minecraft.font.draw(matrices, this.optionName, (float)(x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (float)(y + entryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), 0xFFFFFF);
+        public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            graphics.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), 0xFFFFFF);
             this.resetButton.setX(x + 190);
             this.resetButton.setY(y);
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption)) : !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption));
-            this.resetButton.render(matrices, mouseX, mouseY, tickDelta);
+            this.resetButton.render(graphics, mouseX, mouseY, tickDelta);
             this.valueEditBox.setX(x + 107);
             this.valueEditBox.setY(y);
-            this.valueEditBox.render(matrices, mouseX, mouseY, tickDelta);
+            this.valueEditBox.render(graphics, mouseX, mouseY, tickDelta);
             if (mouseX >= this.valueEditBox.getX() && mouseX < this.valueEditBox.getX() + this.valueEditBox.getWidth() && mouseY >= this.valueEditBox.getY() && mouseY < this.valueEditBox.getY() + this.valueEditBox.getHeight()) {
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen != null) {
