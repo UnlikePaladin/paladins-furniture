@@ -60,6 +60,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider {
     private final NonNullList<ItemStack> tools = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -273,11 +274,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
             return null;
         }
         this.singleSlotRecipeWrapper.setItem(0, itemStack);
-        AbstractCookingRecipe recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
-        if (recipe != null) {
-            ItemStack result = recipe.getResultItem(level.registryAccess());
+        Optional<RecipeHolder<SmeltingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
+        if (recipe != null && recipe.isPresent()) {
+            ItemStack result = recipe.get().value().getResultItem(level.registryAccess());
             if (!result.isEmpty() && (result.getItem().isEdible() || CookingRegistry.isNonFoodRecipe(result))) {
-                return recipe;
+                return recipe.get().value();
             }
         }
         return null;

@@ -321,7 +321,6 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
     public void tick() {
         for (Entry entry : this.children()) {
             if (entry instanceof DoubleEntry doubleEntry) {
-                doubleEntry.valueEditBox.tick();
             }
         }
     }

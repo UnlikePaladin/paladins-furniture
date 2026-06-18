@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
@@ -33,14 +34,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -50,7 +48,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class OvenBlockEntity extends BaseContainerBlockEntity implements Container, WorldlyContainer, RecipeHolder, StackedContentsCompatible {
+public class OvenBlockEntity extends BaseContainerBlockEntity implements Container, WorldlyContainer, StackedContentsCompatible {
 
     // slot layout: 0-2 inputs, 3-11 processing (9), 12-14 outputs, 15 fuel
     public static final int INPUT_COUNT = 3;
@@ -322,14 +320,12 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         return false;
     }
 
-    @Override
-    public void setRecipeUsed(@Nullable Recipe<?> recipe) {
+    public void setRecipeUsed(@Nullable RecipeHolder<?> recipe) {
         if (recipe != null) {
-            this.recipesUsed.addTo(recipe.getId(), 1);
+            this.recipesUsed.addTo(recipe.id(), 1);
         }
     }
 
-    @Override
     public @Nullable Recipe<?> getRecipeUsed() {
         return null;
     }
@@ -381,13 +377,20 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
+        RecipeHolder<SmokingRecipe> holder = getSmokingRecipeHolder(itemStack, registryAccess);
+        if (holder != null)
+            return holder.value();
+        return null;
+    }
+
+    public RecipeHolder<SmokingRecipe> getSmokingRecipeHolder(ItemStack itemStack, RegistryAccess registryAccess) {
         this.singleSlotRecipeWrapper.setItem(0, itemStack);
-        AbstractCookingRecipe recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this.singleSlotRecipeWrapper, this.level).orElse(null);
+        Optional<RecipeHolder<SmokingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this.singleSlotRecipeWrapper, this.level);
         ItemStack result;
-        if (recipe != null) {
-            result = recipe.getResultItem(registryAccess);
+        if (recipe != null && recipe.isPresent()) {
+            result = recipe.get().value().getResultItem(registryAccess);
             if (!result.isEmpty() && result.getItem().isEdible()) {
-                return recipe;
+                return recipe.get();
             }
         }
         return null;
@@ -403,18 +406,18 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     public void awardUsedRecipesAndPopExperience(ServerPlayer serverPlayer) {
-        List<Recipe<?>> list = this.getRecipesToAwardAndPopExperience((ServerLevel) serverPlayer.level(), serverPlayer.position());
+        List<RecipeHolder<?>> list = this.getRecipesToAwardAndPopExperience((ServerLevel) serverPlayer.level(), serverPlayer.position());
         serverPlayer.awardRecipes(list);
         this.recipesUsed.clear();
     }
 
-    public List<Recipe<?>> getRecipesToAwardAndPopExperience(ServerLevel serverLevel, Vec3 vec3) {
-        List<Recipe<?>> list = Lists.newArrayList();
+    public List<RecipeHolder<?>> getRecipesToAwardAndPopExperience(ServerLevel serverLevel, Vec3 vec3) {
+        List<RecipeHolder<?>> list = Lists.newArrayList();
 
         for (Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
             serverLevel.getRecipeManager().byKey(entry.getKey()).ifPresent(recipe -> {
                 list.add(recipe);
-                createExperience(serverLevel, vec3, entry.getIntValue(), ((AbstractCookingRecipe) recipe).getExperience());
+                createExperience(serverLevel, vec3, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).getExperience());
             });
         }
 
@@ -554,11 +557,11 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             // when we reach or exceed the required cook time, replace processing slot with the recipe result
             if (be.slotCookTime[slotIdx] >= be.slotCookTimeTotal[slotIdx]) {
                 // attempted to produce result
-                Recipe<?> recipe = be.getSmokingRecipe(procStack, level.registryAccess());
-                if (recipe != null && !recipe.getResultItem(level.registryAccess()).isEmpty()) {
+                RecipeHolder<SmokingRecipe> recipe = be.getSmokingRecipeHolder(procStack, level.registryAccess());
+                if (recipe != null && !recipe.value().getResultItem(level.registryAccess()).isEmpty()) {
                     // replace the processing input with the result item so transfer logic can move it
-                    be.setItem(i, recipe.getResultItem(level.registryAccess()).copy());
-                    be.slotRecipes[slotIdx] = recipe.getId();
+                    be.setItem(i, recipe.value().getResultItem(level.registryAccess()).copy());
+                    be.slotRecipes[slotIdx] = recipe.id();
                     hasChanged = true;
                 }
             }
@@ -618,9 +621,9 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 be.slotCookTimeRemainder[slotIdx] = 0.0D;
                 be.slotRecipes[slotIdx] = null;
                 if (usedRecipeId != null) {
-                    Recipe<?> usedRecipe = level.getRecipeManager().byKey(usedRecipeId).orElse(null);
-                    if (usedRecipe != null && toTransfer.getItem() != Items.CHARCOAL) {
-                        be.setRecipeUsed(usedRecipe);
+                    Optional<RecipeHolder<?>> usedRecipe = level.getRecipeManager().byKey(usedRecipeId);
+                    if (usedRecipe != null && usedRecipe.isPresent() && toTransfer.getItem() != Items.CHARCOAL) {
+                        be.setRecipeUsed(usedRecipe.get());
                     }
                 }
             } else {
@@ -660,14 +663,14 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 ItemStack inStack = be.getItem(in);
                 if (!inStack.isEmpty()) {
                     // determine cook time from recipe if available
-                    AbstractCookingRecipe recipe = be.getSmokingRecipe(inStack, level.registryAccess());
+                    RecipeHolder<SmokingRecipe> recipe = be.getSmokingRecipeHolder(inStack, level.registryAccess());
                     int slotIdx = firstEmptyProcessing - processingStart;
                     if (recipe == null) {
                         continue;
                     }
                     ItemStack moved = inStack.split(1);
-                    be.slotCookTimeTotal[slotIdx] = recipe.getCookingTime();
-                    be.slotRecipes[slotIdx] = recipe.getId();
+                    be.slotCookTimeTotal[slotIdx] = recipe.value().getCookingTime();
+                    be.slotRecipes[slotIdx] = recipe.id();
                     be.setItem(firstEmptyProcessing, moved);
                     be.slotCookTime[slotIdx] = 0;
                     be.slotCookTimeRemainder[slotIdx] = 0.0D;
