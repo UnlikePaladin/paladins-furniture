@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/xbox_fridge/xbox_fridge_full"
-    
+	"parent": "pfm:block/xbox_fridge/xbox_fridge_full"
 }

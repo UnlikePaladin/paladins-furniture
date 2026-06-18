@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/kitchen_counter/kitchen_stovetop"
-    
+	"parent": "pfm:block/kitchen_counter/kitchen_stovetop"
 }

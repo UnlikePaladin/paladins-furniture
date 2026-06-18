@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.resources.ResourceLocation;
@@ -17,11 +18,11 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
         super(container, playerInventory, displayName);
-        this.width += 22;
-        this.height = 193;
+        this.imageWidth += 22;
+        this.imageHeight = 193;
         this.titleLabelX += 22;
         this.inventoryLabelX += 22;
-        this.inventoryLabelY = this.height - 94;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         for(int i = 0; i < 9; ++i) {
             Slot slot = this.menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem(), RegistryAccess.EMPTY);
                 if (!itemStack.isEmpty()) {
                 }
             }
@@ -55,7 +56,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     @Override
     protected void renderBg(GuiGraphics drawContext, float partialTicks, int mouseX, int mouseY) {
-        drawContext.blit(texture, this.leftPos + 22, this.topPos, 0, 0, this.width - 22, this.height);
+        drawContext.blit(texture, this.leftPos + 22, this.topPos, 0, 0, this.imageWidth - 22, this.imageHeight);
         drawContext.blit(texture, this.leftPos, this.topPos + 10, 176, 30, 25, 87);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         int offsetX = tileEntity.hasPowerUpgrade() ? -5 : 0;
@@ -67,10 +68,10 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         }
 
         if (tileEntity.hasPowerUpgrade()) {
-            drawContext.blit(texture, this.leftPos + this.width - 25, this.topPos + 22, 205, 0, 18, 72);
+            drawContext.blit(texture, this.leftPos + this.imageWidth - 25, this.topPos + 22, 205, 0, 18, 72);
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
             float energyPercentage = (float)energyStorage.getEnergy() / (float)energyStorage.getCapacity();
-            drawContext.blit(texture, this.leftPos + this.width - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F));
+            drawContext.blit(texture, this.leftPos + this.imageWidth - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F));
         }
 
     }
