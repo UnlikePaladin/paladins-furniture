@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/working_table"
-    
+	"parent": "pfm:block/working_table"
 }

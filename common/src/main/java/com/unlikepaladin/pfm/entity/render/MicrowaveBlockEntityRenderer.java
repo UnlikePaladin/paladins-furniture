@@ -54,7 +54,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
             matrices.translate(x, y ,z);
             matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
             if (blockEntity.isActive && blockEntity.getRecipe() != null && blockEntity.getRecipe().value() != null && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getLevel().registryAccess(),blockEntity.getRecipe().value(), blockEntity.container, blockEntity.getMaxStackSize())) {
-                matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
+                matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getGameTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
             this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 0);
             matrices.popPose();

@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.fabric.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
@@ -51,6 +50,7 @@ public class PFMCookingForBlockHeadsCompat {
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE));
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE));
         connectorBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER, PaladinFurnitureModBlocksItems.WHITE_FREEZER));
+        connectorBlocks.addAll(KitchenStovetopBlock.streamKitchenStovetop().toList());
         connectorBlocks.forEach(KitchenMultiBlock::registerConnectorBlock);
     }
 
@@ -128,7 +128,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
+                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem, level.registryAccess()) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 

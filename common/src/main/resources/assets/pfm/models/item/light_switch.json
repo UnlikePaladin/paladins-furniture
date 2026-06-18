@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/light_switch/light_switch"
-    
+	"parent": "pfm:block/light_switch/light_switch"
 }

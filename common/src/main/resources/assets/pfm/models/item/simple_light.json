@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/simple_light/simple_light"
-    
+	"parent": "pfm:block/simple_light/simple_light"
 }

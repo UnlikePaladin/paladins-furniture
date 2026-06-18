@@ -59,7 +59,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public void registerBlockEntityTypes() {
-        this.registerLookup("kitchen_smelting_provider", IKitchenSmeltingProvider.class, BlockEntities.STOVE_BLOCK_ENTITY);
+        this.registerLookup("kitchen_smelting_provider", IKitchenSmeltingProvider.class, BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_TOP_BLOCK_ENTITY);
         this.registerLookup("kitchen_item_provider", IKitchenItemProvider.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
         this.registerLookup("kitchen_connector", IKitchenConnector.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.SINK_BLOCK_ENTITY);
     }

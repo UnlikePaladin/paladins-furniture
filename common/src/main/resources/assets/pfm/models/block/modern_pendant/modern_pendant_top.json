@@ -2,7 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"0": "block/light_gray_concrete",
-		"particle": "block/light_gray_concrete"
+		"particle": "#0"
 	},
 	"elements": [
 		{
