@@ -109,7 +109,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
+                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem, level.registryAccess()) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 

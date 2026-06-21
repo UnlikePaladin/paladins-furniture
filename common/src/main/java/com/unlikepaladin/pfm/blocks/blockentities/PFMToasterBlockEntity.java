@@ -181,7 +181,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
                     changed = true;
                 } else {
                     if(items.get(i).isEdible()) {
-                        Item item = Items.COAL;
+                        Item item = Items.CHARCOAL;
                         items.set(i, new ItemStack(item, 1));
                         changed = true;
                     }
