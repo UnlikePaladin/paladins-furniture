@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.forge.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
@@ -16,22 +17,18 @@ import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
+import net.blay09.mods.cookingforblockheads.api.IngredientToken;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -42,17 +39,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
-    private final DefaultKitchenItemProvider itemProvider;
+public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenItemProcessor, BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+    private final KitchenItemProvider itemProvider;
+    private final Container inputContainer;
 
     public OvenBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(new SubContainer(this, 12, 15));
+        this.itemProvider = new ContainerKitchenItemProvider(new SubContainer(this, 12, 15));
+        this.inputContainer = new SubContainer(this, 0, 3);
     }
 
     public OvenBlockEntityBalm(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.itemProvider = new DefaultKitchenItemProvider(new SubContainer(this, 12, 15));
+        this.itemProvider = new ContainerKitchenItemProvider(new SubContainer(this, 12, 15));
+        this.inputContainer = new SubContainer(this, 0, 3);
+    }
+
+    public Container getInputContainer() {
+        return inputContainer;
     }
 
     @Override
@@ -61,7 +65,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
     }
 
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
+        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     private boolean capabilitiesInitialized;
@@ -117,26 +121,20 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
     }
 
     @Override
-    public ItemStack smeltItem(ItemStack itemStack) {
-        int firstEmptyProcessing = -1;
-        int processingStart = INPUT_COUNT;
-        int processingEnd = processingStart + PROCESSING_COUNT;
-        for (int i = processingStart; i < processingEnd; i++) {
-            if (getItem(i).isEmpty()) {
-                firstEmptyProcessing = i;
-                break;
+    public boolean canProcess(RecipeType<?> recipeType) {
+        return recipeType == RecipeType.SMELTING;
+    }
+
+    @Override
+    public KitchenOperation processRecipe(Recipe<?> recipe, List<IngredientToken> ingredientTokens) {
+        for(IngredientToken ingredientToken : ingredientTokens) {
+            ItemStack itemStack = ingredientToken.consume();
+            ItemStack restStack = ContainerUtils.insertItemStacked(getInputContainer(), itemStack, false);
+            if (!restStack.isEmpty()) {
+                ingredientToken.restore(restStack);
             }
         }
-
-        if (firstEmptyProcessing != -1) {
-            if (!itemStack.isEmpty()) {
-                ItemStack moved = itemStack.split(1);
-                setItem(firstEmptyProcessing, moved);
-                return itemStack.isEmpty() ? ItemStack.EMPTY : itemStack;
-            }
-        }
-
-        return itemStack;
+        return KitchenOperation.EMPTY;
     }
 
     @Override

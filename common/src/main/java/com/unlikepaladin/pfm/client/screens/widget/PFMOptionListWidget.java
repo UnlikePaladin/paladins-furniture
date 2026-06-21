@@ -277,7 +277,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             if (mouseX >= this.valueEditBox.getX() && mouseX < this.valueEditBox.getX() + this.valueEditBox.getWidth() && mouseY >= this.valueEditBox.getY() && mouseY < this.valueEditBox.getY() + this.valueEditBox.getHeight()) {
                 Screen screen = Minecraft.getInstance().screen;
                 if (screen != null) {
-                    screen.setTooltipForNextRenderPass(this.supplier, valueEditBox.isFocused() ? new BelowOrAboveWidgetTooltipPositioner(valueEditBox) : DefaultTooltipPositioner.INSTANCE, valueEditBox.isFocused());
+                    screen.setTooltipForNextRenderPass(this.supplier, valueEditBox.isFocused() ? new BelowOrAboveWidgetTooltipPositioner(valueEditBox.getRectangle()) : DefaultTooltipPositioner.INSTANCE, valueEditBox.isFocused());
                 }
             }
         }

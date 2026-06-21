@@ -107,12 +107,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Conta
 
     @Override
     public boolean isEmpty() {
-        for (ItemStack itemStack : this.itemsBeingCooked) {
-            if (!itemStack.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
+        return itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty);
     }
 
     @Override

@@ -13,23 +13,14 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
-import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
 import net.blay09.mods.cookingforblockheads.block.OvenBlock;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
-import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.minecraft.core.*;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
-import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
-import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -40,9 +31,8 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -50,8 +40,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -276,7 +264,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         Optional<RecipeHolder<SmeltingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
         if (recipe != null && recipe.isPresent()) {
             ItemStack result = recipe.get().value().getResultItem(level.registryAccess());
-            if (!result.isEmpty() && (result.getItem().isEdible() || CookingRegistry.isNonFoodRecipe(result))) {
+            if (!result.isEmpty() && (result.getItem().isEdible())) {
                 return recipe.get().value();
             }
         }
@@ -364,13 +352,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return this.hasPowerUpgrade;
     }
 
-    public void setHasPowerUpgrade(boolean hasPowerUpgrade) {
-        this.hasPowerUpgrade = hasPowerUpgrade;
-        BlockState state = this.level.getBlockState(this.worldPosition);
-        this.level.setBlockAndUpdate(this.worldPosition, state.setValue(OvenBlock.POWERED, hasPowerUpgrade));
-        this.setChanged();
-    }
-
     public boolean isBurning() {
         return this.furnaceBurnTime > 0;
     }
@@ -382,11 +363,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     public float getCookProgress(int i) {
         if (i < 0 || i >= this.slotCookTime.length) return 0.0F;
         return (float) this.slotCookTime[i] / (float) this.slotCookTimeTotal[i];
-    }
-
-    @Override
-    public ItemStack smeltItem(ItemStack itemStack) {
-        return ContainerUtils.insertItemStacked(this.inputContainer, itemStack, false);
     }
 
     public ItemStack getToolItem(int i) {
@@ -415,6 +391,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
+    @Override
     public Container getInputContainer() {
         return this.inputContainer;
     }

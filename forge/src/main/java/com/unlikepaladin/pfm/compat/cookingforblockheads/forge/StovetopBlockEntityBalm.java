@@ -3,12 +3,10 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
-import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
-import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.StovetopBlockEntityImpl;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
@@ -16,22 +14,16 @@ import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
+import net.blay09.mods.cookingforblockheads.api.IngredientToken;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
+import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -41,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, IKitchenSmeltingProvider, BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements Container, KitchenItemProcessor, BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
 
     public StovetopBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -53,7 +45,7 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     }
 
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenSmeltingProvider.class, this));
+        return List.of(new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     private boolean capabilitiesInitialized;
@@ -107,11 +99,18 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     }
 
     @Override
-    public ItemStack smeltItem(ItemStack itemStack) {
+    public boolean canProcess(RecipeType<?> recipeType) {
+        return recipeType == RecipeType.SMELTING;
+    }
+
+    public ItemStack tryTakeItem(ItemStack itemStack) {
         int firstEmptyProcessing = -1;
         int processingStart = 0;
         for (int i = processingStart; i < this.itemsBeingCooked.size(); i++) {
-            if (getItem(i).isEmpty()) { firstEmptyProcessing = i; break; }
+            if (getItem(i).isEmpty()) {
+                firstEmptyProcessing = i;
+                break;
+            }
         }
 
         if (firstEmptyProcessing != -1) {
@@ -123,6 +122,18 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
         }
 
         return itemStack;
+    }
+
+    @Override
+    public KitchenOperation processRecipe(Recipe<?> recipe, List<IngredientToken> ingredientTokens) {
+        for(IngredientToken ingredientToken : ingredientTokens) {
+            ItemStack itemStack = ingredientToken.consume();
+            ItemStack restStack = tryTakeItem(itemStack);
+            if (!restStack.isEmpty()) {
+                ingredientToken.restore(restStack);
+            }
+        }
+        return KitchenOperation.EMPTY;
     }
 
     @Override

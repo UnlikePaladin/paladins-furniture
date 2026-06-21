@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.NetworkHooks;
 
 public class OvenBlockEntityImpl extends OvenBlockEntity {
 
@@ -29,7 +28,7 @@ public class OvenBlockEntityImpl extends OvenBlockEntity {
     public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
         if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof OvenBlockEntity ovenBlockEntity){
             MenuProvider namedScreenHandlerFactory = state.getMenuProvider(world, pos);
-            NetworkHooks.openScreen((ServerPlayer) player, namedScreenHandlerFactory, packetByteBuf -> {
+            player.openMenu(namedScreenHandlerFactory, packetByteBuf -> {
                 packetByteBuf.writeBlockPos(ovenBlockEntity.getBlockPos());
             } );
         }

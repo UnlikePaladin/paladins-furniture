@@ -6,26 +6,18 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScre
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
-import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.container.SubContainer;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.api.container.DefaultContainer;
-import net.blay09.mods.balm.api.container.SubContainer;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
+import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
-import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
-import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
-import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.core.*;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -43,23 +35,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
-import net.neoforged.neoforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -231,6 +212,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     final SubContainer outputContainer;
     private final SubContainer processingContainer;
     final SubContainer toolsContainer;
+    protected final KitchenItemProvider itemProvider;
     private Component customName;
     private boolean isFirstTick = true;
     private boolean hasPowerUpgrade;
@@ -244,7 +226,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         this.outputContainer = new SubContainer(this.mappedContainer, 4, 7);
         this.processingContainer = new SubContainer(this.mappedContainer, 7, 16);
         this.toolsContainer = new SubContainer(this.mappedContainer, 16, 20);
-        this.itemProvider = new DefaultKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
+        this.itemProvider = new ContainerKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, BlockEntity be) {
@@ -279,7 +261,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         Optional<RecipeHolder<SmeltingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
         if (recipe != null && recipe.isPresent()) {
             ItemStack result = recipe.get().value().getResultItem(level.registryAccess());
-            if (!result.isEmpty() && (result.getItem().isEdible() || CookingRegistry.isNonFoodRecipe(result))) {
+            if (!result.isEmpty() && (result.getItem().isEdible())) {
                 return recipe.get().value();
             }
         }
@@ -367,13 +349,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return this.hasPowerUpgrade;
     }
 
-    public void setHasPowerUpgrade(boolean hasPowerUpgrade) {
-        this.hasPowerUpgrade = hasPowerUpgrade;
-        BlockState state = this.level.getBlockState(this.worldPosition);
-        this.level.setBlockAndUpdate(this.worldPosition, state.setValue(OvenBlock.POWERED, hasPowerUpgrade));
-        this.setChanged();
-    }
-
     public boolean isBurning() {
         return this.furnaceBurnTime > 0;
     }
@@ -385,11 +360,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     public float getCookProgress(int i) {
         if (i < 0 || i >= this.slotCookTime.length) return 0.0F;
         return (float) this.slotCookTime[i] / (float) this.slotCookTimeTotal[i];
-    }
-
-    @Override
-    public ItemStack smeltItem(ItemStack itemStack) {
-        return ContainerUtils.insertItemStacked(this.inputContainer, itemStack, false);
     }
 
     public ItemStack getToolItem(int i) {
@@ -415,7 +385,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
     @Override
     public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(IKitchenItemProvider.class, this.itemProvider), new BalmProvider<>(IKitchenSmeltingProvider.class, this));
+        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     public Container getInputContainer() {
@@ -550,12 +520,5 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         double e = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
-    }
-
-    @Override
-    public <T> T getProvider(Class<T> clazz) {
-        NeoForgeBalmProviders forgeProviders = (NeoForgeBalmProviders)Balm.getProviders();
-        Capability<?> capability = forgeProviders.getCapability(clazz);
-        return (T) this.getCapability(capability).resolve().orElse(null);
     }
 }
