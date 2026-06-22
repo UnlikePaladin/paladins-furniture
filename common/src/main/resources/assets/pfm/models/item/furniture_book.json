@@ -1,6 +1,6 @@
 {
-  "parent":"minecraft:item/generated",
-  "textures": {
-    "layer0":"pfm:item/book_orange"
-  }
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "pfm:item/book_orange"
+	}
 }

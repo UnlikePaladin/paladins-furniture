@@ -21,7 +21,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
-        oven.onOpen(playerInventory.player);
+        oven.startOpen(playerInventory.player);
         Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
 
@@ -67,7 +67,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     @Override
     public void removed(Player player) {
         super.removed(player);
-        tileEntity.onClose(player);
+        tileEntity.stopOpen(player);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
+                ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack, player.level().registryAccess());
                 if (StoveBlockEntityBalm.isItemFuel(slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;

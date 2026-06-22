@@ -7,6 +7,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class KitchenStovetopBlockImpl {
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new StovetopBlockEntityImpl(pos, state);
+        return StovetopBlockEntityImpl.getFactory().create(pos, state);
     }
 }

@@ -1,9 +1,7 @@
 {
-	"cpurpleit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple_corner_right",
+	"credit": "By UnlikePaladin",
+	"parent": "pfm:block/sofa_simple/white/sofa_simple_corner_right",
 	"textures": {
-		"particle": "block/purple_wool",
 		"base": "block/purple_wool"
 	}
-    
 }

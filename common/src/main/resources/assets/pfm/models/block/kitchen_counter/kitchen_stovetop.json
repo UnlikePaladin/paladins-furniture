@@ -2,8 +2,8 @@
 	"credit": "By UnlikePaladin",
 	"texture_size": [64, 64],
 	"textures": {
-		"particle": "pfm:block/iron_stove",
-		"6": "pfm:block/iron_stove"
+		"6": "pfm:block/iron_stove",
+		"particle": "#6"
 	},
 	"elements": [
 		{

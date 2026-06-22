@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/gray_oven_range_hood/gray_oven_range_hood"
-    
+	"parent": "pfm:block/gray_oven_range_hood/gray_oven_range_hood"
 }

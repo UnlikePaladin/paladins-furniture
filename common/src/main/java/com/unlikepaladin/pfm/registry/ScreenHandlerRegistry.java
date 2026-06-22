@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.registry;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.menus.*;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.util.Tuple;
@@ -24,7 +23,9 @@ public class ScreenHandlerRegistry {
         ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"furniture"), WorkbenchScreenHandler::new);
         Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, AbstractContainerMenu>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> stoveHandler = getStoveMenuFactory();
         ScreenHandlerIDs.STOVE_SCREEN_HANDLER = registerScreenHandlerExtended(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), stoveHandler.getA(), stoveHandler.getB());
-        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = registerScreenHandlerSimple(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"iron_stove_block_entity"), IronStoveScreenHandler::new);
+        ScreenHandlerIDs.OVEN_SCREEN_HANDLER = registerScreenHandlerExtended(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"oven_block_entity"),
+                ((integer, inventory, byteBuf) -> new OvenScreenHandler(ScreenHandlerIDs.OVEN_SCREEN_HANDLER, integer, inventory, byteBuf))
+        );
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = registerScreenHandlerExtended(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), MicrowaveScreenHandler::new, MicrowaveScreenHandler.PACKET_CODEC);
         ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = registerScreenHandlerExtended(new ResourceLocation(PaladinFurnitureMod.MOD_ID,"trashcan_block_entity"), TrashcanScreenHandler::new, TrashcanScreenHandler.PACKET_CODEC);
 

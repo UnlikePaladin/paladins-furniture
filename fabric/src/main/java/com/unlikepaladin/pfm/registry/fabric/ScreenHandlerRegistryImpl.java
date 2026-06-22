@@ -3,7 +3,8 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
@@ -12,12 +13,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.Container;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiFunction;
@@ -40,6 +39,6 @@ public class ScreenHandlerRegistryImpl {
             return new Tuple<>((TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
         }
         else
-            return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+            return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 }
