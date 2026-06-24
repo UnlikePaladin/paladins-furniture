@@ -4,8 +4,8 @@
 		"2": "pfm:block/xbox_fridge/fridge_back_dark",
 		"4": "pfm:block/xbox_fridge/xbox_logo",
 		"5": "block/white_concrete",
-		"particle": "pfm:block/xbox_fridge/fridge_xbox",
-		"base": "pfm:block/xbox_fridge/fridge_xbox"
+		"base": "pfm:block/xbox_fridge/fridge_xbox",
+		"particle": "#base"
 	},
 	"elements": [
 		{

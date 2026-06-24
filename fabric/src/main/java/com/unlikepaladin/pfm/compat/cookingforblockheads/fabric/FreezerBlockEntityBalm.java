@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
-import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;

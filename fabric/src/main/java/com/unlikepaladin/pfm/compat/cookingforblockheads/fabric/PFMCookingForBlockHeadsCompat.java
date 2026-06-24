@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.blocks.fabric.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.balm.api.Balm;
@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level;
 
 public class PFMCookingForBlockHeadsCompat {
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE));
-    public static TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+    public static TriFunc<Integer, Inventory, StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
             BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
@@ -41,7 +41,7 @@ public class PFMCookingForBlockHeadsCompat {
     }
 
     public static <D extends StovePacket> StreamCodec<RegistryFriendlyByteBuf, D> getStovePacket() {
-        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
+        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveData.PACKET_CODEC;
     }
 
     public static void openMenuScreen(Level level, BlockPos pos, Player player) {
@@ -109,7 +109,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return ItemInteractionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
+                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem, level.registryAccess()) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 

@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
@@ -42,7 +43,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         for(int i = 0; i < 9; ++i) {
             Slot slot = this.menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem(), RegistryAccess.EMPTY);
                 if (!itemStack.isEmpty()) {
                 }
             }
