@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.menus.slots.OvenFuelSlot;
 import com.unlikepaladin.pfm.menus.slots.OvenProcessingSlot;
 import com.unlikepaladin.pfm.menus.slots.OvenResultSlot;
@@ -52,11 +53,10 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
     private final RecipeBookType recipeBookType;
 
-    public OvenScreenHandler(MenuType<? extends AbstractContainerMenu> menuType, int containerId, Inventory inventory, FriendlyByteBuf byteBuf) {
+    public OvenScreenHandler(MenuType<? extends AbstractContainerMenu> menuType, int containerId, Inventory inventory, StoveData pos) {
         // client-side menu: create a PropertyDelegate sized to match the server-side layout
         this(menuType, containerId, inventory, new SimpleContainer(SLOT_COUNT), new SimpleContainerData(2 + PROCESSING_SLOT_COUNT * 2));
-        BlockPos pos = byteBuf.readBlockPos();
-        if (inventory.player.level().getBlockEntity(pos) instanceof OvenBlockEntity oven) {
+        if (inventory.player.level().getBlockEntity(pos.pos()) instanceof OvenBlockEntity oven) {
             this.container = oven;
         }
     }

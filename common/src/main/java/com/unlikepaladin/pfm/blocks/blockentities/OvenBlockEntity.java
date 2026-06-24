@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -112,7 +113,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     private final ResourceLocation[] slotRecipes;
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
     private final Container singleSlotRecipeWrapper;
-    protected final NonNullList<ItemStack> items = NonNullList.withSize(TOTAL_SLOTS, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> items = NonNullList.withSize(TOTAL_SLOTS, ItemStack.EMPTY);
     public OvenBlockEntity(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         this.slotCookTime = new int[PROCESSING_COUNT];
@@ -130,6 +131,16 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     @Override
     protected Component getDefaultName() {
         return Component.translatable("container.pfm.oven");
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return items;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> nonNullList) {
+        this.items = nonNullList;
     }
 
     @Override
@@ -338,9 +349,9 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
+    public void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         this.items.clear();
-        ContainerHelper.loadAllItems(compoundTag, this.items);
+        ContainerHelper.loadAllItems(compoundTag, this.items, provider);
         // load timers
         this.furnaceBurnTime = compoundTag.getInt("BurnTime");
         this.currentItemBurnTime = compoundTag.getInt("CurrentItemBurnTime");
@@ -359,12 +370,12 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         for (String key : recipesUsedTag.getAllKeys()) {
             this.recipesUsed.put(new ResourceLocation(key), recipesUsedTag.getInt(key));
         }
-        super.load(compoundTag);
+        super.loadAdditional(compoundTag, provider);
     }
 
     @Override
-    public void saveAdditional(CompoundTag compoundTag) {
-        ContainerHelper.saveAllItems(compoundTag, this.items);
+    public void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        ContainerHelper.saveAllItems(compoundTag, this.items, provider);
         // save timers
         compoundTag.putInt("BurnTime", this.furnaceBurnTime);
         compoundTag.putInt("CurrentItemBurnTime", this.currentItemBurnTime);
@@ -373,7 +384,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         CompoundTag recipesUsedTag = new CompoundTag();
         this.recipesUsed.forEach((resourceLocation, integer) -> recipesUsedTag.putInt(resourceLocation.toString(), integer));
         compoundTag.put("RecipesUsed", recipesUsedTag);
-        super.saveAdditional(compoundTag);
+        super.saveAdditional(compoundTag, provider);
     }
 
     public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
@@ -389,7 +400,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         ItemStack result;
         if (recipe != null && recipe.isPresent()) {
             result = recipe.get().value().getResultItem(registryAccess);
-            if (!result.isEmpty() && result.getItem().isEdible()) {
+            if (!result.isEmpty() && result.has(DataComponents.FOOD)) {
                 return recipe.get();
             }
         }
@@ -587,7 +598,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             for (int o = outputStart; o < outputEnd; o++) {
                 ItemStack out = be.getItem(o);
                 if (out.isEmpty()) continue;
-                if (ItemStack.isSameItemSameTags(out, remaining)) {
+                if (ItemStack.isSameItemSameComponents(out, remaining)) {
                     int space = Math.min(remaining.getMaxStackSize(), out.getMaxStackSize()) - out.getCount();
                     if (space > 0) {
                         int move = Math.min(space, remaining.getCount());

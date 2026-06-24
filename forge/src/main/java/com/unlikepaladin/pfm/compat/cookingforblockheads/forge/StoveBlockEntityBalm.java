@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
@@ -310,7 +310,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         // NBT Migration
         if (tagCompound.contains("ItemHandler")) {
             DefaultContainer oldContainer = new DefaultContainer(20);
-            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"));
+            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"), registryLookup);
 
             // Map old container slots to new standard slots
             for (int i = 0; i < 3; i++) {
@@ -328,11 +328,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
             }
         }
 
-        super.load(tagCompound);
+        super.loadAdditional(tagCompound, registryLookup);
 
         this.tools.clear();
         if (tagCompound.contains("Tools")) {
-            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools);
+            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools, registryLookup);
         }
 
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
@@ -344,10 +344,10 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
     @Override
     public void saveAdditional(CompoundTag tagCompound, HolderLookup.Provider registryLookup) {
-        super.saveAdditional(tagCompound);
+        super.saveAdditional(tagCompound, registryLookup);
 
         CompoundTag toolsTag = new CompoundTag();
-        ContainerHelper.saveAllItems(toolsTag, this.tools);
+        ContainerHelper.saveAllItems(toolsTag, this.tools, registryLookup);
         tagCompound.put("Tools", toolsTag);
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
@@ -422,12 +422,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public void setCustomName(Component customName) {
-        this.customName = customName;
-        this.setChanged();
-    }
-
-    @Override
     public boolean hasCustomName() {
         return this.customName != null;
     }
@@ -467,12 +461,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag nbt = super.getUpdateTag();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag nbt = super.getUpdateTag(provider);
         CompoundTag toolsTag = new CompoundTag();
-        ContainerHelper.saveAllItems(toolsTag, this.tools);
+        ContainerHelper.saveAllItems(toolsTag, this.tools, provider);
         nbt.put("Tools", toolsTag);
-        ContainerHelper.saveAllItems(nbt, this.items);
+        ContainerHelper.saveAllItems(nbt, this.items, provider);
         return nbt;
     }
 
@@ -483,9 +477,9 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        this.load(pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
+        super.onDataPacket(net, pkt, provider);
+        this.loadAdditional(pkt.getTag(), provider);
     }
 
     @Override
@@ -541,12 +535,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
-        return new StoveScreenHandler.StoveData(this.getBlockPos());
+    public StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
+        return new StoveData(this.getBlockPos());
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData> getScreenStreamCodec() {
-        return StoveScreenHandler.PACKET_CODEC;
+    public StreamCodec<RegistryFriendlyByteBuf, StoveData> getScreenStreamCodec() {
+        return StoveData.PACKET_CODEC;
     }
 }

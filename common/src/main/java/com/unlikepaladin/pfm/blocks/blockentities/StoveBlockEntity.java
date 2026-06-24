@@ -118,7 +118,7 @@ public class StoveBlockEntity extends OvenBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+    public void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         int[] is;
         this.itemsBeingCooked.clear();

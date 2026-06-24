@@ -3,22 +3,20 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+;
 
-public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedScreenHandlerFactory<StoveScreenHandler.StoveData> {
+public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedScreenHandlerFactory<StoveData> {
 
     public StoveBlockEntityImpl(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -43,7 +41,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
     }
 
     @Override
-    public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
-        return new StoveScreenHandler.StoveData(this.getBlockPos());
+    public StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
+        return new StoveData(this.getBlockPos());
     }
 }

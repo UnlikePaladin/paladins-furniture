@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
@@ -18,6 +18,9 @@ import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.core.*;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,8 +31,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -37,7 +38,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -52,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider {
+public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider<StoveData> {
     private final NonNullList<ItemStack> tools = NonNullList.withSize(4, ItemStack.EMPTY);
     private final EnergyStorage energyStorage = new EnergyStorage(10000) {
         @Override
@@ -301,11 +301,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public void load(CompoundTag tagCompound) {
+    public void loadAdditional(CompoundTag tagCompound, HolderLookup.Provider provider) {
         // NBT Migration
         if (tagCompound.contains("ItemHandler")) {
             DefaultContainer oldContainer = new DefaultContainer(20);
-            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"));
+            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"), provider);
 
             // Map old container slots to new standard slots
             for (int i = 0; i < 3; i++) {
@@ -323,26 +323,26 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
             }
         }
 
-        super.load(tagCompound);
+        super.loadAdditional(tagCompound, provider);
 
         this.tools.clear();
         if (tagCompound.contains("Tools")) {
-            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools);
+            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools, provider);
         }
 
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
         this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
         if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Component.Serializer.fromJson(tagCompound.getString("CustomName"), registryLookup);
+            this.customName = Component.Serializer.fromJson(tagCompound.getString("CustomName"), provider);
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tagCompound, HolderLookup.Provider registryLookup) {
-        super.saveAdditional(tagCompound);
+        super.saveAdditional(tagCompound, registryLookup);
 
         CompoundTag toolsTag = new CompoundTag();
-        ContainerHelper.saveAllItems(toolsTag, this.tools);
+        ContainerHelper.saveAllItems(toolsTag, this.tools, registryLookup);
         tagCompound.put("Tools", toolsTag);
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
@@ -417,12 +417,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public void setCustomName(Component customName) {
-        this.customName = customName;
-        this.setChanged();
-    }
-
-    @Override
     public boolean hasCustomName() {
         return this.customName != null;
     }
@@ -462,12 +456,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag nbt = super.getUpdateTag();
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        CompoundTag nbt = super.getUpdateTag(provider);
         CompoundTag toolsTag = new CompoundTag();
-        ContainerHelper.saveAllItems(toolsTag, this.tools);
+        ContainerHelper.saveAllItems(toolsTag, this.tools, provider);
         nbt.put("Tools", toolsTag);
-        ContainerHelper.saveAllItems(nbt, this.items);
+        ContainerHelper.saveAllItems(nbt, this.items, provider);
         return nbt;
     }
 
@@ -478,9 +472,9 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        this.load(pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider provider) {
+        super.onDataPacket(net, pkt, provider);
+        this.loadAdditional(pkt.getTag(), provider);
     }
 
     @Override
@@ -526,5 +520,15 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         double e = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @Override
+    public StoveData getScreenOpeningData(ServerPlayer serverPlayer) {
+        return new StoveData(this.getBlockPos());
+    }
+
+    @Override
+    public StreamCodec<RegistryFriendlyByteBuf, StoveData> getScreenStreamCodec() {
+        return StoveData.PACKET_CODEC;
     }
 }

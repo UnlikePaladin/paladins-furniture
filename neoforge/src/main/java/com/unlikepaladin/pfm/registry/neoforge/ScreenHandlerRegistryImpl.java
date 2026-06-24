@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
@@ -47,11 +48,11 @@ public class ScreenHandlerRegistryImpl {
         }
     }
 
-    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getStoveMenuFactory() {
+    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveData>> getStoveMenuFactory() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
-            return new Tuple<>((TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
+            return new Tuple<>((TriFunc<Integer, Inventory, StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
         }
         else
-            return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+            return new Tuple<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, data), StoveData.PACKET_CODEC);
     }
 }

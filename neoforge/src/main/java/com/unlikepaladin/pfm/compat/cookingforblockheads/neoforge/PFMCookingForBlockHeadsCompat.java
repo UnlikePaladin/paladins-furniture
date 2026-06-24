@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.blocks.neoforge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
@@ -56,7 +56,7 @@ import java.util.function.Function;
 
 public class PFMCookingForBlockHeadsCompat {
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
-    public static TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+    public static TriFunc<Integer, Inventory, StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
             BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
@@ -65,7 +65,7 @@ public class PFMCookingForBlockHeadsCompat {
     }
 
     public static <D extends StovePacket> StreamCodec<RegistryFriendlyByteBuf, D> getStovePacket() {
-        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
+        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveData.PACKET_CODEC;
     }
 
     public static void openMenuScreen(Level level, BlockPos pos, Player player) {

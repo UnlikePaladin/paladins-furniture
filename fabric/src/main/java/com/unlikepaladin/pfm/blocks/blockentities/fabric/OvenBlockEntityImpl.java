@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.OvenBlockEntityBalm;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScreenHandlerFactory {
+public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScreenHandlerFactory<StoveData> {
     public OvenBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
@@ -27,8 +28,8 @@ public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScre
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBlockPos(this.getBlockPos());
+    public StoveData getScreenOpeningData(ServerPlayer serverPlayer) {
+        return new StoveData(this.getBlockPos());
     }
 
     public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
