@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.blocks.neoforge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
@@ -57,7 +57,7 @@ import java.util.function.Function;
 
 public class PFMCookingForBlockHeadsCompat {
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).setId(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
-    public static TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+    public static TriFunc<Integer, Inventory, StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
             BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
@@ -66,7 +66,7 @@ public class PFMCookingForBlockHeadsCompat {
     }
 
     public static <D extends StovePacket> StreamCodec<RegistryFriendlyByteBuf, D> getStovePacket() {
-        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
+        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveData.PACKET_CODEC;
     }
 
     public static void openMenuScreen(Level level, BlockPos pos, Player player) {
@@ -134,7 +134,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
+                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem, player.level().registryAccess()) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 
@@ -191,16 +191,14 @@ public class PFMCookingForBlockHeadsCompat {
             };
         });
 
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> {
-            StoveBlockEntityBalm ovenBlockEntityBalm = (StoveBlockEntityBalm) entity;
-            return new ContainerKitchenItemProvider(new CombinedContainer(ovenBlockEntityBalm.toolsContainer, ovenBlockEntityBalm.outputContainer));
-        });
-
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProcessor.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> (StoveBlockEntityBalm) entity);
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProcessor.class), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, (entity, side) -> (OvenBlockEntityBalm) entity);
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProcessor.class), BlockEntities.STOVE_TOP_BLOCK_ENTITY, (entity, side) -> (StovetopBlockEntityBalm) entity);
 
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.DRAWER_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm9x3)entity).itemProvider);
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FRIDGE_BLOCK_ENTITY, (entity, side) -> ((FridgeBlockEntityBalm)entity).itemProvider);
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, (entity, side) -> ((CounterOvenBlockEntityBalm)entity).itemProvider);
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, (entity, side) -> ((OvenBlockEntityBalm)entity).itemProvider);
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> ((StoveBlockEntityBalm)entity).itemProvider);
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm3x3)entity).itemProvider);
     }
 }

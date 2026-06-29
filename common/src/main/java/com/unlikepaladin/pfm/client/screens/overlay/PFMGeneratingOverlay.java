@@ -56,7 +56,7 @@ public class PFMGeneratingOverlay extends Overlay {
         this.minecraft = client;
         this.parent = parent;
         client.getTextureManager().register(pfmLogo, new LogoTexture());
-        this.glText = new GLText();
+        this.glText = GLText.shared();
         this.progressText = GLText.gltCreateText();
         this.notificationText = GLText.gltCreateText();
     }
@@ -160,8 +160,9 @@ public class PFMGeneratingOverlay extends Overlay {
             this.renderProgressBar(context, width / 2 - barWidth, barHeight - 5, width / 2 + barWidth, barHeight + 5, 1.0f - Mth.clamp(timeProgress, 0.0f, 1.0f));
         }
         if (timeProgress >= 2.0f || (!PFMGenerator.areAssetsRunning() && !PFMGenerator.isDataRunning())) {
+            gltDeleteText(progressText);
+            gltDeleteText(notificationText);
             this.minecraft.setOverlay(parent);
-            glText.gltTerminate();
         }
     }
 
