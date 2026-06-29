@@ -227,7 +227,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     private boolean isFirstTick = true;
     private boolean hasPowerUpgrade;
     private Direction facing;
-    private final Container singleSlotRecipeWrapper = new SimpleContainer(1);
+    private SingleRecipeInput singleSlotRecipeWrapper = new SingleRecipeInput(ItemStack.EMPTY);
 
     public StoveBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
@@ -267,7 +267,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         if (itemStack.isEmpty()) {
             return null;
         }
-        this.singleSlotRecipeWrapper.setItem(0, itemStack);
+        this.singleSlotRecipeWrapper = new SingleRecipeInput(itemStack);
         Optional<RecipeHolder<SmeltingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
         if (recipe != null && recipe.isPresent()) {
             ItemStack result = recipe.get().value().getResultItem(level.registryAccess());

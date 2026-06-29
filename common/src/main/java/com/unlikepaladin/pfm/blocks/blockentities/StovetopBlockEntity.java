@@ -141,7 +141,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Conta
             int cookTime = 200;
             if (this.level != null) {
                 cookTime = this.level.getRecipeManager()
-                    .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), this.level)
+                    .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), this.level)
                     .map(op -> op.value().getCookingTime())
                     .orElse(200);
             }

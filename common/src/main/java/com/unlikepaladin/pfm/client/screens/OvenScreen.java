@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation("pfm:textures/gui/container/oven.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("pfm:textures/gui/container/oven.png");
 
     public OvenScreen(OvenScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);

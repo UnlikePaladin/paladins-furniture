@@ -16,14 +16,11 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
-public class OvenScreenHandler extends RecipeBookMenu<Container> {
+public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
     // container layout (container slot indices)
     public static final int INPUT_SLOT_START = 0;
     public static final int INPUT_SLOT_COUNT = 3;
@@ -159,8 +156,13 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
     }
 
     @Override
-    public boolean recipeMatches(RecipeHolder<? extends Recipe<Container>> recipeHolder) {
-        return recipeHolder.value().matches(this.container, this.level);
+    public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> recipeHolder) {
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            if (level.getRecipeManager().getRecipeFor(recipeType, new SingleRecipeInput(container.getItem(i)), level).isPresent()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -250,7 +252,7 @@ public class OvenScreenHandler extends RecipeBookMenu<Container> {
     }
 
     protected boolean canSmelt(ItemStack itemStack) {
-        return this.level.getRecipeManager().getRecipeFor(this.recipeType, new SimpleContainer(itemStack), this.level).isPresent();
+        return this.level.getRecipeManager().getRecipeFor(this.recipeType, new SingleRecipeInput(itemStack), this.level).isPresent();
     }
 
     public boolean isFuel(ItemStack itemStack) {

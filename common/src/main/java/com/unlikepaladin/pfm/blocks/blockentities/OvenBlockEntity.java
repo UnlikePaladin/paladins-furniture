@@ -112,7 +112,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     protected double[] slotCookTimeRemainder;
     private final ResourceLocation[] slotRecipes;
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
-    private final Container singleSlotRecipeWrapper;
+    private SingleRecipeInput singleSlotRecipeWrapper;
     protected NonNullList<ItemStack> items = NonNullList.withSize(TOTAL_SLOTS, ItemStack.EMPTY);
     public OvenBlockEntity(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -121,7 +121,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         this.slotCookTimeRemainder = new double[PROCESSING_COUNT];
         this.slotRecipes = new ResourceLocation[PROCESSING_COUNT];
         for (int i = 0; i < this.slotCookTimeTotal.length; i++) this.slotCookTimeTotal[i] = 200;
-        this.singleSlotRecipeWrapper = new SimpleContainer(1);
+        this.singleSlotRecipeWrapper = new SingleRecipeInput(ItemStack.EMPTY);
     }
 
     public OvenBlockEntity(BlockPos blockPos, BlockState state) {
@@ -368,7 +368,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         CompoundTag recipesUsedTag = compoundTag.getCompound("RecipesUsed");
         this.recipesUsed.clear();
         for (String key : recipesUsedTag.getAllKeys()) {
-            this.recipesUsed.put(new ResourceLocation(key), recipesUsedTag.getInt(key));
+            this.recipesUsed.put(ResourceLocation.parse(key), recipesUsedTag.getInt(key));
         }
         super.loadAdditional(compoundTag, provider);
     }
@@ -395,7 +395,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     public RecipeHolder<SmokingRecipe> getSmokingRecipeHolder(ItemStack itemStack, RegistryAccess registryAccess) {
-        this.singleSlotRecipeWrapper.setItem(0, itemStack);
+        this.singleSlotRecipeWrapper = new SingleRecipeInput( itemStack);
         Optional<RecipeHolder<SmokingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this.singleSlotRecipeWrapper, this.level);
         ItemStack result;
         if (recipe != null && recipe.isPresent()) {
