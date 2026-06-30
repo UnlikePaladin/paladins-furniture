@@ -6,7 +6,7 @@
 		"2": "pfm:block/office_chair/office_chair_legs",
 		"3": "pfm:block/office_chair/office_chair_seat",
 		"4": "pfm:block/office_chair/office_chair_back",
-        "particle": "pfm:block/office_chair/office_chair_legs"
+        "particle": "#3"
 	},
 	"elements": [
 		{

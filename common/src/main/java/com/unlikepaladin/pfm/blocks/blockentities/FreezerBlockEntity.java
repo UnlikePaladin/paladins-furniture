@@ -172,12 +172,12 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
 
     public static Map<Item, Integer> createFuelTimeMap() {
         LinkedHashMap<Item, Integer> map = Maps.newLinkedHashMap();
-        FreezerBlockEntity.addFuel(map, Items.SNOWBALL, 50);
-        FreezerBlockEntity.addFuel(map, Items.SNOW, 62);
-        FreezerBlockEntity.addFuel(map, Items.SNOW_BLOCK, 400);
-        FreezerBlockEntity.addFuel(map, Items.ICE, 1600);
-        FreezerBlockEntity.addFuel(map, Items.PACKED_ICE, 14400);
-        FreezerBlockEntity.addFuel(map, Items.BLUE_ICE, 129600);
+        FreezerBlockEntity.addFuel(map, Items.SNOWBALL, 25);
+        FreezerBlockEntity.addFuel(map, Items.SNOW, 50);
+        FreezerBlockEntity.addFuel(map, Items.SNOW_BLOCK, 100);
+        FreezerBlockEntity.addFuel(map, Items.ICE, 200);
+        FreezerBlockEntity.addFuel(map, Items.PACKED_ICE, 1800);
+        FreezerBlockEntity.addFuel(map, Items.BLUE_ICE, 16200);
         return map;
     }
     private boolean isActive() {

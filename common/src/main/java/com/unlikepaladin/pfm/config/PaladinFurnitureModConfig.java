@@ -1,17 +1,16 @@
 package com.unlikepaladin.pfm.config;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.config.option.DoubleConfigOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 
-
 import java.io.*;
-import java.lang.reflect.Type;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -45,7 +44,9 @@ public class PaladinFurnitureModConfig {
             renderImmersivePortalsMirrors = new BooleanConfigOption(Component.translatable("pfm.option.renderImmersivePortalsMirrors"), Component.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
             spawnImmersivePortalsMirror  = new BooleanConfigOption(Component.translatable("pfm.option.spawnImmersivePortalsMirror"), Component.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             disableGeneratingScreen  = new BooleanConfigOption(Component.translatable("pfm.option.disableGeneratingScreen"), Component.translatable("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            disableSinytraWarning  = new BooleanConfigOption(Component.translatable("pfm.option.disableSinytraWarning"), Component.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
+            disableSinytraWarning  = new BooleanConfigOption(Component.translatable("pfm.option.disableSinytraWarning"), Component.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            fuelConsumptionMultiplier = new DoubleConfigOption(Component.translatable("pfm.option.fuelConsumptionMultiplier"), Component.translatable("pfm.option.fuelConsumptionMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER),
+            ovenSpeedMultiplier = new DoubleConfigOption(Component.translatable("pfm.option.ovenSpeedMultiplier"), Component.translatable("pfm.option.ovenSpeedMultiplier.tooltip"), GAMEPLAY_OPTIONS, 1.0D, Side.SERVER)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -119,6 +120,17 @@ public class PaladinFurnitureModConfig {
         return disableSinytraWarning.getValue();
     }
 
+    public double getFuelConsumptionMultiplier() {
+        return fuelConsumptionMultiplier.getValue();
+    }
+
+    public double getOvenSpeedMultiplier() {
+        return ovenSpeedMultiplier.getValue();
+    }
+
+    private DoubleConfigOption fuelConsumptionMultiplier;
+    private DoubleConfigOption ovenSpeedMultiplier;
+
     private BooleanConfigOption checkForUpdates;
 
     private BooleanConfigOption shaderSolidFix;
@@ -160,7 +172,7 @@ public class PaladinFurnitureModConfig {
 
         JsonObject config = new JsonObject();
         try (FileReader reader = new FileReader(propertiesPath.toString())) {
-            JsonElement element = new JsonParser().parse(reader);
+            JsonElement element = JsonParser.parseReader(reader);
             if (element.isJsonObject()) {
                 config = element.getAsJsonObject();
             }
@@ -179,12 +191,28 @@ public class PaladinFurnitureModConfig {
         spawnImmersivePortalsMirror.setValue(getFromJsonElement(config.get("spawnImmersivePortalsMirror"), true));
         disableGeneratingScreen.setValue(getFromJsonElement(config.get("disableGeneratingScreen"), false));
         disableSinytraWarning.setValue(getFromJsonElement(config.get("disableSinytraWarning"), false));
+        boolean needsSave = false;
+        if (config.has("fuelConsumptionMultiplier") && config.get("fuelConsumptionMultiplier").isJsonPrimitive()) {
+            fuelConsumptionMultiplier.setValue(getFromJsonElement(config.get("fuelConsumptionMultiplier"), Double.class, 1.0D));
+        } else {
+            fuelConsumptionMultiplier.setValue(1.0D);
+            needsSave = true;
+        }
+        if (config.has("ovenSpeedMultiplier") && config.get("ovenSpeedMultiplier").isJsonPrimitive()) {
+            ovenSpeedMultiplier.setValue(getFromJsonElement(config.get("ovenSpeedMultiplier"), Double.class, 1.0D));
+        } else {
+            ovenSpeedMultiplier.setValue(1.0D);
+            needsSave = true;
+        }
         for (String key : options.keySet()) {
             if (!config.has(key.replace("pfm.option.", ""))){
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
                 options.get(key).setValue(options.get(key).getDefaultValue());
                 save();
             }
+        }
+        if (needsSave) {
+            save();
         }
     }
 
@@ -193,20 +221,46 @@ public class PaladinFurnitureModConfig {
         if (element != null && element.isJsonPrimitive()) {
             JsonPrimitive primitive = element.getAsJsonPrimitive();
 
-            Type targetType;
-
-            if (primitive.isString()) {
-                targetType = String.class;
-            } else if (primitive.isBoolean()) {
-                targetType = Boolean.class;
-            } else if (primitive.isNumber()) {
-                targetType = Number.class;
-            } else {
-                // Handle the case where the primitive type is not supported
-                return null;
+            // If the caller provided a non-null defaultValue use its runtime class so
+            // Gson will deserialize to the expected boxed type (e.g. Double). This
+            // avoids returning Gson's LazilyParsedNumber which cannot be cast to
+            // boxed primitives.
+            if (defaultValue != null) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    Class<T> clazz = (Class<T>) defaultValue.getClass();
+                    return GSON.fromJson(primitive, clazz);
+                } catch (ClassCastException e) {
+                    // Fall through to primitive-based extraction below
+                }
             }
 
-            return GSON.fromJson(primitive, targetType);
+            // No default type to infer from: return sensible primitive mappings.
+            if (primitive.isString()) {
+                return (T) primitive.getAsString();
+            } else if (primitive.isBoolean()) {
+                return (T) (Boolean) primitive.getAsBoolean();
+            } else if (primitive.isNumber()) {
+                return (T) (Double) primitive.getAsDouble();
+            }
+
+            return null;
+        }
+        return defaultValue;
+    }
+
+    /**
+     * Variant that accepts an explicit target class. Prefer this when the desired
+     * return type is known to avoid relying on a non-null defaultValue for type
+     * inference.
+     */
+    public static <T> T getFromJsonElement(JsonElement element, Class<T> targetClass, T defaultValue) {
+        if (element != null && element.isJsonPrimitive()) {
+            try {
+                return GSON.fromJson(element, targetClass);
+            } catch (JsonSyntaxException | ClassCastException ignored) {
+                // Fall back to default value below
+            }
         }
         return defaultValue;
     }
@@ -231,6 +285,8 @@ public class PaladinFurnitureModConfig {
         spawnImmersivePortalsMirror.setValue("true".equals(properties.getProperty("spawnImmersivePortalsMirror")));
         disableGeneratingScreen.setValue("true".equals(properties.get("disableGeneratingScreen")));
         disableSinytraWarning.setValue("true".equals(properties.get("disableSinytraWarning")));
+        fuelConsumptionMultiplier.setValue(1.0D);
+        ovenSpeedMultiplier.setValue(1.0D);
         save();
         Files.delete(legacyConfigFile);
         PaladinFurnitureMod.GENERAL_LOGGER.info("Successfully migrated to new config");
@@ -256,6 +312,8 @@ public class PaladinFurnitureModConfig {
         object.addProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue());
         object.addProperty("disableGeneratingScreen", disableGeneratingScreen.getValue());
         object.addProperty("disableSinytraWarning", disableSinytraWarning.getValue());
+        object.addProperty("fuelConsumptionMultiplier", fuelConsumptionMultiplier.getValue());
+        object.addProperty("ovenSpeedMultiplier", ovenSpeedMultiplier.getValue());
 
         try (FileWriter writer = new FileWriter(propertiesPath.toString())) {
             GSON.toJson(object, writer);

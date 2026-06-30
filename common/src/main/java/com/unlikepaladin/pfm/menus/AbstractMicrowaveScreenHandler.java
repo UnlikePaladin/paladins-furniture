@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import com.unlikepaladin.pfm.menus.slots.SizeableSlot;
+import com.unlikepaladin.pfm.menus.slots.MicrowaveSlot;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -53,7 +53,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu {
         this.dataAccess = dataAccess;
         this.level = playerInventory.player.getCommandSenderWorld();
         this.recipePropertySet = this.level.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT);
-        this.addSlot(new SizeableSlot(playerInventory.player, container, 0, 78, 40));
+        this.addSlot(new MicrowaveSlot(playerInventory.player, container, 0, 78, 40));
 
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

@@ -4,10 +4,12 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityB
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,10 +20,12 @@ import net.minecraft.world.inventory.Slot;
 
 public class StoveScreenHandlerBalm extends AbstractContainerMenu implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
+    private final RecipePropertySet acceptedInputs;
 
     public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
+        this.acceptedInputs = playerInventory.player.level().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
         oven.startOpen(playerInventory.player);
         Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
@@ -31,7 +35,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
             this.addSlot(new Slot(container, i, 84 + i * 18 + offsetX, 19));
         }
 
-        this.addSlot(new StoveFuelSlot(this, container, 3, 61 + offsetX, 59));
+        this.addSlot(new SlotOvenFuel(this, container, 3, 61 + offsetX, 59));
 
         for(i = 0; i < 3; ++i) {
             this.addSlot(new StoveResultSlot(playerInventory.player, oven, container, i + 4, 142 + offsetX, 41 + i * 18));
@@ -83,12 +87,11 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
                 if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!smeltingResult.isEmpty()) {
+                } else if (acceptedInputs.test(slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -132,5 +135,22 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     public void removed(Player player){
         super.removed(player);
         this.tileEntity.stopOpen(player);
+    }
+
+    public boolean isFuel(ItemStack itemStack) {
+        return OvenBlockEntity.isItemFuel(this.tileEntity.getLevel(), itemStack);
+    }
+
+    public static class SlotOvenFuel extends Slot {
+        private final StoveScreenHandlerBalm menu;
+
+        public SlotOvenFuel(StoveScreenHandlerBalm menu, Container container, int i, int x, int y) {
+            super(container, i, x, y);
+            this.menu = menu;
+        }
+
+        public boolean canInsert(ItemStack itemStack) {
+            return this.menu.isFuel(itemStack);
+        }
     }
 }
