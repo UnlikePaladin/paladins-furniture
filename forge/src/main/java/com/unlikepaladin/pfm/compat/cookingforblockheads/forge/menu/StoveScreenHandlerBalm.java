@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
@@ -33,7 +34,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
             this.addSlot(new Slot(container, i, 84 + i * 18 + offsetX, 19));
         }
 
-        this.addSlot(new SlotOvenFuel(container, 3, 61 + offsetX, 59));
+        this.addSlot(new SlotOvenFuel(this, container, 3, 61 + offsetX, 59));
 
         for(i = 0; i < 3; ++i) {
             this.addSlot(new StoveResultSlot(playerInventory.player, oven, container, i + 4, 142 + offsetX, 41 + i * 18));
@@ -85,7 +86,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                if (StoveBlockEntityBalm.isItemFuel(slotStack)) {
+                if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -133,5 +134,22 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     public void removed(Player player){
         super.removed(player);
         this.tileEntity.stopOpen(player);
+    }
+
+    public boolean isFuel(ItemStack itemStack) {
+        return OvenBlockEntity.isItemFuel(this.tileEntity.getLevel(), itemStack);
+    }
+
+    public static class SlotOvenFuel extends Slot {
+        private final StoveScreenHandlerBalm menu;
+
+        public SlotOvenFuel(StoveScreenHandlerBalm menu, Container container, int i, int x, int y) {
+            super(container, i, x, y);
+            this.menu = menu;
+        }
+
+        public boolean canInsert(ItemStack itemStack) {
+            return this.menu.isFuel(itemStack);
+        }
     }
 }

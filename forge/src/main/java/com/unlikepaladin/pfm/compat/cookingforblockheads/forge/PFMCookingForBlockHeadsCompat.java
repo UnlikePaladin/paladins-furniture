@@ -116,7 +116,7 @@ public class PFMCookingForBlockHeadsCompat {
                     player.setItemInHand(hand, heldItem);
 
                     return InteractionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
+                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(level, heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
                     return InteractionResult.SUCCESS;

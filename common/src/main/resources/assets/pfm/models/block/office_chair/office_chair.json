@@ -5,7 +5,8 @@
 	"textures": {
 		"2": "pfm:block/office_chair/office_chair_legs",
 		"3": "pfm:block/office_chair/office_chair_seat",
-		"4": "pfm:block/office_chair/office_chair_back"
+		"4": "pfm:block/office_chair/office_chair_back",
+        "particle": "#3"
 	},
 	"elements": [
 		{
