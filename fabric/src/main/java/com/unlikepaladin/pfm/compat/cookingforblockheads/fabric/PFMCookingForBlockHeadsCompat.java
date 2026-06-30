@@ -12,6 +12,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -110,7 +111,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem, level.registryAccess()) != ItemStack.EMPTY) {
+                if (!heldItem.isEmpty() && oven.isCookable(level, heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 

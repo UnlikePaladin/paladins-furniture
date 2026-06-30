@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -29,18 +30,17 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float f, int i, int j) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = this.leftPos;
         int y = this.topPos;
-        graphics.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
-        graphics.blit(TEXTURE, x+58, y+18, 176, 50, 76, 76);
-        graphics.blit(TEXTURE, x+36, y+43, 176, 17, 17, 33);
+        graphics.blit(RenderType::guiTextured, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderType::guiTextured, TEXTURE, x+58, y+18, 176, 50, 76, 76, 256, 256);
+        graphics.blit(RenderType::guiTextured, TEXTURE, x+36, y+43, 176, 17, 17, 33, 256, 256);
 
         if (this.menu.isLit()) {
             int litProgress = this.menu.getLitProgress();
-            graphics.blit(TEXTURE, x + 36, y + 41 + (14 - litProgress), 176, 14 - litProgress, 14, litProgress + 1);
+            graphics.blit(RenderType::guiTextured, TEXTURE, x + 36, y + 41 + (14 - litProgress), 176, 14 - litProgress, 14, litProgress + 1, 256, 256);
         }
 
         int gridX = this.leftPos + 58;
@@ -57,13 +57,13 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
                 // we are overcooking with this one
                 int burnHeight = this.menu.getOverovercookProgress(slotIndex, 18);
                 if (burnHeight > 0) {
-                    graphics.blit(TEXTURE, slotX, slotY + (18 - burnHeight), 212, 32 + (18 - burnHeight), 18, burnHeight);
+                    graphics.blit(RenderType::guiTextured, TEXTURE, slotX, slotY + (18 - burnHeight), 212, 32 + (18 - burnHeight), 18, burnHeight, 256, 256);
 
                 }
             } else {
                 int cookHeight = this.menu.getCookProgress(slotIndex, 18);
                 if (cookHeight > 0) {
-                    graphics.blit(TEXTURE, slotX, slotY + (18 - cookHeight), 194, 32 + (18 - cookHeight), 18, cookHeight);
+                    graphics.blit(RenderType::guiTextured, TEXTURE, slotX, slotY + (18 - cookHeight), 194, 32 + (18 - cookHeight), 18, cookHeight, 256, 256);
                 }
             }
         }

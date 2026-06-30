@@ -16,6 +16,7 @@ import net.blay09.mods.balm.api.tag.BalmItemTags;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.minecraft.core.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -267,24 +268,24 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
+    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, ServerLevel level) {
         if (itemStack.isEmpty()) {
             return null;
         }
         this.singleSlotRecipeWrapper = new SingleRecipeInput(itemStack);
-        Optional<RecipeHolder<SmeltingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
+        Optional<RecipeHolder<SmeltingRecipe>> recipe = level.recipeAccess().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level);
         if (recipe != null && recipe.isPresent()) {
-            ItemStack result = recipe.get().value().getResultItem(level.registryAccess());
+            ItemStack result = recipe.get().value().result();
             if (!result.isEmpty() && (result.has(DataComponents.FOOD))) {
                 return recipe.get().value();
             }
         }
-        return null;
+        return super.getSmokingRecipe(itemStack, level);
     }
 
-    public ItemStack getSmeltingResult(ItemStack itemStack, RegistryAccess registryAccess) {
-        AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, registryAccess);
-        return recipe != null ? recipe.getResultItem(registryAccess) : ItemStack.EMPTY;
+    public ItemStack getSmeltingResult(ItemStack itemStack, ServerLevel level) {
+        AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, level);
+        return recipe != null ? recipe.result() : ItemStack.EMPTY;
     }
 
     public static boolean isItemFuel(ItemStack itemStack) {

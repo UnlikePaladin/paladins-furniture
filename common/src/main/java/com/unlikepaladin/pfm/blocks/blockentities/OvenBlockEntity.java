@@ -16,8 +16,10 @@ import java.util.Optional;
 
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,6 +35,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.StackedContentsCompatible;
@@ -57,6 +60,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     public static final int OUTPUT_COUNT = 3;
     public static final int FUEL_COUNT = 1;
     public static final int TOTAL_SLOTS = INPUT_COUNT + PROCESSING_COUNT + OUTPUT_COUNT + FUEL_COUNT; // 16
+    private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> quickCheck;
 
     final ContainerData dataAccess = new ContainerData() {
         // layout:
@@ -110,8 +114,8 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     protected int[] slotCookTimeTotal;
     protected double burnTimeRemainder = 0.0D;
     protected double[] slotCookTimeRemainder;
-    private final ResourceLocation[] slotRecipes;
-    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
+    private final ResourceKey<Recipe<?>>[] slotRecipes;
+    private final Object2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed = new Object2IntOpenHashMap<>();
     private SingleRecipeInput singleSlotRecipeWrapper;
     protected NonNullList<ItemStack> items = NonNullList.withSize(TOTAL_SLOTS, ItemStack.EMPTY);
     public OvenBlockEntity(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
@@ -119,9 +123,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         this.slotCookTime = new int[PROCESSING_COUNT];
         this.slotCookTimeTotal = new int[PROCESSING_COUNT];
         this.slotCookTimeRemainder = new double[PROCESSING_COUNT];
-        this.slotRecipes = new ResourceLocation[PROCESSING_COUNT];
+        this.slotRecipes = new ResourceKey[PROCESSING_COUNT];
         for (int i = 0; i < this.slotCookTimeTotal.length; i++) this.slotCookTimeTotal[i] = 200;
         this.singleSlotRecipeWrapper = new SingleRecipeInput(ItemStack.EMPTY);
+        this.quickCheck = RecipeManager.createCheck(RecipeType.SMOKING);
     }
 
     public OvenBlockEntity(BlockPos blockPos, BlockState state) {
@@ -262,7 +267,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getUnitVec3i();
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -303,7 +308,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @Nullable Direction direction) {
         // only allow insertion into input slots or fuel slot via automation
         if (i >= 0 && i < INPUT_COUNT) return true;
-        if (i == TOTAL_SLOTS - 1) return AbstractFurnaceBlockEntity.isFuel(itemStack);
+        if (i == TOTAL_SLOTS - 1) return level.fuelValues().isFuel(itemStack);
         return false;
     }
 
@@ -327,7 +332,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     public boolean canPlaceItem(int i, ItemStack itemStack) {
         // players may only place items into input slots or the fuel slot
         if (i >= 0 && i < INPUT_COUNT) return true;
-        if (i == TOTAL_SLOTS - 1) return AbstractFurnaceBlockEntity.isFuel(itemStack);
+        if (i == TOTAL_SLOTS - 1) return level.fuelValues().isFuel(itemStack);
         return false;
     }
 
@@ -342,7 +347,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     }
 
     @Override
-    public void fillStackedContents(StackedContents stackedContents) {
+    public void fillStackedContents(StackedItemContents stackedContents) {
         for (ItemStack itemStack : this.items) {
             stackedContents.accountStack(itemStack);
         }
@@ -368,7 +373,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         CompoundTag recipesUsedTag = compoundTag.getCompound("RecipesUsed");
         this.recipesUsed.clear();
         for (String key : recipesUsedTag.getAllKeys()) {
-            this.recipesUsed.put(ResourceLocation.parse(key), recipesUsedTag.getInt(key));
+            this.recipesUsed.put(ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(key)), recipesUsedTag.getInt(key));
         }
         super.loadAdditional(compoundTag, provider);
     }
@@ -382,24 +387,23 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         compoundTag.putIntArray("CookTimes", this.slotCookTime != null ? this.slotCookTime : new int[PROCESSING_COUNT]);
         compoundTag.putIntArray("CookTimesTotal", this.slotCookTimeTotal != null ? this.slotCookTimeTotal : new int[PROCESSING_COUNT]);
         CompoundTag recipesUsedTag = new CompoundTag();
-        this.recipesUsed.forEach((resourceLocation, integer) -> recipesUsedTag.putInt(resourceLocation.toString(), integer));
+        this.recipesUsed.forEach((resourceLocation, integer) -> recipesUsedTag.putInt(resourceLocation.location().toString(), integer));
         compoundTag.put("RecipesUsed", recipesUsedTag);
         super.saveAdditional(compoundTag, provider);
     }
 
-    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, RegistryAccess registryAccess) {
-        RecipeHolder<SmokingRecipe> holder = getSmokingRecipeHolder(itemStack, registryAccess);
+    public AbstractCookingRecipe getSmokingRecipe(ItemStack itemStack, ServerLevel level) {
+        RecipeHolder<SmokingRecipe> holder = (RecipeHolder<SmokingRecipe>) getSmokingRecipeHolder(itemStack, level);
         if (holder != null)
             return holder.value();
         return null;
     }
 
-    public RecipeHolder<SmokingRecipe> getSmokingRecipeHolder(ItemStack itemStack, RegistryAccess registryAccess) {
+    public RecipeHolder<? extends AbstractCookingRecipe> getSmokingRecipeHolder(ItemStack itemStack, ServerLevel level) {
         this.singleSlotRecipeWrapper = new SingleRecipeInput( itemStack);
-        Optional<RecipeHolder<SmokingRecipe>> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMOKING, this.singleSlotRecipeWrapper, this.level);
-        ItemStack result;
+        Optional<? extends RecipeHolder<? extends AbstractCookingRecipe>> recipe = quickCheck.getRecipeFor(this.singleSlotRecipeWrapper, level);
         if (recipe != null && recipe.isPresent()) {
-            result = recipe.get().value().getResultItem(registryAccess);
+            ItemStack result = recipe.get().value().result();
             if (!result.isEmpty() && result.has(DataComponents.FOOD)) {
                 return recipe.get();
             }
@@ -411,8 +415,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            Item item = itemStack.getItem();
-            return AbstractFurnaceBlockEntity.getFuel().getOrDefault(item, 0);
+            return level.fuelValues().burnDuration(itemStack);
         }
     }
 
@@ -425,10 +428,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
     public List<RecipeHolder<?>> getRecipesToAwardAndPopExperience(ServerLevel serverLevel, Vec3 vec3) {
         List<RecipeHolder<?>> list = Lists.newArrayList();
 
-        for (Object2IntMap.Entry<ResourceLocation> entry : this.recipesUsed.object2IntEntrySet()) {
-            serverLevel.getRecipeManager().byKey(entry.getKey()).ifPresent(recipe -> {
+        for (Object2IntMap.Entry<ResourceKey<Recipe<?>>> entry : this.recipesUsed.object2IntEntrySet()) {
+            serverLevel.recipeAccess().byKey(entry.getKey()).ifPresent(recipe -> {
                 list.add(recipe);
-                createExperience(serverLevel, vec3, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).getExperience());
+                createExperience(serverLevel, vec3, entry.getIntValue(), ((AbstractCookingRecipe) recipe.value()).experience());
             });
         }
 
@@ -460,7 +463,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 return true;
             }
 
-            if (this.getSmokingRecipe(cookingStack, level.registryAccess()) != null) {
+            if (level.recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT).test(cookingStack)) {
                 return true;
             }
         }
@@ -516,7 +519,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         if (be.furnaceBurnTime == 0 && be.shouldConsumeFuel()) {
             int fuelIndex = TOTAL_SLOTS - 1;
             ItemStack fuelStack = be.getItem(fuelIndex);
-            if (!fuelStack.isEmpty() && AbstractFurnaceBlockEntity.isFuel(fuelStack)) {
+            if (!fuelStack.isEmpty() && level.fuelValues().isFuel(fuelStack)) {
                 int burn = be.getBurnDuration(fuelStack);
                 if (burn > 0) {
                     be.currentItemBurnTime = be.furnaceBurnTime = burn;
@@ -524,8 +527,8 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                     Item item = fuelStack.getItem();
                     fuelStack.shrink(1);
                     if (fuelStack.isEmpty()) {
-                        Item containerItem = item.getCraftingRemainingItem();
-                        be.setItem(fuelIndex, containerItem == null ? ItemStack.EMPTY : new ItemStack(containerItem));
+                        ItemStack containerItem = item.getCraftingRemainder();
+                        be.setItem(fuelIndex, containerItem == null ? ItemStack.EMPTY : containerItem);
                     } else {
                         be.setItem(fuelIndex, fuelStack);
                     }
@@ -568,10 +571,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             // when we reach or exceed the required cook time, replace processing slot with the recipe result
             if (be.slotCookTime[slotIdx] >= be.slotCookTimeTotal[slotIdx]) {
                 // attempted to produce result
-                RecipeHolder<SmokingRecipe> recipe = be.getSmokingRecipeHolder(procStack, level.registryAccess());
-                if (recipe != null && !recipe.value().getResultItem(level.registryAccess()).isEmpty()) {
+                RecipeHolder<? extends AbstractCookingRecipe> recipe = be.getSmokingRecipeHolder(procStack, (ServerLevel) level);
+                if (recipe != null && !recipe.value().result().isEmpty()) {
                     // replace the processing input with the result item so transfer logic can move it
-                    be.setItem(i, recipe.value().getResultItem(level.registryAccess()).copy());
+                    be.setItem(i, recipe.value().result().copy());
                     be.slotRecipes[slotIdx] = recipe.id();
                     hasChanged = true;
                 }
@@ -626,13 +629,13 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
 
             // update processing slot with leftover (or clear it)
             if (remaining.isEmpty()) {
-                ResourceLocation usedRecipeId = be.slotRecipes[slotIdx];
+                ResourceKey<Recipe<?>> usedRecipeId = be.slotRecipes[slotIdx];
                 be.setItem(i, ItemStack.EMPTY);
                 be.slotCookTime[slotIdx] = 0;
                 be.slotCookTimeRemainder[slotIdx] = 0.0D;
                 be.slotRecipes[slotIdx] = null;
                 if (usedRecipeId != null) {
-                    Optional<RecipeHolder<?>> usedRecipe = level.getRecipeManager().byKey(usedRecipeId);
+                    Optional<RecipeHolder<?>> usedRecipe = ((ServerLevel)level).recipeAccess().byKey(usedRecipeId);
                     if (usedRecipe != null && usedRecipe.isPresent() && toTransfer.getItem() != Items.CHARCOAL) {
                         be.setRecipeUsed(usedRecipe.get());
                     }
@@ -674,13 +677,13 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                 ItemStack inStack = be.getItem(in);
                 if (!inStack.isEmpty()) {
                     // determine cook time from recipe if available
-                    RecipeHolder<SmokingRecipe> recipe = be.getSmokingRecipeHolder(inStack, level.registryAccess());
+                    RecipeHolder<? extends AbstractCookingRecipe> recipe = be.getSmokingRecipeHolder(inStack, (ServerLevel) level);
                     int slotIdx = firstEmptyProcessing - processingStart;
                     if (recipe == null) {
                         continue;
                     }
                     ItemStack moved = inStack.split(1);
-                    be.slotCookTimeTotal[slotIdx] = recipe.value().getCookingTime();
+                    be.slotCookTimeTotal[slotIdx] = recipe.value().cookingTime();
                     be.slotRecipes[slotIdx] = recipe.id();
                     be.setItem(firstEmptyProcessing, moved);
                     be.slotCookTime[slotIdx] = 0;
@@ -702,5 +705,9 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         if (hasChanged) {
             be.setChanged();
         }
+    }
+
+    public boolean isCookable(Level level, ItemStack heldItem) {
+        return level.recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT).test(heldItem);
     }
 }

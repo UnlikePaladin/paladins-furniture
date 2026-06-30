@@ -39,17 +39,6 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     @Override
     protected void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
         super.renderLabels(context, mouseX, mouseY);
-        StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
-
-        for(int i = 0; i < 9; ++i) {
-            Slot slot = this.menu.slots.get(i + 7);
-            if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem(), RegistryAccess.EMPTY);
-                if (!itemStack.isEmpty()) {
-                }
-            }
-        }
-
     }
 
     @Override

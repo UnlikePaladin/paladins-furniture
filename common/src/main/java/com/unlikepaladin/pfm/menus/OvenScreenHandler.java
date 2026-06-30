@@ -7,20 +7,27 @@ import com.unlikepaladin.pfm.menus.slots.OvenProcessingSlot;
 import com.unlikepaladin.pfm.menus.slots.OvenResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.recipebook.ServerPlaceRecipe;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 // import net.minecraft.network.FriendlyByteBuf; // unused
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
-public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class OvenScreenHandler extends RecipeBookMenu {
     // container layout (container slot indices)
     public static final int INPUT_SLOT_START = 0;
     public static final int INPUT_SLOT_COUNT = 3;
@@ -49,6 +56,7 @@ public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, Abstrac
     protected static int SLOT_DIMENSION = 18;
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
     private final RecipeBookType recipeBookType;
+    private final RecipePropertySet recipePropertySet;
 
     public OvenScreenHandler(MenuType<? extends AbstractContainerMenu> menuType, int containerId, Inventory inventory, StoveData pos) {
         // client-side menu: create a PropertyDelegate sized to match the server-side layout
@@ -67,6 +75,7 @@ public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, Abstrac
         this.level = inventory.player.level();
         this.container = container;
         this.container.startOpen(inventory.player);
+        this.recipePropertySet = this.level.recipeAccess().propertySet(RecipePropertySet.FURNACE_INPUT);
         // input slots
         this.inputScreenStart = this.slots.size();
         for (int i = 0; i < INPUT_SLOT_COUNT; i++) {
@@ -122,68 +131,10 @@ public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, Abstrac
     }
 
     @Override
-    public void fillCraftSlotsStackedContents(StackedContents stackedContents) {
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
         if (this.container instanceof StackedContentsCompatible) {
             ((StackedContentsCompatible)this.container).fillStackedContents(stackedContents);
         }
-    }
-
-    @Override
-    public void clearCraftingContent() {
-        // Clear container-side ingredient/result slots if available
-        if (this.container != null) {
-            // clear inputs
-            for (int i = 0; i < INPUT_SLOT_COUNT; i++) {
-                int idx = INPUT_SLOT_START + i;
-                if (this.container.getContainerSize() > idx) this.container.setItem(idx, ItemStack.EMPTY);
-            }
-            // clear outputs
-            for (int o = 0; o < OUTPUT_SLOT_COUNT; o++) {
-                int idx = OUTPUT_SLOT_START + o;
-                if (this.container.getContainerSize() > idx) this.container.setItem(idx, ItemStack.EMPTY);
-            }
-        }
-
-        // Also clear the corresponding screen slots if they exist (inputs + outputs)
-        if (!this.slots.isEmpty()) {
-            for (int s = this.inputScreenStart; s < this.inputScreenEnd && s < this.slots.size(); s++) {
-                this.getSlot(s).set(ItemStack.EMPTY);
-            }
-            for (int s = this.outputScreenStart; s < this.outputScreenEnd && s < this.slots.size(); s++) {
-                this.getSlot(s).set(ItemStack.EMPTY);
-            }
-        }
-    }
-
-    @Override
-    public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> recipeHolder) {
-        for (int i = 0; i < container.getContainerSize(); i++) {
-            if (level.getRecipeManager().getRecipeFor(recipeType, new SingleRecipeInput(container.getItem(i)), level).isPresent()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int getResultSlotIndex() {
-        // return first output screen index (used by recipe book UI)
-        return this.outputScreenStart;
-    }
-
-    @Override
-    public int getGridWidth() {
-        return 1;
-    }
-
-    @Override
-    public int getGridHeight() {
-        return 1;
-    }
-
-    @Override
-    public int getSize() {
-        return this.container.getContainerSize();
     }
 
     @Override
@@ -252,11 +203,11 @@ public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, Abstrac
     }
 
     protected boolean canSmelt(ItemStack itemStack) {
-        return this.level.getRecipeManager().getRecipeFor(this.recipeType, new SingleRecipeInput(itemStack), this.level).isPresent();
+        return this.recipePropertySet.test(itemStack);
     }
 
     public boolean isFuel(ItemStack itemStack) {
-        return AbstractFurnaceBlockEntity.isFuel(itemStack);
+        return level.fuelValues().isFuel(itemStack);
     }
 
     public void removed(Player player) {
@@ -321,6 +272,43 @@ public class OvenScreenHandler extends RecipeBookMenu<SingleRecipeInput, Abstrac
 
     public boolean isLit() {
         return this.data.get(0) > 0;
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean craftAll, boolean creative, RecipeHolder<?> recipe, ServerLevel world, Inventory inventory) {
+        List<Slot> inputSlots = new ArrayList<>();
+        for (int s = this.inputScreenStart; s < this.inputScreenEnd && s < this.slots.size(); s++) {
+            inputSlots.add(this.getSlot(s));
+        }
+        List<Slot> outputSlots = new ArrayList<>();
+        for (int s = this.outputScreenStart; s < this.outputScreenEnd && s < this.slots.size(); s++) {
+            outputSlots.add(this.getSlot(s));
+        }
+        List<Slot> allSlots = new ArrayList<>();
+        allSlots.addAll(inputSlots);
+        allSlots.addAll(outputSlots);
+        return ServerPlaceRecipe.placeRecipe(new ServerPlaceRecipe.CraftingMenuAccess<>() {
+            @Override
+            public void fillCraftSlotsStackedContents(StackedItemContents stackedItemContents) {
+                OvenScreenHandler.this.fillCraftSlotsStackedContents(stackedItemContents);
+            }
+
+            @Override
+            public void clearCraftingContent() {
+                inputSlots.forEach(slot -> slot.set(ItemStack.EMPTY));
+                outputSlots.forEach(slot -> slot.set(ItemStack.EMPTY));
+            }
+
+            @Override
+            public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> recipeHolder) {
+                for (int i = 0; i < container.getContainerSize(); i++) {
+                    if (recipePropertySet.test(container.getItem(i))) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }, 1, 1, inputSlots, allSlots, inventory, (RecipeHolder<AbstractCookingRecipe>)recipe, craftAll, creative);
     }
 
     public RecipeBookType getRecipeBookType() {

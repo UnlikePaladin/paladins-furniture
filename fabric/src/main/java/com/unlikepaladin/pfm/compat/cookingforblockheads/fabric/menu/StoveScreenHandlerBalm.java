@@ -15,14 +15,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class StoveScreenHandlerBalm extends AbstractContainerMenu implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
+    private final RecipePropertySet acceptedInputs;
 
     public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
+        this.acceptedInputs = playerInventory.player.level().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
         oven.startOpen(playerInventory.player);
         Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
@@ -90,12 +93,11 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack, player.level().registryAccess());
                 if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!smeltingResult.isEmpty()) {
+                } else if (acceptedInputs.test(slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
