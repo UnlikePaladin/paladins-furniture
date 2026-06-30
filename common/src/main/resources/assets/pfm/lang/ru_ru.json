@@ -243,6 +243,10 @@
   "pfm.option.spawnImmersivePortalsMirror.tooltip": "Если включено, зеркала мода будут работать с Immersive Portals.",
   "pfm.option.renderImmersivePortalsMirrors": "Отображение зеркал Immersive Portals",
   "pfm.option.renderImmersivePortalsMirrors.tooltip": "Если включено, зеркала будут отображаться, если установлен Immersive Portals.",
+  "pfm.option.fuelConsumptionMultiplier": "Множитель потребления топлива",
+  "pfm.option.fuelConsumptionMultiplier.tooltip": "Множитель скорости сгорания топлива в духовке. По умолчанию 1.0.",
+  "pfm.option.ovenSpeedMultiplier": "Множитель скорости духовки",
+  "pfm.option.ovenSpeedMultiplier.tooltip": "Множитель скорости приготовления пищи в духовке. По умолчанию 1.0.",
 
   "pfm.config.title": "Конфигурация мода 'Мебель Паладина'",
   "pfm.option.resetAll": "Сбросить все настройки",

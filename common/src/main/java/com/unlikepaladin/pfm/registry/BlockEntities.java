@@ -8,8 +8,8 @@ public class BlockEntities {
     public static BlockEntityType<? extends GenericStorageBlockEntity9x3> DRAWER_BLOCK_ENTITY;
     public static BlockEntityType<? extends FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
     public static BlockEntityType<? extends FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
-    public static BlockEntityType<? extends BlockEntity> STOVE_BLOCK_ENTITY;
-    public static BlockEntityType<? extends CounterOvenBlockEntity> KITCHEN_COUNTER_OVEN_BLOCK_ENTITY;
+    public static BlockEntityType<? extends OvenBlockEntity> STOVE_BLOCK_ENTITY;
+    public static BlockEntityType<? extends OvenBlockEntity> KITCHEN_COUNTER_OVEN_BLOCK_ENTITY;
     public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
     public static BlockEntityType<? extends MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
     public static BlockEntityType<? extends StovetopBlockEntity> STOVE_TOP_BLOCK_ENTITY;

@@ -1,8 +1,7 @@
 {
 	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/chair_classic/wool/white/chair_classic_tucked",
+	"parent": "pfm:block/chair_classic/wool/white/chair_classic_tucked",
 	"textures": {
-        	"base": "block/green_wool"
-		}
-    
+		"base": "block/green_wool"
+	}
 }

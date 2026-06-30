@@ -5,6 +5,7 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 
@@ -18,11 +19,11 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
         super(container, playerInventory, displayName);
-        this.width += 22;
-        this.height = 193;
+        this.imageWidth += 22;
+        this.imageHeight = 193;
         this.titleLabelX += 22;
         this.inventoryLabelX += 22;
-        this.inventoryLabelY = this.height - 94;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
@@ -40,17 +41,6 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     @Override
     protected void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
         super.renderLabels(context, mouseX, mouseY);
-        StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
-
-        for(int i = 0; i < 9; ++i) {
-            Slot slot = this.menu.slots.get(i + 7);
-            if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
-                if (!itemStack.isEmpty()) {
-                }
-            }
-        }
-
     }
 
     @Override

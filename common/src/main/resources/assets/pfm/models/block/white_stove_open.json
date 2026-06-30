@@ -3,7 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "pfm:block/white_stove",
-		"particle": "pfm:block/white_stove"
+		"particle": "#0"
 	},
 	"elements": [
 		{

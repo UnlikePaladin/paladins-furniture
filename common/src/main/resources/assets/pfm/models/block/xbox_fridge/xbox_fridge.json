@@ -2,8 +2,8 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"2": "pfm:block/xbox_fridge/fridge_back_dark",
-		"particle": "pfm:block/xbox_fridge/fridge_xbox",
-		"base": "pfm:block/xbox_fridge/fridge_xbox"
+		"base": "pfm:block/xbox_fridge/fridge_xbox",
+		"particle": "#base"
 	},
 	"elements": [
 		{

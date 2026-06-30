@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.forge.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.StoveBlockEntityImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -30,14 +31,8 @@ public class StoveBlockImpl {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             PFMCookingForBlockHeadsCompat.openMenuScreen(world, pos, player);
         } else {
-            MenuProvider screenHandlerFactory = world.getBlockState(pos).getMenuProvider(world, pos);
-            if (screenHandlerFactory != null && player instanceof ServerPlayer) {
-                // With this call the server will request the client to open the appropriate Screenhandler
-                ((ServerPlayer)player).openMenu(screenHandlerFactory, packetByteBuf -> {
-                    packetByteBuf.writeBlockPos(pos);
-                } );
-                player.awardStat(Statistics.STOVE_OPENED);
-            }
+            // With this call the server will request the client to open the appropriate Screenhandler
+            OvenBlockEntityImpl.openScreen(player, world.getBlockState(pos), world, pos);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.unlikepaladin.pfm.client.screens.overlay.GLText;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
