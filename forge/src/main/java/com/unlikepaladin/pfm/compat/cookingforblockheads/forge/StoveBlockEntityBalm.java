@@ -298,7 +298,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
     @Override
     public int getBurnDuration(ItemStack itemStack) {
-        return (int) Math.max(1.0, (double) getBurnTime(itemStack) * CookingForBlockheadsConfig.getActive().ovenFuelTimeMultiplier);
+        return (int) Math.max(1.0, getBurnTime(itemStack));
     }
 
     @Override
