@@ -1,15 +1,15 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"0": "block/water_still",
-		"particle": "block/water_still"
+		"fluid": "block/water_still",
+		"particle": "#fluid"
 	},
 	"elements": [
 		{
 			"from": [2, 12, 2],
 			"to": [14, 13, 11.5],
 			"faces": {
-				"up": {"uv": [2, 2, 14, 11.5], "texture": "#0", "tintindex": 1}
+				"up": {"uv": [2, 2, 14, 11.5], "texture": "#fluid", "tintindex": 1}
 			}
 		}
 	],

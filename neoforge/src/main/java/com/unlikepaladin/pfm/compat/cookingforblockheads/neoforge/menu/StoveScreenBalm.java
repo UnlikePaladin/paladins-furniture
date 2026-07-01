@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         for(int i = 0; i < 9; ++i) {
             Slot slot = this.menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = this.menu.getResultItems().get(i);
                 if (!itemStack.isEmpty()) {
                     Matrix3x2fStack pose = context.pose();
                     pose.pushMatrix();

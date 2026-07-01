@@ -3,9 +3,9 @@
 	"textures": {
 		"3": "block/light_gray_concrete",
 		"4": "pfm:block/lamp",
-		"particle": "block/iron_block",
 		"base": "block/iron_block",
-		"legs": "block/gray_concrete"
+		"legs": "block/gray_concrete",
+		"particle": "#base"
 	},
 	"elements": [
 		{

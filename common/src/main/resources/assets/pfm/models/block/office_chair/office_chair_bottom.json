@@ -3,7 +3,8 @@
 	"credit": "By UnlikePaladin",
 	"texture_size": [32, 32],
 	"textures": {
-		"2": "pfm:block/office_chair/office_chair_legs"
+		"2": "pfm:block/office_chair/office_chair_legs",
+        "particle": "#2"
 	},
 	"elements": [
 		{

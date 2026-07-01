@@ -10,7 +10,7 @@ public class ScreenHandlerIDs {
 
     public static MenuType<AbstractFreezerScreenHandler> FREEZER_SCREEN_HANDLER;
     public static MenuType<? extends AbstractContainerMenu> STOVE_SCREEN_HANDLER;
-    public static MenuType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
+    public static MenuType<OvenScreenHandler> OVEN_SCREEN_HANDLER;
     public static MenuType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
     public static MenuType<WorkbenchScreenHandler> WORKBENCH_SCREEN_HANDLER;
     public static MenuType<TrashcanScreenHandler> TRASHCAN_SCREEN_HANDLER;

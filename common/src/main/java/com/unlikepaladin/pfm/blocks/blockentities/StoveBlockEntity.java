@@ -2,15 +2,15 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,13 +48,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
+public class StoveBlockEntity extends OvenBlockEntity {
     public StoveBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.STOVE_BLOCK_ENTITY, pos, state, RecipeType.SMOKING);
+        super(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
     }
-    public StoveBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
-        super(entity, pos, state, RecipeType.SMOKING);
+    public StoveBlockEntity(BlockEntityType<? extends OvenBlockEntity> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
     }
+
      String blockname = this.getBlockState().getBlock().getDescriptionId();
 
     protected void onContainerOpen(Level world, BlockPos pos, BlockState state) {
@@ -108,7 +109,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
-        return new StoveScreenHandler(containerId, playerInventory, this, this.dataAccess);
+        return new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, containerId, playerInventory, this, this.dataAccess);
     }
 
     protected final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -126,7 +127,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput view) {
+    public void loadAdditional(ValueInput view) {
         super.loadAdditional(view);
         int[] is;
         this.itemsBeingCooked.clear();
@@ -276,7 +277,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntitySupplier<? extends BlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends OvenBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

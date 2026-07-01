@@ -3,11 +3,13 @@ package com.unlikepaladin.pfm.registry.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockheadsImpl;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.networking.*;
 import com.unlikepaladin.pfm.networking.neoforge.*;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -46,6 +48,10 @@ public class NetworkRegistryNeoForge {
         registrar.playToClient(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID, MicrowaveUpdatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player(), Minecraft.getInstance()));
 
         registrar.playToClient(NetworkIDs.SYNC_FURNITURE_RECIPES, SyncRecipesPayload.PACKET_CODEC, (payload, context) -> payload.handle());
+
+        if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
+            PFMCookingForBlockheadsImpl.registerPackets(registrar);
+        }
     }
 
     @SubscribeEvent

@@ -5,7 +5,7 @@
 	"textures": {
 		"2": "pfm:block/trash_can_side",
 		"3": "pfm:block/trash_can",
-		"particle": "pfm:block/trash_can_side"
+		"particle": "#2"
 	},
 	"elements": [
 		{

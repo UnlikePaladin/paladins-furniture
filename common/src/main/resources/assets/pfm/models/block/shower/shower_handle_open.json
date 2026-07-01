@@ -4,7 +4,7 @@
 		"0": "block/light_gray_concrete",
 		"1": "block/red_concrete",
 		"2": "block/blue_concrete",
-		"particle": "block/light_gray_concrete"
+		"particle": "#0"
 	},
 	"elements": [
 		{

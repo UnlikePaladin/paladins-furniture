@@ -128,6 +128,7 @@
   "container.pfm.gray_stove": "Gray Stove",
   "container.pfm.iron_stove": "Iron Stove",
   "container.pfm.kitchen_counter_oven": "Built-in Oven",
+  "container.pfm.oven": "Oven",
   "container.pfm.working_table.ingredient_required" : "Ingredients Required:",
 
   "block.pfm.kitchen_stovetop": "Kitchen Stovetop",
@@ -251,7 +252,12 @@
   "pfm.option.disableGeneratingScreen.tooltip": "If true, this will disable the PFM overlay when assets or data are being generated.",
   "pfm.option.disableSinytraWarning": "Disable Sinytra Warning",
   "pfm.option.disableSinytraWarning.tooltip": "If true, this will disable the warning when sinytra connector is installed.",
+  "pfm.option.fuelConsumptionMultiplier": "Fuel Consumption Multiplier",
+  "pfm.option.fuelConsumptionMultiplier.tooltip": "Multiplier for the rate at which fuel burns in the oven. Default is 1.0.",
+  "pfm.option.ovenSpeedMultiplier": "Oven Cooking Speed Multiplier",
+  "pfm.option.ovenSpeedMultiplier.tooltip": "Multiplier for the speed at which items cook in the oven. Default is 1.0.",
   "pfm.issue.disableWarning": "Don't show this Warning Again",
+  "pfm.moved_to_stovetop": "Move to Stovetop",
 
   "pfm.config.title": "Paladin's Furniture Mod Config",
   "pfm.option.resetAll": "Reset All Options",
