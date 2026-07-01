@@ -5,29 +5,16 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.*;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
-import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
-import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
-import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
-import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.*;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.core.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -47,25 +34,21 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider<StoveData> {
     private final NonNullList<ItemStack> tools = NonNullList.withSize(4, ItemStack.EMPTY);
-    private final EnergyStorage energyStorage = new EnergyStorage(10000) {
+    private final EnergyStorage energyStorage = new DefaultEnergyStorage(10000) {
         @Override
         public int fill(int maxReceive, boolean simulate) {
             if (!simulate) {
@@ -235,7 +218,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     private boolean hasPowerUpgrade;
     private Direction facing;
     private SingleRecipeInput singleSlotRecipeWrapper = new SingleRecipeInput(ItemStack.EMPTY);
-    private KitchenItemProvider itemProvider;
     public StoveBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
         this.inputContainer = new SubContainer(this.mappedContainer, 0, 3);
@@ -243,7 +225,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         this.outputContainer = new SubContainer(this.mappedContainer, 4, 7);
         this.processingContainer = new SubContainer(this.mappedContainer, 7, 16);
         this.toolsContainer = new SubContainer(this.mappedContainer, 16, 20);
-        this.itemProvider = new ContainerKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
         this.itemProvider = new ContainerKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
     }
 
@@ -304,7 +285,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : 800;
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : world.fuelValues().burnDuration(itemStack);
         }
     }
 
@@ -318,7 +299,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         // NBT Migration
         if (tagCompound.contains("ItemHandler")) {
             DefaultContainer oldContainer = new DefaultContainer(20);
-            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"), provider);
+            oldContainer.deserialize(tagCompound.getCompoundOrEmpty("ItemHandler"), provider);
 
             // Map old container slots to new standard slots
             for (int i = 0; i < 3; i++) {
@@ -340,7 +321,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
         this.tools.clear();
         if (tagCompound.contains("Tools")) {
-            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools, provider);
+            ContainerHelper.loadAllItems(tagCompound.getCompoundOrEmpty("Tools"), this.tools, provider);
         }
 
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade").orElse(false);
@@ -400,11 +381,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
                 default -> this.fuelContainer;
             };
         }
-    }
-
-    @Override
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     public Container getInputContainer() {
@@ -543,11 +519,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, StoveData> getScreenStreamCodec() {
         return StoveData.PACKET_CODEC;
-    }
-
-    @Override
-    public KitchenItemProcessor getKitchenItemProcessor() {
-        return this;
     }
 
     @Override

@@ -358,10 +358,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         this.items.clear();
         ContainerHelper.loadAllItems(compoundTag, this.items, provider);
         // load timers
-        this.furnaceBurnTime = compoundTag.getInt("BurnTime");
-        this.currentItemBurnTime = compoundTag.getInt("CurrentItemBurnTime");
-        int[] cookTimes = compoundTag.contains("CookTimes") ? compoundTag.getIntArray("CookTimes") : new int[0];
-        int[] cookTotals = compoundTag.contains("CookTimesTotal") ? compoundTag.getIntArray("CookTimesTotal") : new int[0];
+        this.furnaceBurnTime = compoundTag.getIntOr("BurnTime", 0);
+        this.currentItemBurnTime = compoundTag.getIntOr("CurrentItemBurnTime", 0);
+        int[] cookTimes = compoundTag.getIntArray("CookTimes").orElse(new int[0]);
+        int[] cookTotals = compoundTag.getIntArray("CookTimesTotal").orElse(new int[0]);
         if (cookTimes.length == PROCESSING_COUNT) this.slotCookTime = cookTimes;
         else this.slotCookTime = Arrays.copyOf(cookTimes, PROCESSING_COUNT);
         if (cookTotals.length == PROCESSING_COUNT) this.slotCookTimeTotal = cookTotals;
@@ -370,10 +370,10 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             Arrays.fill(this.slotCookTimeTotal, 200);
             System.arraycopy(cookTotals, 0, this.slotCookTimeTotal, 0, Math.min(cookTotals.length, this.slotCookTimeTotal.length));
         }
-        CompoundTag recipesUsedTag = compoundTag.getCompound("RecipesUsed");
+        CompoundTag recipesUsedTag = compoundTag.getCompoundOrEmpty("RecipesUsed");
         this.recipesUsed.clear();
-        for (String key : recipesUsedTag.getAllKeys()) {
-            this.recipesUsed.put(ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(key)), recipesUsedTag.getInt(key));
+        for (String key : recipesUsedTag.keySet()) {
+            this.recipesUsed.put(ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(key)), recipesUsedTag.getIntOr(key, 0));
         }
         super.loadAdditional(compoundTag, provider);
     }

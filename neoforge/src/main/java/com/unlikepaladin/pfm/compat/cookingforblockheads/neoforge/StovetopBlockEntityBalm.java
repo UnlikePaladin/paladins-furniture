@@ -2,12 +2,10 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.StovetopBlockEntityImpl;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements KitchenItemProcessor, BalmContainerProvider, BalmProviderHolder {
+public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements KitchenItemProcessor, BalmContainerProvider, KitchenItemProcessorHolder {
 
     public StovetopBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -26,10 +24,6 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
     @Override
     public Container getContainer() {
         return this;
-    }
-
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     @Override
@@ -68,5 +62,10 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
             }
         }
         return KitchenOperation.EMPTY;
+    }
+
+    @Override
+    public KitchenItemProcessor getKitchenItemProcessor() {
+        return this;
     }
 }

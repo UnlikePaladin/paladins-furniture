@@ -1,42 +1,29 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.SubContainer;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
-import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
-import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenItemProcessor, BalmContainerProvider, BalmProviderHolder {
+public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenItemProcessor, BalmContainerProvider, KitchenItemProviderHolder, KitchenItemProcessorHolder {
     protected final KitchenItemProvider itemProvider;
     private final Container inputContainer;
 
@@ -61,10 +48,6 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
         return this;
     }
 
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
-    }
-
     @Override
     public boolean canProcess(RecipeType<?> recipeType) {
         return recipeType == RecipeType.SMELTING;
@@ -80,5 +63,15 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
             }
         }
         return KitchenOperation.EMPTY;
+    }
+
+    @Override
+    public KitchenItemProcessor getKitchenItemProcessor() {
+        return this;
+    }
+
+    @Override
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
     }
 }

@@ -48,7 +48,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         for(int i = 0; i < 9; ++i) {
             Slot slot = this.menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = this.menu.getResultItems().get(i);
                 if (!itemStack.isEmpty()) {
                     PoseStack pose = context.pose();
                     pose.pushPose();

@@ -5,7 +5,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.container.SubContainer;
@@ -13,21 +12,17 @@ import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
-import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,31 +33,26 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider {
     private final NonNullList<ItemStack> tools = NonNullList.withSize(4, ItemStack.EMPTY);
-    private final EnergyStorage energyStorage = new EnergyStorage(10000) {
+    private final EnergyStorage energyStorage = new DefaultEnergyStorage(10000) {
         @Override
         public int fill(int maxReceive, boolean simulate) {
             if (!simulate) {
@@ -312,7 +302,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         // NBT Migration
         if (tagCompound.contains("ItemHandler")) {
             DefaultContainer oldContainer = new DefaultContainer(20);
-            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"), registryLookup);
+            oldContainer.deserialize(tagCompound.getCompoundOrEmpty("ItemHandler"), registryLookup);
 
             // Map old container slots to new standard slots
             for (int i = 0; i < 3; i++) {
@@ -334,7 +324,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
         this.tools.clear();
         if (tagCompound.contains("Tools")) {
-            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools, registryLookup);
+            ContainerHelper.loadAllItems(tagCompound.getCompoundOrEmpty("Tools"), this.tools, registryLookup);
         }
 
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade").orElse(false);
@@ -525,13 +515,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
     @Override
-    public <T> T getProvider(Class<T> clazz) {
-        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
-        Capability<?> capability = forgeProviders.getCapability(clazz);
-        return (T) this.getCapability(capability).resolve().orElse(null);
-    }
-
-    @Override
     public StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
         return new StoveData(this.getBlockPos());
     }
@@ -539,11 +522,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, StoveData> getScreenStreamCodec() {
         return StoveData.PACKET_CODEC;
-    }
-
-    @Override
-    public KitchenItemProcessor getKitchenItemProcessor() {
-        return this;
     }
 
     @Override

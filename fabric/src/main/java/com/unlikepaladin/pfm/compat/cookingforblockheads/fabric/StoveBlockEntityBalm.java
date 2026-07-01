@@ -60,7 +60,7 @@ import java.util.Optional;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider<StoveData> {
     private final NonNullList<ItemStack> tools = NonNullList.withSize(4, ItemStack.EMPTY);
-    private final EnergyStorage energyStorage = new EnergyStorage(10000) {
+    private final EnergyStorage energyStorage = new DefaultEnergyStorage(10000) {
         @Override
         public int fill(int maxReceive, boolean simulate) {
             if (!simulate) {
@@ -279,9 +279,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return super.getSmokingRecipe(itemStack, level);
     }
 
-
-
-
     public ItemStack getSmeltingResult(ItemStack itemStack, ServerLevel level) {
         AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, level);
         return recipe != null ? recipe.result() : ItemStack.EMPTY;
@@ -299,7 +296,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : 800;
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : world.fuelValues().burnDuration(itemStack);
         }
     }
 
@@ -313,7 +310,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         // NBT Migration
         if (tagCompound.contains("ItemHandler")) {
             DefaultContainer oldContainer = new DefaultContainer(20);
-            oldContainer.deserialize(tagCompound.getCompound("ItemHandler"), registryLookup);
+            oldContainer.deserialize(tagCompound.getCompoundOrEmpty("ItemHandler"), registryLookup);
 
             // Map old container slots to new standard slots
             for (int i = 0; i < 3; i++) {
@@ -335,7 +332,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
 
         this.tools.clear();
         if (tagCompound.contains("Tools")) {
-            ContainerHelper.loadAllItems(tagCompound.getCompound("Tools"), this.tools, registryLookup);
+            ContainerHelper.loadAllItems(tagCompound.getCompoundOrEmpty("Tools"), this.tools, registryLookup);
         }
 
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade").orElse(false);
@@ -395,11 +392,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
                 default -> this.fuelContainer;
             };
         }
-    }
-
-    @Override
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
     }
 
     @Override
@@ -543,11 +535,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, StoveData> getScreenStreamCodec() {
         return StoveData.PACKET_CODEC;
-    }
-
-    @Override
-    public KitchenItemProcessor getKitchenItemProcessor() {
-        return this;
     }
 
     @Override

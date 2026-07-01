@@ -3,12 +3,17 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,15 +22,20 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraftforge.network.PacketDistributor;
 
 public class StoveScreenHandlerBalm extends AbstractContainerMenu implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
     private final RecipePropertySet acceptedInputs;
+    private final Player player;
+    private NonNullList<ItemStack> resultItems;
 
     public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
         this.acceptedInputs = playerInventory.player.level().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
+        this.resultItems = NonNullList.withSize(9, ItemStack.EMPTY);
+        this.player = playerInventory.player;
         oven.startOpen(playerInventory.player);
         Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
@@ -152,5 +162,36 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
         public boolean canInsert(ItemStack itemStack) {
             return this.menu.isFuel(itemStack);
         }
+    }
+
+    public void setResultItems(NonNullList<ItemStack> itemStacks) {
+        this.resultItems = itemStacks;
+    }
+
+    public NonNullList<ItemStack> getResultItems() {
+        return resultItems;
+    }
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        if (!this.player.isLocalPlayer()) {
+            boolean changes = false;
+
+            for(int i = 0; i < 3; ++i) {
+                for(int j = 0; j < 3; ++j) {
+                    ItemStack result = this.tileEntity.getSmeltingResult((this.slots.get(7 + j + i * 3)).getItem(), (ServerLevel) player.level());
+                    if (!ItemStack.isSameItemSameComponents(this.resultItems.get(j+i*3), result)) {
+                        this.resultItems.set(j+i*3, result);
+                        changes = true;
+                    }
+                }
+            }
+
+            if (changes) {
+                NetworkRegistryForge.PFM_CHANNEL.send(new ClientStoveResultsPacket(this.resultItems), PacketDistributor.PLAYER.with((ServerPlayer) player));
+            }
+        }
+
     }
 }

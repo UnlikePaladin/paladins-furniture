@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.networking.MicrowaveUpdatePayload;
 import com.unlikepaladin.pfm.networking.SyncConfigPayload;
@@ -32,5 +33,9 @@ public class ClientPacketRegistry {
                     payload.handle();
                 }
         );
+
+        if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
+            ClientPlayNetworking.registerGlobalReceiver(ClientStoveResultsPacket.TYPE, (payload, context) -> { ClientStoveResultsPacket.handle(context.player(), payload);});
+        }
     }
 }

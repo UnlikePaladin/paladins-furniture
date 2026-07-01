@@ -30,8 +30,6 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float f, int i, int j) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
         int x = this.leftPos;
         int y = this.topPos;
         graphics.blit(RenderType::guiTextured, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
