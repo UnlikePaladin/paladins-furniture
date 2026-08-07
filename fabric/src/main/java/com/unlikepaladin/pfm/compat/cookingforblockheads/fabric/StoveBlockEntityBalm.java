@@ -504,19 +504,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return recipeType == RecipeType.SMELTING;
     }
 
-    public KitchenOperation processRecipe(Recipe<?> recipe, List<IngredientToken> ingredientTokens) {
-        for (IngredientToken ingredientToken : ingredientTokens) {
-            ItemStack itemStack = ingredientToken.consume();
-            ItemStack restStack = ContainerUtils.insertItemStacked(this.inputContainer, itemStack, false);
-            if (!restStack.isEmpty()) {
-                ingredientToken.restore(restStack);
-            }
-        }
-
-        return KitchenOperation.EMPTY;
-    }
-
-
     @Override
     public StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
         return new StoveData(this.getBlockPos());
