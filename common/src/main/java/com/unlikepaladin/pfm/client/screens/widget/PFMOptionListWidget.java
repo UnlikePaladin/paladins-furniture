@@ -6,6 +6,9 @@ import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.config.option.DoubleConfigOption;
+import net.minecraft.client.gui.components.EditBox;
+import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
@@ -18,6 +21,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.*;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -33,7 +41,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
     final PFMConfigScreen parent;
     int maxKeyNameLength;
     public BitSet hasChanges;
-    public Map<AbstractConfigOption, Boolean> newConfigValues;
+    public Map<AbstractConfigOption, Object> newConfigValues;
     public Map<AbstractConfigOption, Integer> configOptionToIndexForHasChanges;
 
     public PFMOptionListWidget(PFMConfigScreen parent, Minecraft client) {
@@ -56,8 +64,11 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
                 this.maxKeyNameLength = i;
             }
             if (configOptionEntry.getValue().getType() == Boolean.class) {
-                PFMOptionListWidget.this.newConfigValues.put(configOptionEntry.getValue(), (Boolean) configOptionEntry.getValue().getValue());
+                PFMOptionListWidget.this.newConfigValues.put(configOptionEntry.getValue(), configOptionEntry.getValue().getValue());
                 this.addEntry(new BooleanEntry((BooleanConfigOption)configOptionEntry.getValue(), text, index));
+            } else if (configOptionEntry.getValue().getType() == Double.class) {
+                PFMOptionListWidget.this.newConfigValues.put(configOptionEntry.getValue(), configOptionEntry.getValue().getValue());
+                this.addEntry(new DoubleEntry((DoubleConfigOption)configOptionEntry.getValue(), text, index));
             } else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Config Type!");
             }
@@ -81,8 +92,10 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
     }
 
     public void save() {
-        for (Map.Entry<AbstractConfigOption, Boolean> entry : newConfigValues.entrySet()) {
+        for (Map.Entry<AbstractConfigOption, Object> entry : newConfigValues.entrySet()) {
             if (entry.getKey().getType() == Boolean.class)
+                entry.getKey().setValue(entry.getValue());
+            else if (entry.getKey().getType() == Double.class)
                 entry.getKey().setValue(entry.getValue());
         }
     }
@@ -161,7 +174,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
 
             this.valueButton = Button.builder(optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
-                PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
+                PFMOptionListWidget.this.newConfigValues.put(configOption, !(Boolean) PFMOptionListWidget.this.newConfigValues.get(configOption));
                 hasChanges = !hasChanges;
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
             }).tooltip(supplier).bounds(0,0,75,20).createNarration(Supplier::get).build();
@@ -178,11 +191,11 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
             this.resetButton.setX(getX() + 190);
             this.resetButton.setY(getY());
-            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));
+            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption)) : !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption));
             this.resetButton.render(context, mouseX, mouseY, tickDelta);
             this.valueButton.setX(getX() + 105);
             this.valueButton.setY(getY());
-            this.valueButton.setMessage(PFMOptionListWidget.this.newConfigValues.get(configOption) ? CommonComponents.GUI_YES : CommonComponents.GUI_NO);
+            this.valueButton.setMessage((Boolean) PFMOptionListWidget.this.newConfigValues.get(configOption) ? CommonComponents.GUI_YES : CommonComponents.GUI_NO);
             this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
             this.valueButton.render(context, mouseX, mouseY, tickDelta);
         }
@@ -208,6 +221,106 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         @Override
         public boolean mouseReleased(MouseButtonEvent click) {
             return this.valueButton.mouseReleased(click) || this.resetButton.mouseReleased(click);
+        }
+    }
+
+    @Environment(value=EnvType.CLIENT)
+    public class DoubleEntry
+            extends Entry {
+        private final DoubleConfigOption configOption;
+        private final Component optionName;
+        public final EditBox valueEditBox;
+        private final Button resetButton;
+        private final Tooltip supplier;
+        int index;
+        boolean hasChanges = false;
+        DoubleEntry(final DoubleConfigOption configOption, final Component optionName, int index) {
+            this.configOption = configOption;
+            this.optionName = optionName;
+            this.index = index;
+            final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableComponent styledTooltip = ((MutableComponent)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
+            final MutableComponent combinedText = Component.literal("").append(sideText).append(Component.literal("\n")).append(styledTooltip);
+
+            this.supplier = Tooltip.create(combinedText);
+            this.valueEditBox = new EditBox(PFMOptionListWidget.this.minecraft.font, 0, 0, 70, 16, optionName);
+            this.valueEditBox.setValue(String.valueOf(PFMOptionListWidget.this.newConfigValues.get(configOption)));
+            this.valueEditBox.setResponder(text -> {
+                try {
+                    double val = Double.parseDouble(text);
+                    PFMOptionListWidget.this.newConfigValues.put(configOption, val);
+                    this.hasChanges = (val != configOption.getValue());
+                    PFMOptionListWidget.this.hasChanges.set(index, this.hasChanges);
+                } catch (NumberFormatException e) {
+                    // ignore invalid inputs in value map, but keep hasChanges
+                }
+            });
+            this.valueEditBox.setEditable(this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer);
+            this.valueEditBox.setTooltip(supplier);
+
+            this.resetButton = Button.builder(Component.translatable("controls.reset"), button -> {
+                PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
+                this.valueEditBox.setValue(String.valueOf(configOption.getDefaultValue()));
+                hasChanges = true;
+                PFMOptionListWidget.this.hasChanges.set(index, true);
+            }).bounds(0, 0, 50, 20)
+            .createNarration(textSupplier -> Component.translatable("narrator.controls.reset", optionName))
+            .build();
+        }
+
+        @Override
+        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF));
+            this.resetButton.setX(getX() + 190);
+            this.resetButton.setY(getY());
+            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption)) : !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption));
+            this.resetButton.render(context, mouseX, mouseY, tickDelta);
+            this.valueEditBox.setX(getX() + 107);
+            this.valueEditBox.setY(getY());
+            this.valueEditBox.render(context, mouseX, mouseY, tickDelta);
+        }
+
+        @Override
+        public List<? extends GuiEventListener> children() {
+            return ImmutableList.of(this.valueEditBox, this.resetButton);
+        }
+
+        @Override
+        public List<? extends NarratableEntry> narratables() {
+            return ImmutableList.of(this.valueEditBox, this.resetButton);
+        }
+
+        @Override
+        public boolean mouseClicked(MouseButtonEvent mouseButtonEvent, boolean bl) {
+            boolean editable = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
+            if (editable && this.valueEditBox.mouseClicked(mouseButtonEvent, bl)) {
+                this.setFocused(this.valueEditBox);
+                return true;
+            }
+            this.setFocused(null);
+            return this.resetButton.mouseClicked(mouseButtonEvent, bl);
+        }
+
+        @Override
+        public boolean mouseReleased(MouseButtonEvent mouseButtonEvent) {
+            return this.valueEditBox.mouseReleased(mouseButtonEvent) || this.resetButton.mouseReleased(mouseButtonEvent);
+        }
+
+        @Override
+        public boolean charTyped(CharacterEvent characterEvent) {
+            return this.valueEditBox.charTyped(characterEvent);
+        }
+
+        @Override
+        public boolean keyPressed(KeyEvent keyEvent) {
+            return this.valueEditBox.keyPressed(keyEvent);
+        }
+    }
+
+    public void tick() {
+        for (Entry entry : this.children()) {
+            if (entry instanceof DoubleEntry doubleEntry) {
+            }
         }
     }
 

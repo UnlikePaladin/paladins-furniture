@@ -5,12 +5,16 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.data.PFMTag;
+import com.unlikepaladin.pfm.networking.SyncRecipesPayload;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
+import io.netty.util.AttributeKey;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
@@ -19,8 +23,10 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolde
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
+import net.blay09.mods.cookingforblockheads.network.message.ClientboundOvenResultsPacket;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -43,6 +49,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").unlockedBy(PFMRecipeProvider.getunlockedByNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
+    public static void registerPackets() {
+        PayloadTypeRegistry.playS2C().register(ClientStoveResultsPacket.TYPE, ClientStoveResultsPacket.STREAM_CODEC);
+    }
+
     @Override
     public Optional<PFMClientModCompatibility> getClientModCompatiblity() {
         if (clientModCompatibility == null)
@@ -63,7 +73,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     @Override
     public void registerBlockEntityTypes() {
         initCapabilities(Balm.getCapabilities());
-        //this.registerLookup("kitchen_item_processor", KitchenItemProcessor.class, BlockEntities.STOVE_BLOCK_ENTITY);
+        //this.registerLookup("kitchen_item_processor", KitchenItemProcessor.class, BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_TOP_BLOCK_ENTITY);
         //this.registerLookup("kitchen_item_provider", KitchenItemProvider.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
     }
 
@@ -101,6 +111,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public void initCapabilities(BalmCapabilities balmCapabilities) {
+
         balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
             if (blockEntity instanceof KitchenItemProviderHolder provider) {
                 return provider.getKitchenItemProvider();
@@ -112,7 +123,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_TOP_BLOCK_ENTITY));
     }
 
     public static PFMCookingForBlockheads getInstance() {

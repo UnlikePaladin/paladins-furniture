@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SmokerBlock;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -66,12 +67,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return getFactory().create(pos, state);
-    }
-
-    @ExpectPlatform
-    public static BlockEntityType.BlockEntitySupplier<? extends CounterOvenBlockEntity> getFactory() {
-        throw new AssertionError();
+        return OvenBlockEntity.getFactory().create(pos, state);
     }
 
     @Override
@@ -101,13 +97,13 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createFurnaceTicker(world, type, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
+        return world.isClientSide() ? null : createTickerHelper(type, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, OvenBlockEntity::serverTick);
     }
 
     @Override
     public void openContainer(Level world, BlockPos pos, Player player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CounterOvenBlockEntity) {
+        if (blockEntity instanceof OvenBlockEntity) {
             openMenuScreen(world, pos, player);
             player.awardStat(Statistics.STOVE_OPENED);
         }

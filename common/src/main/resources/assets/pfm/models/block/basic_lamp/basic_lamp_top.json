@@ -2,7 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"texture": "block/stripped_oak_log",
-		"particle": "block/stripped_oak_log"
+		"particle": "#texture"
 	},
 	"elements": [
 		{

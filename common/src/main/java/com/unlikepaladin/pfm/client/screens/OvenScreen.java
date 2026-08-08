@@ -1,30 +1,70 @@
 package com.unlikepaladin.pfm.client.screens;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
-import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
-import net.minecraft.client.gui.screens.recipebook.SearchRecipeBookCategory;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeBookCategories;
 
-import java.util.List;
+public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
 
-public class OvenScreen extends AbstractFurnaceScreen<OvenScreenHandler> {
-    //You can replace the background with whatever you like, just remember there will always be the recipe book button
-    private static final ResourceLocation BACKGROUND = ResourceLocation.parse("textures/gui/container/smoker.png");
-
-    private static final ResourceLocation LIT_PROGRESS_TEXTURE = ResourceLocation.parse("container/smoker/lit_progress");
-    private static final ResourceLocation BURN_PROGRESS_TEXTURE = ResourceLocation.parse("container/smoker/burn_progress");
-    private static final Component TOGGLE_SMOKABLE_TEXT = Component.translatable("gui.recipebook.toggleRecipes.smokable");
-    private static final List<RecipeBookComponent.TabInfo> TABS = List.of(
-            new RecipeBookComponent.TabInfo(SearchRecipeBookCategory.SMOKER), new RecipeBookComponent.TabInfo(Items.PORKCHOP, RecipeBookCategories.SMOKER_FOOD)
-    );
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("pfm:textures/gui/container/oven.png");
 
     public OvenScreen(OvenScreenHandler handler, Inventory inventory, Component title) {
-        super(handler, inventory, title, TOGGLE_SMOKABLE_TEXT, BACKGROUND, LIT_PROGRESS_TEXTURE, BURN_PROGRESS_TEXTURE, TABS);
+        super(handler, inventory, title);
+        this.imageWidth = 176;
+        this.imageHeight = 195;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+        this.inventoryLabelY += 29;
+    }
+
+    @Override
+    protected void renderBg(GuiGraphics graphics, float f, int i, int j) {
+        int x = this.leftPos;
+        int y = this.topPos;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x+58, y+18, 176, 50, 76, 76, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x+36, y+43, 176, 17, 17, 33, 256, 256);
+
+        if (this.menu.isLit()) {
+            int litProgress = this.menu.getLitProgress();
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 36, y + 41 + (14 - litProgress), 176, 14 - litProgress, 14, litProgress + 1, 256, 256);
+        }
+
+        int gridX = this.leftPos + 58;
+        int gridY = this.topPos + 40;
+
+        for (int slotIndex = 0; slotIndex < 9; slotIndex++) {
+            int row = slotIndex / 3;
+            int col = slotIndex % 3;
+
+            int slotX = gridX + (col * 18);
+            int slotY = gridY + (row * 18);
+
+            if (this.menu.isSlotOverheating(slotIndex)) {
+                // we are overcooking with this one
+                int burnHeight = this.menu.getOverovercookProgress(slotIndex, 18);
+                if (burnHeight > 0) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, slotX, slotY + (18 - burnHeight), 212, 32 + (18 - burnHeight), 18, burnHeight, 256, 256);
+
+                }
+            } else {
+                int cookHeight = this.menu.getCookProgress(slotIndex, 18);
+                if (cookHeight > 0) {
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, slotX, slotY + (18 - cookHeight), 194, 32 + (18 - cookHeight), 18, cookHeight, 256, 256);
+                }
+            }
+        }
     }
 }

@@ -2,10 +2,9 @@ package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.OvenScreen;
-import com.unlikepaladin.pfm.client.screens.StoveScreen;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -24,7 +23,7 @@ public class ScreenRegistryImpl {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return PFMCookingForBlockheadsClient.getStoveScreen();
         } else {
-            return (t, playerInventory, text) -> (J) new StoveScreen((StoveScreenHandler) t, playerInventory, text);
+            return (t, playerInventory, text) -> (J) new OvenScreen((OvenScreenHandler) t, playerInventory, text);
         }
     }
 
