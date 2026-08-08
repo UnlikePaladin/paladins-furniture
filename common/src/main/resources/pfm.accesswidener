@@ -19,8 +19,13 @@ accessible field net/minecraft/client/renderer/RenderPipelines GUI_TEXTURED_SNIP
 accessible class net/minecraft/client/renderer/texture/atlas/SpriteSource$SpriteSupplier
 accessible class net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl
 
+accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setTextureState (Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
 accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder createCompositeState (Z)Lnet/minecraft/client/renderer/RenderType$CompositeState;
+accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
 
 accessible class net/minecraft/client/resources/model/BlockStateModelLoader$LoadedBlockModelDefinition
 accessible field net/minecraft/client/resources/model/AtlasManager KNOWN_ATLASES Ljava/util/List;
+accessible field net/minecraft/world/item/CreativeModeTabs BUILDING_BLOCKS Lnet/minecraft/resources/ResourceKey;

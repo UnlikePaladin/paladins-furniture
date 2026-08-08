@@ -86,7 +86,8 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     @Override
     public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
         CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
-        ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
+        if (tileEntity != null)
+            ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
         super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 

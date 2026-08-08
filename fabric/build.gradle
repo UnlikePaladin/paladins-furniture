@@ -154,6 +154,7 @@ if (rootProject.cookingfor_blockheads_compatibility_fabric == "true") {
     dependencies {
         modImplementation "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
         modImplementation "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
+        modApi("net.blay09.mods:kuma-api-fabric:$rootProject.kuma_version")
     }
 } else {
     dependencies {
