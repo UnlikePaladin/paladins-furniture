@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -133,7 +133,7 @@ sourceSets.main.resources {
 
 remapJar {
     atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = "neoforge-mc${rootProject.minecraft_version}"
 }
