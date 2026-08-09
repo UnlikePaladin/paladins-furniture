@@ -1,8 +1,7 @@
 {
 	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/mirror/mirror_left",
+	"parent": "pfm:block/mirror/mirror_left",
 	"textures": {
 		"5": "block/gray_concrete"
 	}
-    
 }

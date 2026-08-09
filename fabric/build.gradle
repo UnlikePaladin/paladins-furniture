@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -154,6 +154,7 @@ if (rootProject.cookingfor_blockheads_compatibility_fabric == "true") {
     dependencies {
         modImplementation "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
         modImplementation "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
+        modApi("net.blay09.mods:kuma-api-fabric:$rootProject.kuma_version")
     }
 } else {
     dependencies {
@@ -241,7 +242,7 @@ shadowJar {
 
 remapJar {
     injectAccessWidener = true
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = "fabric-mc${rootProject.minecraft_version}"
 }

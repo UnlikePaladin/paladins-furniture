@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import org.joml.Matrix3x2fStack;
 
@@ -19,11 +21,11 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
         super(container, playerInventory, displayName);
-        this.width += 22;
-        this.height = 193;
+        this.imageWidth += 22;
+        this.imageHeight = 193;
         this.titleLabelX += 22;
         this.inventoryLabelX += 22;
-        this.inventoryLabelY = this.height - 94;
+        this.inventoryLabelY = this.imageHeight - 94;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         for(int i = 0; i < 9; ++i) {
             Slot slot = this.menu.slots.get(i + 7);
             if (slot.hasItem()) {
-                ItemStack itemStack = tileEntity.getSmeltingResult(slot.getItem());
+                ItemStack itemStack = this.menu.getResultItems().get(i);
                 if (!itemStack.isEmpty()) {
                     Matrix3x2fStack pose = context.pose();
                     pose.pushMatrix();

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import dev.architectury.injectables.annotations.ExpectPlatform;

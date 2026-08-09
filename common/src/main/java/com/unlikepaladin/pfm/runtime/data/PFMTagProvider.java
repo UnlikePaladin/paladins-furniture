@@ -125,6 +125,7 @@ public class PFMTagProvider extends PFMProvider {
                 .addTags(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
                 .addTags(PaladinFurnitureModBlocksItems.IRON_CHAIN)
                 .addTags(sinkBlocks)
+                .addTags(PaladinFurnitureModBlocksItems.TOASTER_BLOCK)
                 .addTags(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
                 .addTags(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
                 .addTags(PaladinFurnitureModBlocksItems.BASIC_BATHTUB)

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.client.PFMCookingForBlockheadsClient;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -25,6 +26,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private PFMClientModCompatibility clientModCompatibility;
 
     public PFMCookingForBlockheadsImpl() {
+    }
+
+    public static void registerPackets(PayloadRegistrar registrar) {
+        registrar.playToClient(ClientStoveResultsPacket.TYPE, ClientStoveResultsPacket.STREAM_CODEC, (payload, context) -> ClientStoveResultsPacket.handle(context.player(), payload));
     }
 
     @Override
@@ -113,6 +119,6 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_TOP_BLOCK_ENTITY));
     }
 }

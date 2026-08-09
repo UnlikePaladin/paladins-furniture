@@ -7,9 +7,12 @@ import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +37,11 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.HORIZONTAL_FACING);
     }
 
     @Override
@@ -78,7 +86,8 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     @Override
     public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean isMoving) {
         CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
-        ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
+        if (tileEntity != null)
+            ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
         super.affectNeighborsAfterRemoval(state, level, pos, isMoving);
     }
 

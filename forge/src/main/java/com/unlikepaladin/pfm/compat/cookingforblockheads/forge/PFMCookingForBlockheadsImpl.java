@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.client.PFMCookingForBlockheadsClient;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -12,6 +13,7 @@ import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
+import io.netty.util.AttributeKey;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
@@ -23,11 +25,17 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.resources.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.ForgePacketHandler;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.SimpleChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +46,21 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private PFMClientModCompatibility clientModCompatibility;
 
     public PFMCookingForBlockheadsImpl() {
+    }
+
+    public static void registerPackets(SimpleChannel channel, AttributeKey<ForgePacketHandler> context) {
+        channel.messageBuilder(ClientStoveResultsPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder((clientStoveResultsPacket, registryFriendlyByteBuf) -> ClientStoveResultsPacket.STREAM_CODEC.encode(registryFriendlyByteBuf, clientStoveResultsPacket))
+                .decoder(ClientStoveResultsPacket.STREAM_CODEC::decode)
+                .consumerNetworkThread(context, (forgePacketHandler, payload, contextPayload) -> {
+                    contextPayload.enqueueWork(() -> {
+                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                            ClientStoveResultsPacket.handle(Minecraft.getInstance().player, payload);
+                        });
+                        contextPayload.setPacketHandled(true);
+                    });
+                })
+                .add();
     }
 
     @Override
@@ -116,6 +139,6 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.STOVE_TOP_BLOCK_ENTITY));
     }
 }

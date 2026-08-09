@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu;
 
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.slot.StoveResultSlot;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 /*import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
@@ -13,21 +14,32 @@ import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class StoveScreenHandlerBalm extends AbstractContainerMenu implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
+    private final RecipePropertySet acceptedInputs;
+    private final Player player;
+    private NonNullList<ItemStack> resultItems;
 
     public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
-        oven.onOpen(playerInventory.player);
+        this.acceptedInputs = playerInventory.player.level().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
+        this.player = playerInventory.player;
+        this.resultItems = NonNullList.withSize(9, ItemStack.EMPTY);
+        oven.startOpen(playerInventory.player);
         Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
 
@@ -73,7 +85,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     @Override
     public void removed(Player player) {
         super.removed(player);
-        tileEntity.onClose(player);
+        tileEntity.stopOpen(player);
     }
 
     @Override
@@ -94,12 +106,11 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
                 if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (!smeltingResult.isEmpty()) {
+                } else if (acceptedInputs.test(slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -143,6 +154,14 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
         return OvenBlockEntity.isItemFuel(this.tileEntity.getLevel(), itemStack);
     }
 
+    public void setResultItems(NonNullList<ItemStack> itemStacks) {
+        this.resultItems = itemStacks;
+    }
+
+    public NonNullList<ItemStack> getResultItems() {
+        return resultItems;
+    }
+
     public static class SlotOvenFuel extends Slot {
         private final StoveScreenHandlerBalm menu;
 
@@ -154,5 +173,29 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
         public boolean canInsert(ItemStack itemStack) {
             return this.menu.isFuel(itemStack);
         }
+    }
+
+
+    @Override
+    public void broadcastChanges() {
+        super.broadcastChanges();
+        if (!this.player.isLocalPlayer()) {
+            boolean changes = false;
+
+            for(int i = 0; i < 3; ++i) {
+                for(int j = 0; j < 3; ++j) {
+                    ItemStack result = this.tileEntity.getSmeltingResult((this.slots.get(7 + j + i * 3)).getItem(), (ServerLevel) player.level());
+                    if (!ItemStack.isSameItemSameComponents(this.resultItems.get(j+i*3), result)) {
+                        this.resultItems.set(j+i*3, result);
+                        changes = true;
+                    }
+                }
+            }
+
+            if (changes) {
+                ServerPlayNetworking.send((ServerPlayer) this.player, new ClientStoveResultsPacket(this.resultItems));
+            }
+        }
+
     }
 }

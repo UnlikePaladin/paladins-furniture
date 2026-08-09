@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -99,6 +99,7 @@ if (rootProject.cookingfor_blockheads_compatibility_neoforge == "true") {
     dependencies {
         modImplementation "curse.maven:balm-neoforge-531761:${rootProject.balm_version_neoforge}"
         modImplementation "curse.maven:cooking-for-blockheads-neoforge-231484:${rootProject.cookingforblockheads_version_neoforge}"
+        modApi("net.blay09.mods:kuma-api-neoforge:$rootProject.kuma_version")
     }
 } else {
     dependencies {
@@ -133,7 +134,7 @@ sourceSets.main.resources {
 
 remapJar {
     atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = "neoforge-mc${rootProject.minecraft_version}"
 }

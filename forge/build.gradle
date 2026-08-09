@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -121,6 +121,7 @@ if (rootProject.cookingfor_blockheads_compatibility_forge == "true") {
     dependencies {
         modImplementation "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
         modImplementation "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
+        modApi("net.blay09.mods:kuma-api-forge:$rootProject.kuma_version")
     }
 } else {
     dependencies {
@@ -154,7 +155,7 @@ sourceSets.main.resources {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = "minecraftforge-mc${rootProject.minecraft_version}"
 }
