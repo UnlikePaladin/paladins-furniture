@@ -5,10 +5,10 @@ import net.minecraft.data.recipes.RecipeOutput;
 import java.util.Optional;
 
 public interface PFMModCompatibility {
-    default void registerBlocks() {};
+    default void registerLateBlocks() {};
     default void registerBlockEntityTypes() {};
     default void registerEntityTypes() {};
-    default void registerItems() {};
+    default void registerLateItems() {};
     default void createBlocks() {};
     default void registerScreenHandlers() {};
     default void generateRecipes(RecipeOutput exporter) {};

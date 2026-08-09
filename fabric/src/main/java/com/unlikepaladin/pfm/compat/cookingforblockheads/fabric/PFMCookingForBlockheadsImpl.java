@@ -7,16 +7,11 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.networking.ClientStoveResultsPacket;
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.networking.SyncRecipesPayload;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
-import io.netty.util.AttributeKey;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
@@ -25,16 +20,13 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolde
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.network.message.ClientboundOvenResultsPacket;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +60,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
-    public void registerBlocks() {
+    public void registerLateBlocks() {
         LateBlockRegistry.registerLateBlockClassic("cooking_table", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, true, PaladinFurnitureMod.FURNITURE_GROUP);
     }
 

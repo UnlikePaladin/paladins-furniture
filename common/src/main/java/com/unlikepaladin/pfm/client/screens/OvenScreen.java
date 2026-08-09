@@ -1,20 +1,16 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
 
-    private static final ResourceLocation TEXTURE = Identifier.parse("pfm:textures/gui/container/oven.png");
+    private static final Identifier TEXTURE = Identifier.parse("pfm:textures/gui/container/oven.png");
 
     public OvenScreen(OvenScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);

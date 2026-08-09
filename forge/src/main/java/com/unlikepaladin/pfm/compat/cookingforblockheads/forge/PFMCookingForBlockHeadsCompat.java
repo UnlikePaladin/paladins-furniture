@@ -15,6 +15,7 @@ import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -127,5 +128,9 @@ public class PFMCookingForBlockHeadsCompat {
             }
             return InteractionResult.SUCCESS;
         }
+    }
+
+    public static Block getCookingTableBlock() {
+        return COOKING_TABLE_BLOCK;
     }
 }

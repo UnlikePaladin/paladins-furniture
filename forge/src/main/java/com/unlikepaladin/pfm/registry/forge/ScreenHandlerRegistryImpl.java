@@ -52,7 +52,7 @@ public class ScreenHandlerRegistryImpl {
             return new Tuple<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, data), StoveData.PACKET_CODEC);
     }
 
-    public static Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory(){
+    public static Tuple<TriFunc<Integer, Inventory, StoveData, OvenScreenHandler>, StreamCodec<RegistryFriendlyByteBuf, StoveData>> getOvenMenuFactory(){
         return new Tuple<>((integer, playerInventory, data) -> new OvenScreenHandler(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, integer, playerInventory, data), StoveData.PACKET_CODEC);
     }
 }

@@ -1,11 +1,12 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.StovetopBlockEntityImpl;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -31,7 +32,7 @@ public class StovetopBlockEntityBalm extends StovetopBlockEntityImpl implements 
 
     @Override
     public boolean canProcess(RecipeType<?> recipeType) {
-        return recipeType == RecipeType.SMELTING;
+        return recipeType == RecipeType.SMELTING || recipeType == RecipeType.SMOKING || recipeType == RecipeType.CAMPFIRE_COOKING || recipeType == ModRecipes.ovenRecipes.type();
     }
 
     public ItemStack tryTakeItem(ItemStack itemStack) {

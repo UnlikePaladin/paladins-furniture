@@ -6,22 +6,16 @@ import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.items.*;
-import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
@@ -642,7 +636,7 @@ public class LateBlockRegistry {
         }});
         PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM = LampItem.getItemFactory(PaladinFurnitureModBlocksItems.BASIC_LAMP, new Item.Properties().component(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier).component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).setId(getItemRegistryKey("basic_lamp")));
         LateBlockRegistry.registerLateItem( "basic_lamp", () -> PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
-        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerBlocks);
-        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerItems);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerLateBlocks);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerLateItems);
     }
 }

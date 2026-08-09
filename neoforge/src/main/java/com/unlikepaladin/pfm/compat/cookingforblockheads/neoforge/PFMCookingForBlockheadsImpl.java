@@ -87,7 +87,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
-    public void registerBlocks() {
+    public void registerLateBlocks() {
         LateBlockRegistry.registerLateBlockClassic("cooking_table", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, true, PaladinFurnitureMod.FURNITURE_GROUP);
     }
 

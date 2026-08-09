@@ -12,6 +12,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
@@ -171,5 +172,9 @@ public class PFMCookingForBlockHeadsCompat {
                 entity instanceof KitchenItemProviderHolder holder ? holder.getKitchenItemProvider() : null);
         event.registerBlockEntity(providerCap, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, (entity, side) ->
                 entity instanceof KitchenItemProviderHolder holder ? holder.getKitchenItemProvider() : null);
+    }
+
+    public static Block getCookingTableBlock() {
+        return COOKING_TABLE_BLOCK;
     }
 }

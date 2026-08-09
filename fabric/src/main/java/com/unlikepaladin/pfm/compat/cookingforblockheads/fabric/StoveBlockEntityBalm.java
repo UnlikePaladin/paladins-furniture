@@ -5,21 +5,15 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.CombinedContainer;
-import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.api.container.DefaultContainer;
-import net.blay09.mods.balm.api.container.SubContainer;
-import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.tag.BalmItemTags;
+import net.blay09.mods.balm.platform.energy.DefaultEnergyStorage;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
+import net.blay09.mods.balm.tags.BalmItemTags;
+import net.blay09.mods.balm.world.BalmMenuProvider;
+import net.blay09.mods.balm.world.CombinedContainer;
+import net.blay09.mods.balm.world.SubContainer;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.minecraft.core.*;
-import net.blay09.mods.cookingforblockheads.api.IngredientToken;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,19 +33,14 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.ContainerUser;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -61,7 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMenuProvider<StoveData> {
@@ -499,10 +487,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         double e = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
-    }
-
-    public boolean canProcess(RecipeType<?> recipeType) {
-        return recipeType == RecipeType.SMELTING;
     }
 
     @Override
