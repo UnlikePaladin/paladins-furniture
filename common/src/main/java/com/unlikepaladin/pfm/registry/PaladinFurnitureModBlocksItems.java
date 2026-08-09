@@ -29,11 +29,11 @@ public class PaladinFurnitureModBlocksItems {
     public static final HashMap<Class<? extends Block>, FurnitureEntry<?>> furnitureEntryMap = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
 
-    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW).strength(5.0f, 3.5f).sound(SoundType.STONE), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.SNOW).noOcclusion().strength(5.0f, 3.5f).sound(SoundType.STONE), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(WHITE_FREEZER).noOcclusion(), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).strength(5.0f,3.5f).sound(SoundType.STONE), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_GRAY).noOcclusion().strength(5.0f,3.5f).sound(SoundType.STONE), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
     public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(GRAY_FREEZER).noOcclusion(), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
-    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).strength(5.0f,3.5f).sound(SoundType.METAL), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.METAL).noOcclusion().strength(5.0f,3.5f).sound(SoundType.METAL), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
     public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(IRON_FREEZER).noOcclusion(), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
     public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.COLOR_BLACK).strength(5.0f, 1200.0f).sound(SoundType.STONE).noOcclusion(), ToolType.PICKAXE), null);
 
@@ -43,8 +43,8 @@ public class PaladinFurnitureModBlocksItems {
     public static final KitchenRangeHoodBlock GRAY_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(GRAY_FREEZER).noOcclusion(), ToolType.PICKAXE));
     public static final StoveBlock IRON_STOVE = new IronStoveBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), ToolType.PICKAXE));
     public static final KitchenRangeHoodBlock IRON_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(), ToolType.PICKAXE));
-    public static final MicrowaveBlock IRON_MICROWAVE = new MicrowaveBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), ToolType.PICKAXE));
-    public static final TrashcanBlock TRASHCAN = new TrashcanBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK), ToolType.PICKAXE));
+    public static final MicrowaveBlock IRON_MICROWAVE = new MicrowaveBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(), ToolType.PICKAXE));
+    public static final TrashcanBlock TRASHCAN = new TrashcanBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(), ToolType.PICKAXE));
     public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(Blocks.CHAIN).noOcclusion(), ToolType.PICKAXE));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.YELLOW);
