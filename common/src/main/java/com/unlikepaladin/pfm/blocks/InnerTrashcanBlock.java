@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -28,8 +29,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
-
 public class InnerTrashcanBlock extends BaseEntityBlock {
     public InnerTrashcanBlock(Properties settings) {
         super(settings);
@@ -54,7 +53,7 @@ public class InnerTrashcanBlock extends BaseEntityBlock {
     }
 
     public static final VoxelShape TRASHCAN = Shapes.or(box(3.5, 11, 3.25, 12.5, 11.5, 12.75), box(3.5, 0, 3.5, 12.5, 11, 12.5));
-    public static final VoxelShape TRASHCAN_EAST_WEST = rotateShape(Direction.NORTH, Direction.EAST, TRASHCAN);
+    public static final VoxelShape TRASHCAN_EAST_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, TRASHCAN);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction direction = state.getValue(FACING);

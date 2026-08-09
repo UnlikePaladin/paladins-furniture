@@ -84,20 +84,6 @@ public class ClassicCoffeeTableBlock extends Block {
         return super.getFluidState(state);
     }
 
-    /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
-
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
-        }
-
-        return buffer[0];
-    }
-
     final static VoxelShape TABLE_CLASSIC_BASE = box(0, 8, 0, 16, 10, 16);
     final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(12, 0, 2, 14, 8, 4);
     final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(2, 0, 2, 4, 8, 4);

@@ -3,20 +3,19 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.capability.*;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
@@ -102,5 +101,14 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
 
     public IItemHandler getContainer() {
         return this.inventoryHandler;
+    }
+
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.COMMON.ovenRequiresCookingOil.get() && itemStack.getItem().getTags().contains(Compat.cookingOilTag) ? 800 : ForgeEventFactory.getItemBurnTime(itemStack, itemStack.getBurnTime() == -1 ? AbstractFurnaceBlockEntity.getFuel().getOrDefault(itemStack.getItem(), 0) : itemStack.getBurnTime());
+        }
     }
 }

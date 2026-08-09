@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -29,8 +30,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
-
 public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty ON = BooleanProperty.create("on");;
     public PFMToasterBlock(Properties settings) {
@@ -43,7 +42,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     }
 
     public static final VoxelShape IRON_TOASTER = Shapes.or(box(5, 0, 3,11, 7, 13));
-    public static final VoxelShape IRON_TOASTER_WEST_EAST = rotateShape(Direction.NORTH, Direction.WEST, IRON_TOASTER);
+    public static final VoxelShape IRON_TOASTER_WEST_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, IRON_TOASTER);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext ctx) {
         Direction dir = state.getValue(FACING);

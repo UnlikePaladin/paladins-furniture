@@ -185,7 +185,7 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements MenuPro
             if (slot >= 0 && slot < 3) {
                 return !StoveBlockEntityBalm.this.getSmeltingResult(stack).isEmpty();
             } else if (slot == 3) {
-                return StoveBlockEntityBalm.isItemFuel(stack);
+                return StoveBlockEntityBalm.this.isItemFuel(stack);
             }
             return true;
         }
@@ -300,25 +300,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements MenuPro
         return recipe != null ? recipe.getResultItem() : ItemStack.EMPTY;
     }
 
-    public static boolean isItemFuel(ItemStack itemStack) {
+    public boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.COMMON.ovenRequiresCookingOil.get()) {
             return itemStack.getItem().getTags().contains(Compat.cookingOilTag);
         } else {
-            return getBurnTime(itemStack) > 0;
+            return getBurnDuration(itemStack) > 0;
         }
-    }
-
-    protected static int getBurnTime(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.COMMON.ovenRequiresCookingOil.get() && itemStack.getItem().getTags().contains(Compat.cookingOilTag) ? 800 : ForgeEventFactory.getItemBurnTime(itemStack, itemStack.getBurnTime() == -1 ? AbstractFurnaceBlockEntity.getFuel().getOrDefault(itemStack.getItem(), 0) : itemStack.getBurnTime());
-        }
-    }
-
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        return (int) Math.max(1.0, (double) getBurnTime(itemStack) * CookingForBlockheadsConfig.COMMON.ovenCookTimeMultiplier.get());
     }
 
     @Override

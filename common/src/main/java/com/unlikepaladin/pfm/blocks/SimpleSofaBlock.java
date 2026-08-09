@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.item.DyeColor;
@@ -13,8 +14,6 @@ import net.minecraft.world.level.BlockGetter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class SimpleSofaBlock extends ArmChairColoredBlock {
     private static final List<FurnitureBlock> SIMPLE_SOFAS = new ArrayList<>();
@@ -44,24 +43,24 @@ public class SimpleSofaBlock extends ArmChairColoredBlock {
     public static final VoxelShape RIGHT_EDGE = Shapes.or(box(11.7, 0, 1.5,14.2, 3, 4),box(0.7, 0, 1.5,3.2, 3, 4),box(5, 9.5, 0,16, 13.71, 3),box(0, 2, 0,16, 9.51, 16),box(0, 9.5, 0,5, 19.51, 16));
     public static final VoxelShape LEFT_EDGE = Shapes.or(box(0.7, 0, 12,3.2, 3, 14.5),box(11.7, 0, 12,14.2, 3, 14.5),box(5, 9.5, 13,16, 13.71, 16),box(0, 2, 0,16, 9.51, 16),box(0, 9.5, 0,5, 19.51, 16));
 
-    public static final VoxelShape STANDARD_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
-    public static final VoxelShape STANDARD_EAST = rotateShape(Direction.WEST, Direction.EAST, STANDARD);
-    public static final VoxelShape STANDARD_NORTH = rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
-    public static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
-    public static final VoxelShape MIDDLE_EAST = rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
-    public static final VoxelShape MIDDLE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
-    public static final VoxelShape OUTER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
-    public static final VoxelShape OUTER_EAST = rotateShape(Direction.WEST, Direction.EAST, OUTER);
-    public static final VoxelShape OUTER_NORTH = rotateShape(Direction.WEST, Direction.NORTH, OUTER);
-    public static final VoxelShape INNER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, INNER);
-    public static final VoxelShape INNER_EAST = rotateShape(Direction.WEST, Direction.EAST, INNER);
-    public static final VoxelShape INNER_NORTH = rotateShape(Direction.WEST, Direction.NORTH, INNER);
-    public static final VoxelShape RIGHT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
-    public static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
-    public static final VoxelShape RIGHT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
-    public static final VoxelShape LEFT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
-    public static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
-    public static final VoxelShape LEFT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
+    public static final VoxelShape STANDARD_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
+    public static final VoxelShape STANDARD_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, STANDARD);
+    public static final VoxelShape STANDARD_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
+    public static final VoxelShape MIDDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
+    public static final VoxelShape MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
+    public static final VoxelShape MIDDLE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
+    public static final VoxelShape OUTER_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
+    public static final VoxelShape OUTER_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, OUTER);
+    public static final VoxelShape OUTER_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+    public static final VoxelShape INNER_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+    public static final VoxelShape INNER_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, INNER);
+    public static final VoxelShape INNER_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, INNER);
+    public static final VoxelShape RIGHT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
+    public static final VoxelShape RIGHT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
+    public static final VoxelShape RIGHT_EDGE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
+    public static final VoxelShape LEFT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
+    public static final VoxelShape LEFT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
+    public static final VoxelShape LEFT_EDGE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);

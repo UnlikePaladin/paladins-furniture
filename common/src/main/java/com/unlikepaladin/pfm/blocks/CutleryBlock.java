@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +27,6 @@ import net.minecraft.world.level.LevelReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 
 public class CutleryBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
@@ -61,9 +60,9 @@ public class CutleryBlock extends HorizontalDirectionalBlock {
     }
 
     private static final VoxelShape FACING_NORTH = Shapes.or(box(3, 0, 0,11, 0.5, 15.5));
-    private static final VoxelShape FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FACING_NORTH);
-    private static final VoxelShape FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, FACING_NORTH);
-    private static final VoxelShape FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, FACING_NORTH);
+    private static final VoxelShape FACING_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, FACING_NORTH);
+    private static final VoxelShape FACING_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, FACING_NORTH);
+    private static final VoxelShape FACING_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, FACING_NORTH);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
