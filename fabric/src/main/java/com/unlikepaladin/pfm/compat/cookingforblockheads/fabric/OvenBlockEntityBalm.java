@@ -4,14 +4,17 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.fabric.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -67,6 +70,14 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements IKitchen
         return itemStack;
     }
 
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(Compat.getCookingOilTag()) ? 800 : Balm.getHooks().getBurnTime(itemStack);
+        }
+    }
 
     @Override
     public <T> T getProvider(Class<T> clazz) {
