@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -140,20 +141,6 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         return super.getFluidState(state);
     }
 
-    /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
-
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
-        }
-
-        return buffer[0];
-    }
-
     final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
     final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(13, 0, 1, 15, 14, 3);
     final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(1, 0, 1, 3, 14, 3);
@@ -250,26 +237,26 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
             newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
         }
         if (corner == "none") {
-            newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.SOUTH, facing, middleDeskShape(right, left, open)));
+            newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.SOUTH, facing, middleDeskShape(right, left, open)));
         } else if (corner == "outer") {
             if (!rotatedCorner) {
                 if (open) {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.SOUTH, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.SOUTH, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.SOUTH, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.SOUTH, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             } else {
                 if (open) {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.EAST, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.EAST, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.EAST, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.EAST, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             }
         } else {
             if (!rotatedCorner)
-                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.SOUTH, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.SOUTH, facing, DESK_INSIDE_CORNER));
             else
-                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.EAST, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.EAST, facing, DESK_INSIDE_CORNER));
         }
 
         VOXEL_SHAPES.put(key, newVoxelShape);
