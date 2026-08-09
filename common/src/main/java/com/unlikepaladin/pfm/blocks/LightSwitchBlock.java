@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -126,9 +127,9 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     private static final VoxelShape lightSwitch = Shapes.or(box(5, 3, 15,11, 11, 16));
-    private static final VoxelShape lightSwitchSouth = BasicTableBlock.rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
-    private static final VoxelShape lightSwitchEast = BasicTableBlock.rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);
-    private static final VoxelShape lightSwitchWest = BasicTableBlock.rotateShape(Direction.NORTH, Direction.WEST, lightSwitch);
+    private static final VoxelShape lightSwitchSouth = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
+    private static final VoxelShape lightSwitchEast = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);
+    private static final VoxelShape lightSwitchWest = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, lightSwitch);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction facing = getDirection(state);

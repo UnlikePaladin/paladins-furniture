@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -44,8 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 
 public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlock {
     private static final List<FurnitureBlock> BASIC_TOILET = new ArrayList<>();
@@ -161,9 +160,9 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
         world.setBlock(pos, state.setValue(BasicToiletBlock.TOILET_STATE, ToiletState.EMPTY), UPDATE_ALL);
     }
     protected static final VoxelShape TOILET_WEST = Shapes.or(box(2, 1, 4.2,14, 6, 11.7),box(1, 0, 3.2,15, 1, 12.7),box(5, 5, 2.5,16, 10, 13.5),box(0, 6, 2.5,5, 20, 13.5),box(5, 8, 3.5,6, 21, 12.5));
-    protected static final VoxelShape TOILET_NORTH = rotateShape(Direction.WEST, Direction.NORTH, TOILET_WEST);
-    protected static final VoxelShape TOILET_EAST = rotateShape(Direction.WEST, Direction.EAST, TOILET_WEST);
-    protected static final VoxelShape TOILET_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, TOILET_WEST);
+    protected static final VoxelShape TOILET_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, TOILET_WEST);
+    protected static final VoxelShape TOILET_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, TOILET_WEST);
+    protected static final VoxelShape TOILET_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, TOILET_WEST);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {

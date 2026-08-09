@@ -109,20 +109,6 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
         return super.getFluidState(state);
     }
 
-    /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
-
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
-        }
-
-        return buffer[0];
-    }
-
     final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
     final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(13, 0, 1, 15, 14, 3);
     final static VoxelShape TABLE_CLASSIC_EAST_NORTH = box(13, 2, 0,15, 4, 3);
