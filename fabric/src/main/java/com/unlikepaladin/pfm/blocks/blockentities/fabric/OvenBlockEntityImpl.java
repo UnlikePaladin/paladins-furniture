@@ -14,6 +14,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScreenHandlerFactory<StoveData> {
     public OvenBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -21,6 +27,17 @@ public class OvenBlockEntityImpl extends OvenBlockEntity implements ExtendedScre
 
     public OvenBlockEntityImpl(BlockPos blockPos, BlockState state) {
         super(blockPos, state);
+    }
+
+    @Nullable
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+        return saveWithoutMetadata(lookup);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends OvenBlockEntity> getFactory() {

@@ -11,6 +11,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.storage.ValueInput;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class OvenBlockEntityImpl extends OvenBlockEntity {
 
     public OvenBlockEntityImpl(BlockEntityType<? extends OvenBlockEntity> type, BlockPos pos, BlockState state) {
@@ -19,6 +27,28 @@ public class OvenBlockEntityImpl extends OvenBlockEntity {
 
     public OvenBlockEntityImpl(BlockPos blockPos, BlockState state) {
         super(blockPos, state);
+    }
+
+    @Nullable
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+        return saveWithoutMetadata(lookup);
+    }
+
+    @Override
+    public void handleUpdateTag(ValueInput tag, HolderLookup.Provider holders) {
+        super.handleUpdateTag(tag, holders);
+        this.loadAdditional(tag);
+    }
+
+    @Override
+    public void onDataPacket(Connection connection, ValueInput data, HolderLookup.Provider lookup) {
+        super.onDataPacket(connection, data, lookup);
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends OvenBlockEntity> getFactory() {

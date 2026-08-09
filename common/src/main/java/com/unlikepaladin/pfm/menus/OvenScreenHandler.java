@@ -60,10 +60,9 @@ public class OvenScreenHandler extends RecipeBookMenu {
 
     public OvenScreenHandler(MenuType<? extends AbstractContainerMenu> menuType, int containerId, Inventory inventory, StoveData pos) {
         // client-side menu: create a PropertyDelegate sized to match the server-side layout
-        this(menuType, containerId, inventory, new SimpleContainer(SLOT_COUNT), new SimpleContainerData(2 + PROCESSING_SLOT_COUNT * 2));
-        if (inventory.player.level().getBlockEntity(pos.pos()) instanceof OvenBlockEntity oven) {
-            this.container = oven;
-        }
+        this(menuType, containerId, inventory,
+                inventory.player.level().getBlockEntity(pos.pos()) instanceof Container c ? c : new SimpleContainer(SLOT_COUNT),
+                new SimpleContainerData(2 + PROCESSING_SLOT_COUNT * 2));
     }
 
     public OvenScreenHandler(MenuType<? extends AbstractContainerMenu> menuType,int containerId, Inventory inventory, Container container, ContainerData containerData) {
