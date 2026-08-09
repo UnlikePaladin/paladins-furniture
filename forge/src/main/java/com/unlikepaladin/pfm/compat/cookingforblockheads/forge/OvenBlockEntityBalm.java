@@ -16,9 +16,11 @@ import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -139,5 +141,14 @@ public class OvenBlockEntityBalm extends OvenBlockEntity implements IKitchenSmel
         }
 
         return itemStack;
+    }
+
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && Compat.getCookingOilTag().contains(itemStack.getItem()) ? 800 : Balm.getHooks().getBurnTime(itemStack);
+        }
     }
 }

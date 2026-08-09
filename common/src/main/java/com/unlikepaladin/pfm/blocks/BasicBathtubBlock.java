@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -57,7 +58,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
-import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class BasicBathtubBlock extends BedBlock {
     public static final IntegerProperty LEVEL_8 = IntegerProperty.create("level", 0, 8);
@@ -271,9 +271,9 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     private static final VoxelShape FOOT = Shapes.join(box(0, 0, 0,16, 11, 16),box(0,2,3,13, 11, 13), BooleanOp.ONLY_FIRST);
-    private static final VoxelShape FOOT_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FOOT);
-    private static final VoxelShape FOOT_EAST = rotateShape(Direction.WEST, Direction.EAST, FOOT);
-    private static final VoxelShape FOOT_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FOOT);
+    private static final VoxelShape FOOT_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, FOOT);
+    private static final VoxelShape FOOT_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, FOOT);
+    private static final VoxelShape FOOT_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, FOOT);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction facing = state.getValue(FACING);
