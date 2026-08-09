@@ -22,11 +22,14 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ForgePacketHandler;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.SimpleChannel;
@@ -43,13 +46,18 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public static void registerPackets(SimpleChannel channel, AttributeKey<ForgePacketHandler> context) {
-        channel.messageBuilder(ClientStoveResultsPacket.class, NetworkDirection.PLAY_TO_CLIENT).encoder((clientStoveResultsPacket, registryFriendlyByteBuf) -> ClientStoveResultsPacket.STREAM_CODEC.encode(registryFriendlyByteBuf, clientStoveResultsPacket)).decoder(ClientStoveResultsPacket.STREAM_CODEC::decode)
-            .consumerNetworkThread(context, (forgePacketHandler, payload, contextPayload) -> {
-                contextPayload.enqueueWork(() -> {
-                    ClientStoveResultsPacket.handle(contextPayload.getSender(), payload);
-                    contextPayload.setPacketHandled(true);
-                });
-            });
+        channel.messageBuilder(ClientStoveResultsPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder((clientStoveResultsPacket, registryFriendlyByteBuf) -> ClientStoveResultsPacket.STREAM_CODEC.encode(registryFriendlyByteBuf, clientStoveResultsPacket))
+                .decoder(ClientStoveResultsPacket.STREAM_CODEC::decode)
+                .consumerNetworkThread(context, (forgePacketHandler, payload, contextPayload) -> {
+                    contextPayload.enqueueWork(() -> {
+                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                            ClientStoveResultsPacket.handle(Minecraft.getInstance().player, payload);
+                        });
+                        contextPayload.setPacketHandled(true);
+                    });
+                })
+                .add();
     }
 
     @Override
