@@ -78,7 +78,7 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(this.level, itemStack);
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : level.fuelValues().burnDuration(itemStack);
         }
     }
 

@@ -21,13 +21,11 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,18 +36,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -57,7 +52,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -288,11 +282,11 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return recipe != null ? recipe.result() : ItemStack.EMPTY;
     }
 
-    public boolean isItemFuel(Level world, ItemStack itemStack) {
+    public boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
             return itemStack.is(BalmItemTags.COOKING_OIL);
         } else {
-            return getBurnDuration(world, itemStack) > 0;
+            return getBurnDuration(itemStack) > 0;
         }
     }
 
