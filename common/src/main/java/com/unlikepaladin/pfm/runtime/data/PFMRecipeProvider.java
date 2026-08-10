@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
+import com.unlikepaladin.pfm.mixin.PFMBedBlockAccessor;
 import com.unlikepaladin.pfm.mixin.PFMIngredientMatchingStacksAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
@@ -483,7 +484,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerSimpleBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, Consumer<FinishedRecipe> exporter) {
-        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getColor();
+        DyeColor color = ((DyeableFurnitureBlock) ((BlockItem)Arrays.stream(PFMRecipeProvider.pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getPFMColor();
         CompoundTag tag = new CompoundTag();
         tag.putString("color", color.getSerializedName());
         DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, tag).group("bedroom").childInput(legMaterial, 5).vanillaInput(baseBed, 1).save(exporter, new ResourceLocation("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
@@ -491,10 +492,10 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerClassicBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, String fence, Consumer<FinishedRecipe> exporter) {
-        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(PFMRecipeProvider.pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getColor();
+        DyeColor color = ((DyeableFurnitureBlock) ((BlockItem)Arrays.stream(PFMRecipeProvider.pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getPFMColor();
         CompoundTag tag = new CompoundTag();
         tag.putString("color", color.getSerializedName());
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, tag).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, new ResourceLocation("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ ((BedBlock)((BlockItem)Arrays.stream(PFMRecipeProvider.pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getColor()));
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, tag).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, new ResourceLocation("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
     }
 
     public static void offerSimpleBunkLadderRecipe(Class<? extends Block> output, String base, List<ResourceLocation> variants, Consumer<FinishedRecipe> exporter) {
