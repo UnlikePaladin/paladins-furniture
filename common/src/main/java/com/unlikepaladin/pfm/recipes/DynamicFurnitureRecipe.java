@@ -177,7 +177,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
     @Override
     public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager) {
-        PaladinFurnitureMod.GENERAL_LOGGER.warn("Something has tried to craft a dynamic furniture recipe without context");
+        PaladinFurnitureMod.GENERAL_LOGGER.debug("Something has tried to craft a dynamic furniture recipe without context");
         return ItemStack.EMPTY;
     }
 
@@ -188,7 +188,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registryManager) {
-        PaladinFurnitureMod.GENERAL_LOGGER.warn("Something has tried to get the output of a dynamic furniture recipe without context");
+        PaladinFurnitureMod.GENERAL_LOGGER.debug("Something has tried to get the output of a dynamic furniture recipe without context");
         return ItemStack.EMPTY;
     }
 
