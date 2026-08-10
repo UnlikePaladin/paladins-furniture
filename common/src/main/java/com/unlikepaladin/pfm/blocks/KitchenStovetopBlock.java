@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.*;
 import net.minecraft.world.item.crafting.*;
@@ -40,7 +41,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -121,9 +121,9 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     }
 
     protected static final VoxelShape STOVETOP = Shapes.or(box(0, 0, 1, 16, 1, 15));
-    protected static final VoxelShape STOVETOP_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVETOP);
-    protected static final VoxelShape STOVETOP_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVETOP);
-    protected static final VoxelShape STOVETOP_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVETOP);
+    protected static final VoxelShape STOVETOP_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, STOVETOP);
+    protected static final VoxelShape STOVETOP_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, STOVETOP);
+    protected static final VoxelShape STOVETOP_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, STOVETOP);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);

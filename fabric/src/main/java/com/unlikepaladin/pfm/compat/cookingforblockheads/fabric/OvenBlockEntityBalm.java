@@ -4,16 +4,20 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.fabric.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
+import net.blay09.mods.balm.api.tag.BalmItemTags;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
@@ -73,6 +77,15 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
             }
         }
         return KitchenOperation.EMPTY;
+    }
+
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(this.level, itemStack);
+        }
     }
 
     @Override

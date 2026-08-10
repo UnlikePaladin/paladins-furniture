@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,10 +57,10 @@ public class BasicChairBlock extends AbstractSittableBlock {
     protected static final VoxelShape FACE_EAST = Shapes.or(box(2.5, 0, 2.5 ,5 ,8 ,5), box(2.5, 0, 11.5, 5, 8, 14), box(12.5, 0, 2.5, 15, 8, 5), box(12.5, 0, 11.5, 15, 8, 14), box(1.65, 8,1.4, 15.66, 10.49, 14.4 ), box(13.33, 8, 1.4, 15.66, 24.49,14.4 ) );
     protected static final VoxelShape FACE_NORTH = Shapes.or(box(2.5, 0, 1 ,5 ,8 ,3.5), box(2.5, 0, 11, 5, 8, 13.5), box(11.5, 0, 1, 14, 8, 3.5), box(11.5, 0, 11, 14, 8, 13.5), box(1.39, 8,0.32, 14.4, 10.49, 14.32 ), box(1.39, 8, 0.32, 14.4, 24.49,2.65 ));
     protected static final VoxelShape FACE_SOUTH = Shapes.or(box(2, 0, 2.5 ,4.5 ,8 ,5), box(2, 0, 12.5, 4.5, 8, 15), box(11, 0, 2.5, 13.5, 8, 5), box(11, 0, 12.5, 13.5, 8, 15), box(1.61, 8,1.65, 14.66, 10.49, 15.67 ), box(1.61, 8, 13.4, 14.66, 24.49,15.67 ) );
-    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, FACE_NORTH);
-    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, FACE_SOUTH);
-    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, FACE_EAST);
-    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, FACE_WEST);
+    protected static final VoxelShape FACE_NORTH_TUCKED = PFMShapeUtil.tuckShape(Direction.NORTH, FACE_NORTH);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = PFMShapeUtil.tuckShape(Direction.SOUTH, FACE_SOUTH);
+    protected static final VoxelShape FACE_EAST_TUCKED = PFMShapeUtil.tuckShape(Direction.EAST, FACE_EAST);
+    protected static final VoxelShape FACE_WEST_TUCKED = PFMShapeUtil.tuckShape(Direction.WEST, FACE_WEST);
 
     @Override
         public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
@@ -78,43 +79,6 @@ public class BasicChairBlock extends AbstractSittableBlock {
             case SOUTH -> FACE_SOUTH;
             default -> FACE_EAST;
         };
-    }
-
-    /**
-     * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
-     */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
-
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
-        }
-
-        return buffer[0];
-    }
-
-    /** Method to tuck the Chair's Voxel Shapes */
-    public static VoxelShape tuckShape(Direction from, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
-
-        switch (from) {
-            case NORTH -> { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
-                buffer[0] = buffer[1];
-                buffer[1] = Shapes.empty();}
-            case SOUTH -> { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
-                buffer[0] = buffer[1];
-                buffer[1] = Shapes.empty();}
-            case WEST -> { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
-                buffer[0] = buffer[1];
-                buffer[1] = Shapes.empty();}
-            default -> { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
-                buffer[0] = buffer[1];
-                buffer[1] = Shapes.empty();}
-        }
-        return buffer[0];
     }
 
     @Override

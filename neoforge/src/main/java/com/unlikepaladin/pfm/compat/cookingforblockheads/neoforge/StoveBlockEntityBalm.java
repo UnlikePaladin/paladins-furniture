@@ -5,7 +5,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.container.SubContainer;
@@ -15,10 +14,6 @@ import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
-import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
-import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
-import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
-import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.*;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -42,13 +37,10 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -286,25 +278,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
 
-    public static boolean isItemFuel(Level world, ItemStack itemStack) {
+    public boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
             return itemStack.is(BalmItemTags.COOKING_OIL);
         } else {
-            return getBurnTime(world, itemStack) > 0;
+            return getBurnDuration(itemStack) > 0;
         }
-    }
-
-    protected static int getBurnTime(Level world, ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(world, itemStack);
-        }
-    }
-
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        return (int) Math.max(1.0, (double) getBurnTime(level, itemStack) * CookingForBlockheadsConfig.getActive().ovenFuelTimeMultiplier);
     }
 
     @Override
