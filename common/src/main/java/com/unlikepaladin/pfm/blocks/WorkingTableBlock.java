@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -35,8 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 
 public class WorkingTableBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     private static final List<WorkingTableBlock> WORKING_TABLES = new ArrayList<>();
@@ -75,9 +74,9 @@ public class WorkingTableBlock extends HorizontalDirectionalBlock implements Sim
     }
 
     public static VoxelShape WORKTABLE_SHAPE = Shapes.or(box(0, 14, 0, 16,16,16), box(2, 1, 2,14, 14, 14),box(1.5, 0, 1,4.5, 1, 15),box(11.5, 0, 1,14.5, 1, 15),box(0, 16, 14,16, 18, 16),box(0, 16, 12,1, 17, 14),box(15, 16, 12,16, 17, 14));
-    public static VoxelShape WORKTABLE_SHAPE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, WORKTABLE_SHAPE);
-    public static VoxelShape WORKTABLE_SHAPE_EAST = rotateShape(Direction.NORTH, Direction.EAST, WORKTABLE_SHAPE);
-    public static VoxelShape WORKTABLE_SHAPE_WEST = rotateShape(Direction.NORTH, Direction.WEST, WORKTABLE_SHAPE);
+    public static VoxelShape WORKTABLE_SHAPE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, WORKTABLE_SHAPE);
+    public static VoxelShape WORKTABLE_SHAPE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, WORKTABLE_SHAPE);
+    public static VoxelShape WORKTABLE_SHAPE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, WORKTABLE_SHAPE);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         switch (state.getValue(FACING)) {

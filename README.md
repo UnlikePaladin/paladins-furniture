@@ -40,4 +40,4 @@ I put many hours of my limited time into this mod, if you'd like to support me, 
 
 ## License
 
-Paldin's Furniture is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the [license file](LICENSE).
+All Code within Paldin's Furniture is licensed under GNU LGPLv3, a free and open-source license. Assets and all visuals are licensed under the Polyform Shield License. For more information, please see the [license file](LICENSE.md).

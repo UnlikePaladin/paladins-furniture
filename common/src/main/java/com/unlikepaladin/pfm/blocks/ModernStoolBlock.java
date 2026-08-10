@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,13 +40,13 @@ public class ModernStoolBlock extends BasicChairBlock {
     }
 
     protected static final VoxelShape MODERN_STOOL_SOUTH = Shapes.or(box(7.125, 1, 7 ,9.125, 10, 9), box(5.125, 0, 5, 11.125, 1, 11), box(4.625, 10, 4.5, 11.625, 12, 11.5), box(4.625, 12, 9.5, 11.625, 15, 11.5));
-    protected static final VoxelShape MODERN_STOOL = rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_STOOL_SOUTH);
-    protected static final VoxelShape MODERN_STOOL_WEST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_STOOL_SOUTH);
-    protected static final VoxelShape MODERN_STOOL_EAST = rotateShape(Direction.NORTH, Direction.WEST, MODERN_STOOL_SOUTH);
-    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, MODERN_STOOL);
-    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, MODERN_STOOL_SOUTH);
-    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, MODERN_STOOL_EAST);
-    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, MODERN_STOOL_WEST);
+    protected static final VoxelShape MODERN_STOOL = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_STOOL_SOUTH);
+    protected static final VoxelShape MODERN_STOOL_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MODERN_STOOL_SOUTH);
+    protected static final VoxelShape MODERN_STOOL_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MODERN_STOOL_SOUTH);
+    protected static final VoxelShape FACE_NORTH_TUCKED = PFMShapeUtil.tuckShape(Direction.NORTH, MODERN_STOOL);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = PFMShapeUtil.tuckShape(Direction.SOUTH, MODERN_STOOL_SOUTH);
+    protected static final VoxelShape FACE_EAST_TUCKED = PFMShapeUtil.tuckShape(Direction.EAST, MODERN_STOOL_EAST);
+    protected static final VoxelShape FACE_WEST_TUCKED = PFMShapeUtil.tuckShape(Direction.WEST, MODERN_STOOL_WEST);
 
     @Override
     public boolean canTuck(BlockState state) {
