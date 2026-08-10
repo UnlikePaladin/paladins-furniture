@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -28,8 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
     protected static final BooleanProperty WALL = BooleanProperty.create("wall");
@@ -89,9 +88,9 @@ public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
     }
 
     public static final VoxelShape WALL_PAPER_SOUTH = Shapes.or(box(11.5, 12, 12,12.5, 13, 16), box(3.5, 12, 11.5,4.5, 13, 16), box(4.5, 10.5, 10.5,11.5, 14.5, 14.5));
-    public static final VoxelShape WALL_PAPER_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, WALL_PAPER_SOUTH);
-    public static final VoxelShape WALL_PAPER_EAST = rotateShape(Direction.SOUTH, Direction.EAST, WALL_PAPER_SOUTH);
-    public static final VoxelShape WALL_PAPER_WEST = rotateShape(Direction.SOUTH, Direction.WEST, WALL_PAPER_SOUTH);
+    public static final VoxelShape WALL_PAPER_NORTH = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.NORTH, WALL_PAPER_SOUTH);
+    public static final VoxelShape WALL_PAPER_EAST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.EAST, WALL_PAPER_SOUTH);
+    public static final VoxelShape WALL_PAPER_WEST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.WEST, WALL_PAPER_SOUTH);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {

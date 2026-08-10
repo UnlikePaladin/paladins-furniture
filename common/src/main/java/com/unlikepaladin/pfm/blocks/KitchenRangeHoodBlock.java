@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,8 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
@@ -79,24 +78,24 @@ public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     }
 
     protected static final VoxelShape RANGE_HOOD = Shapes.or(box(2, 4, 0,14, 16, 7),box(0, 0, 0,16, 4, 15));
-    protected static final VoxelShape RANGE_HOOD_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD);
-    protected static final VoxelShape RANGE_HOOD_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD);
-    protected static final VoxelShape RANGE_HOOD_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD);
+    protected static final VoxelShape RANGE_HOOD_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD);
+    protected static final VoxelShape RANGE_HOOD_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD);
+    protected static final VoxelShape RANGE_HOOD_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD);
 
     protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER = Shapes.or(box(2, 0, 0,14, 28, 7));
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM_DRAWER);
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM_DRAWER);
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM_DRAWER);
 
     protected static final VoxelShape RANGE_HOOD_BOTTOM = Shapes.or(box(2, 0, 0,14, 16, 7));
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM);
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM);
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM);
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM);
 
     protected static final VoxelShape RANGE_HOOD_DRAWER = Shapes.or(box(2, 16, 0,14, 28, 7),box(0, 12, 0,16, 16, 15));
-    protected static final VoxelShape RANGE_HOOD_DRAWER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_DRAWER);
-    protected static final VoxelShape RANGE_HOOD_DRAWER_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_DRAWER);
-    protected static final VoxelShape RANGE_HOOD_DRAWER_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_DRAWER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_DRAWER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_DRAWER);
+    protected static final VoxelShape RANGE_HOOD_DRAWER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_DRAWER);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         boolean down = state.getValue(DOWN);

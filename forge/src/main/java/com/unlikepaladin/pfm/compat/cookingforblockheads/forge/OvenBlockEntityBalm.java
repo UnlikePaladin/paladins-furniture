@@ -14,9 +14,12 @@ import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
+import net.blay09.mods.balm.api.tag.BalmItemTags;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -135,6 +138,15 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
             }
         }
         return KitchenOperation.EMPTY;
+    }
+
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(itemStack);
+        }
     }
 
     @Override

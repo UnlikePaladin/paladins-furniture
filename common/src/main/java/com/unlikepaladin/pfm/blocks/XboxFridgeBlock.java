@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -30,8 +31,6 @@ import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class XboxFridgeBlock extends FridgeBlock
 {
@@ -129,18 +128,18 @@ public class XboxFridgeBlock extends FridgeBlock
     protected static final VoxelShape XBOX_FRIDGE_OPEN = Shapes.or(box(0.5, 1, 3,15.5, 32, 16),box(1, 0, 2.84,15, 1, 15.84),box(0.5, 16, -11.69,1.5, 32, 3.11));
     protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN = Shapes.or(box(0.5, -15, 3,15.5, 16, 16),box(1, -16, 2.84,15, -15, 15.84),box(0.5, 0, -11.69,1.5, 16, 3.11));
 
-    protected static final VoxelShape XBOX_FRIDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER);
-    protected static final VoxelShape XBOX_FRIDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_OPEN);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER_OPEN);
-    protected static final VoxelShape XBOX_FRIDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER);
-    protected static final VoxelShape XBOX_FRIDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_OPEN);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER_OPEN);
-    protected static final VoxelShape XBOX_FRIDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER);
-    protected static final VoxelShape XBOX_FRIDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_OPEN);
-    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER_OPEN);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
