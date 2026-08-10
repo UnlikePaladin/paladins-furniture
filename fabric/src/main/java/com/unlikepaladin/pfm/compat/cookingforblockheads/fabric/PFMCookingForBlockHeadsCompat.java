@@ -12,7 +12,6 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -116,7 +115,7 @@ public class PFMCookingForBlockHeadsCompat {
                     player.setItemInHand(hand, heldItem);
 
                     return InteractionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(level, heldItem)) {
+                } else if (!heldItem.isEmpty() && oven.isItemFuel(heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
                     return InteractionResult.SUCCESS;

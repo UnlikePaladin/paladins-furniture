@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -28,8 +29,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     public BasicShowerHeadBlock(Properties settings) {
@@ -70,9 +69,9 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     }
 
     public static final VoxelShape SHOWER_HEAD_SOUTH = Shapes.or(box(6.5, 6.5, 15, 9.5, 9.5, 16), box(7.5, 7.5, 7,8.5, 8.5, 15), box(7.5, 5.5, 7,8.5, 7.5, 8),box(4.8, 4, 4.2,11.3, 5.5, 10.7));
-    public static final VoxelShape SHOWER_HEAD_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, SHOWER_HEAD_SOUTH);
-    public static final VoxelShape SHOWER_HEAD_EAST = rotateShape(Direction.SOUTH, Direction.EAST, SHOWER_HEAD_SOUTH);
-    public static final VoxelShape SHOWER_HEAD_WEST = rotateShape(Direction.SOUTH, Direction.WEST, SHOWER_HEAD_SOUTH);
+    public static final VoxelShape SHOWER_HEAD_NORTH = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.NORTH, SHOWER_HEAD_SOUTH);
+    public static final VoxelShape SHOWER_HEAD_EAST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.EAST, SHOWER_HEAD_SOUTH);
+    public static final VoxelShape SHOWER_HEAD_WEST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.WEST, SHOWER_HEAD_SOUTH);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {

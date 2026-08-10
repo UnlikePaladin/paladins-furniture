@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -84,18 +85,14 @@ public class ModernDinnerTableBlock extends Block {
         return 0;
     }
 
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        return LogTableBlock.rotateShape(from, to, shape);
-    }
-
     final static VoxelShape MODERN_DINNER_TABLE = Shapes.or(box(0, 14, 0, 16, 16, 16), box(12, 0, 12, 14, 14, 14), box(12, 0, 2, 14, 14, 4), box(13, 2, 7,15, 14, 9), box(1, 2, 7, 3, 14, 9),box(2, 0, 2,4, 14, 4),box(2, 0, 4, 4, 2, 12), box(3, 2, 7,13, 4, 9),box(12, 0, 4,14, 2, 12), box(2, 0, 12,4, 14, 14));
     final static VoxelShape MODERN_DINNER_TABLE_MIDDLE = Shapes.or(box(0, 14, 0, 16, 16, 16),box(0, 2, 7,16, 4, 9 ));
     final static VoxelShape MODERN_DINNER_TABLE_ONE = Shapes.or(box(0, 14, 0, 16, 16, 16), box(13, 2, 7, 15, 14, 9), box(12, 0, 12,14, 14, 14), box(12, 0, 4,14, 2, 12 ), box(0, 2, 7,13, 4, 9), box(12, 0, 2,14, 14, 4 ));
-    final static VoxelShape MODERN_DINNER_TABLE_ONE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_DINNER_TABLE_ONE);
-    final static VoxelShape MODERN_DINNER_TABLE_ONE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MODERN_DINNER_TABLE_ONE);
-    final static VoxelShape MODERN_DINNER_TABLE_ONE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_ONE);
-    final static VoxelShape MODERN_DINNER_TABLE_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_MIDDLE);
-    final static VoxelShape MODERN_DINNER_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE);
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_MIDDLE);
+    final static VoxelShape MODERN_DINNER_TABLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE);
 
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction.Axis dir = state.getValue(AXIS);

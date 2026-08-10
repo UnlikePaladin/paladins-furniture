@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
@@ -107,17 +108,13 @@ public class DinnerTableBlock extends HorizontalDirectionalBlock  {
         return 0;
     }
 
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        return LogTableBlock.rotateShape(from, to, shape);
-    }
-
     final static VoxelShape dinner_table = Shapes.or(box(0, 14, 0, 16, 16, 16), box(0.1, 0, 2, 15.8, 14, 4.05), box(0.1, 0, 11.9, 15.8, 14, 13.95));
     final static VoxelShape dinner_table_middle = Shapes.or(box(0, 14, 0, 16, 16, 16));
     final static VoxelShape dinner_table_one_east = Shapes.or(box(0, 14, 0, 16, 16, 16), box(0.1, 0, 2, 15.8, 14, 4.05));
-    final static VoxelShape dinner_table_one_south = rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one_east);
-    final static VoxelShape dinner_table_one = rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one_east);
-    final static VoxelShape dinner_table_one_west = rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one_east);
-    final static VoxelShape dinner_table_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
+    final static VoxelShape dinner_table_one_south = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one_east);
+    final static VoxelShape dinner_table_one = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one_east);
+    final static VoxelShape dinner_table_one_west = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one_east);
+    final static VoxelShape dinner_table_east = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
 
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);
