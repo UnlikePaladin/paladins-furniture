@@ -40,6 +40,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisplay {
     protected FurnitureRecipe recipe;
@@ -73,7 +74,7 @@ public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisp
             }
             List<Ingredient> finalList = new ArrayList<>();
             for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
-                finalList.add(Ingredient.of(new ItemStack(entry.getKey(), entry.getValue())));
+                finalList.add(Ingredient.of(Stream.of(new ItemStack(entry.getKey(), entry.getValue()))));
             }
             finalList.sort(Comparator.comparing(o -> PFMRecipeProvider.pfm$getMatchingStacks(o)[0].getItem().toString()));
 

@@ -483,7 +483,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerSimpleBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, Consumer<FinishedRecipe> exporter) {
-        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(baseBed.getItems()).findFirst().get().getItem()).getBlock()).getColor();
+        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(pfm$getMatchingStacks(baseBed)).findFirst().get().getItem()).getBlock()).getColor();
         CompoundTag tag = new CompoundTag();
         tag.putString("color", color.getSerializedName());
         DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, tag).group("bedroom").childInput(legMaterial, 5).vanillaInput(baseBed, 1).save(exporter, new ResourceLocation("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
@@ -643,7 +643,7 @@ public class PFMRecipeProvider extends PFMProvider {
         return new InventoryChangeTrigger.TriggerInstance(EntityPredicate.Composite.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, items);
     }
 
-    private static String getItemPath(Ingredient item) {
+    public static String getItemPath(Ingredient item) {
         ItemStack[] n = pfm$getMatchingStacks(item);
         if (n.length > 0) {
             return Registry.ITEM.getKey(n[0].getItem()).getPath();

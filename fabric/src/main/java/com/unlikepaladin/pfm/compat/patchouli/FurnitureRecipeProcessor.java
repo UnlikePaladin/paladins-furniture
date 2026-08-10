@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +50,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                         continue;
                     }
                     Ingredient ingredient = innerRecipe.getIngredients().get(index);
-                    ItemStack[] stacks = ingredient.getItems();
+                    ItemStack[] stacks = PFMRecipeProvider.pfm$getMatchingStacks(ingredient);
                     ingredientsArr[i] = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
                 }
                 return IVariable.from(ingredientsArr);

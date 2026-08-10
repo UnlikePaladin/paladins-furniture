@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
@@ -200,7 +201,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             tooltip.add(new TranslatableComponent("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
-                for (ItemStack stack : ingredient.getItems()) {
+                for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
                     if (!itemStackCountMap.containsKey(stack.getItem())) {
                         itemStackCountMap.put(stack.getItem(), stack.getCount());
                     } else {

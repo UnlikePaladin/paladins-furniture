@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FurnitureDisplay implements TransferRecipeDisplay {
     protected FurnitureRecipe recipe;
@@ -72,7 +73,7 @@ public class FurnitureDisplay implements TransferRecipeDisplay {
             }
             List<Ingredient> finalList = new ArrayList<>();
             for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
-                finalList.add(Ingredient.of(new ItemStack(entry.getKey(), entry.getValue())));
+                finalList.add(Ingredient.of(Stream.of(new ItemStack(entry.getKey(), entry.getValue()))));
             }
             finalList.sort(Comparator.comparing(o -> PFMRecipeProvider.pfm$getMatchingStacks(o)[0].getItem().toString()));
 

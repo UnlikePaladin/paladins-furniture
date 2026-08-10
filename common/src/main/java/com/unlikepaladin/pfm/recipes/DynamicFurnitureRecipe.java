@@ -33,6 +33,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class DynamicFurnitureRecipe implements FurnitureRecipe {
@@ -93,8 +94,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                     abortVariant = true;
                     break;
                 }
-                stacks.add(Ingredient.of(new ItemStack(convertible.asItem(), entry.getValue())));
-            }
+                stacks.add(Ingredient.of(Stream.of(new ItemStack(convertible.asItem(), entry.getValue()))));            }
 
             // abort constructing for a variant if the recipe was invalid because of a missing ingredient, preferable over a crash
             if (abortVariant) {
@@ -112,7 +112,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                 WoodVariant woodVariant = (WoodVariant) variant;
                 List<Ingredient> strippedIngredients = Lists.newArrayList();
                 for (Map.Entry<String, Integer> entry : childrenToCountMap.entrySet()) {
-                    strippedIngredients.add(Ingredient.of(new ItemStack(woodVariant.getItemForRecipe(entry.getKey(), getOutputBlockClass(), true), entry.getValue())));
+                    strippedIngredients.add(Ingredient.of(Stream.of(new ItemStack(woodVariant.getItemForRecipe(entry.getKey(), getOutputBlockClass(), true), entry.getValue()))));
                 }
                 if (getOutputBlockClass() == RawLogTableBlock.class) {
                     strippedIngredients.set(0, Ingredient.of((Block)woodVariant.getChild("stripped_log")));
