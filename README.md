@@ -19,7 +19,7 @@ You will need Fabric Loader, Quilt Loader, NeoForge or MinecraftForge installed 
 
 You will also need Fabric API installed if you're playing on Fabric to use the mod, you can get it [here](https://modrinth.com/mod/fabric-api). If you're playing with versions of Sodium older than 0.6 installed you will need [Indium](https://modrinth.com/mod/indium). The Sinytra Connector mod is unsupported and might cause rendering issues, use it at your own risk. 
 
-The mod is available and updated for versions 1.16.5 through 1.21.4 find the links further below.
+The mod is available and updated for versions 1.16.5 through 1.21.11 find the links further below.
 
 I have a [Discord](https://discord.gg/zbMDUPB) server that you can join if you need help or support with the mod, or if you would like to give me any feedback, I also provide compiled builds for testing new features before they make their way into public releases in it, so join if you'd like to keep up with the latest developments.
 
