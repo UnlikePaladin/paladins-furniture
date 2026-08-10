@@ -5,7 +5,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.DefaultContainer;
@@ -44,9 +43,7 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
@@ -290,25 +287,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
         return recipe != null ? recipe.result() : ItemStack.EMPTY;
     }
 
-    public static boolean isItemFuel(Level world, ItemStack itemStack) {
+    public boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
             return itemStack.is(BalmItemTags.COOKING_OIL);
         } else {
-            return getBurnTime(world, itemStack) > 0;
+            return getBurnDuration(itemStack) > 0;
         }
-    }
-
-    protected static int getBurnTime(Level world, ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : world.fuelValues().burnDuration(itemStack);
-        }
-    }
-
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        return (int) Math.max(1.0, (double) getBurnTime(level, itemStack) * CookingForBlockheadsConfig.getActive().ovenFuelTimeMultiplier);
     }
 
     @Override

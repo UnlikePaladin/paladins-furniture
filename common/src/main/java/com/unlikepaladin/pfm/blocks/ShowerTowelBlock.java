@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -26,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 
 public class ShowerTowelBlock extends HorizontalDirectionalBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SHOWER_TOWELS = new ArrayList<>();
@@ -79,9 +78,9 @@ public class ShowerTowelBlock extends HorizontalDirectionalBlock implements Dyea
     }
 
     private static final VoxelShape TOWEL_SOUTH = Shapes.or(box(1, 1, 2,15, 13, 5), box(1, 0, 2,15, 1, 3), box(0, 11, 0,1, 12, 4), box(15, 11, 0,16, 12, 4));
-    private static final VoxelShape TOWEL_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, TOWEL_SOUTH);
-    private static final VoxelShape TOWEL_EAST = rotateShape(Direction.SOUTH, Direction.EAST, TOWEL_SOUTH);
-    private static final VoxelShape TOWEL_WEST = rotateShape(Direction.SOUTH, Direction.WEST, TOWEL_SOUTH);
+    private static final VoxelShape TOWEL_NORTH = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.NORTH, TOWEL_SOUTH);
+    private static final VoxelShape TOWEL_EAST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.EAST, TOWEL_SOUTH);
+    private static final VoxelShape TOWEL_WEST = PFMShapeUtil.rotateShape(Direction.SOUTH, Direction.WEST, TOWEL_SOUTH);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
        Direction direction = state.getValue(FACING);

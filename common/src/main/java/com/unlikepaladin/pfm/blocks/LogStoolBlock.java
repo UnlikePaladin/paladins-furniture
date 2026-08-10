@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -31,10 +32,10 @@ public class LogStoolBlock extends BasicChairBlock {
 
     protected static final VoxelShape COLLISION = Shapes.or(box(3, 0, 3, 13, 11, 13));
 
-    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, COLLISION);
-    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, COLLISION);
-    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, COLLISION);
-    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, COLLISION);
+    protected static final VoxelShape FACE_NORTH_TUCKED = PFMShapeUtil.tuckShape(Direction.NORTH, COLLISION);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = PFMShapeUtil.tuckShape(Direction.SOUTH, COLLISION);
+    protected static final VoxelShape FACE_EAST_TUCKED = PFMShapeUtil.tuckShape(Direction.EAST, COLLISION);
+    protected static final VoxelShape FACE_WEST_TUCKED = PFMShapeUtil.tuckShape(Direction.WEST, COLLISION);
 
     @Override
     public boolean canTuck(BlockState state) {

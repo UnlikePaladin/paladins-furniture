@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
@@ -26,8 +27,6 @@ import net.minecraft.world.level.BlockGetter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnitureBlock {
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.create("shape", ArmChairShape.class);
@@ -70,29 +69,29 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     protected static final VoxelShape RIGHT_EDGE = Shapes.or(box(12.5, 0, 12,15, 3, 14.5),box(12.5, 0, 1,15, 3, 3.5), box(13, 2, 6.6, 16, 13.71, 16),box(0, 2, 0.3,13, 10.51, 16),box(0, 10.5, 0.3,13, 25.51, 5.3),box(13, 2, 0.3,16, 25.51, 6.6));
     protected static final VoxelShape INNER = Shapes.or(box(12.5, 0, 12,15, 3, 14.5),box(1, 0, 1.5,3.5, 3, 4), box(0.3, 2, 0.3, 16, 10.51, 16),box(0.3, 10.5, 5.3,5.3, 25.51, 16),box(0.3, 10.5, 0.3,16, 25.51, 5.3));
 
-    protected static final VoxelShape STANDARD_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
-    protected static final VoxelShape STANDARD_EAST = rotateShape(Direction.WEST, Direction.EAST, STANDARD);
-    protected static final VoxelShape STANDARD_NORTH = rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
+    protected static final VoxelShape STANDARD_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
+    protected static final VoxelShape STANDARD_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, STANDARD);
+    protected static final VoxelShape STANDARD_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
 
-    protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
-    protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
-    protected static final VoxelShape MIDDLE_WEST = rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
+    protected static final VoxelShape MIDDLE_WEST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
 
-    protected static final VoxelShape OUTER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
-    protected static final VoxelShape OUTER_EAST = rotateShape(Direction.WEST, Direction.EAST, OUTER);
-    protected static final VoxelShape OUTER_WEST = rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+    protected static final VoxelShape OUTER_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
+    protected static final VoxelShape OUTER_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, OUTER);
+    protected static final VoxelShape OUTER_WEST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, OUTER);
 
-    protected static final VoxelShape LEFT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
-    protected static final VoxelShape LEFT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
-    protected static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
 
-    protected static final VoxelShape RIGHT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
-    protected static final VoxelShape RIGHT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
-    protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
 
-    protected static final VoxelShape INNER_NORTH = rotateShape(Direction.WEST, Direction.NORTH, INNER);
-    protected static final VoxelShape INNER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, INNER);
-    protected static final VoxelShape INNER_EAST = rotateShape(Direction.WEST, Direction.EAST, INNER);
+    protected static final VoxelShape INNER_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, INNER);
+    protected static final VoxelShape INNER_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+    protected static final VoxelShape INNER_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, INNER);
     @SuppressWarnings("deprecated")
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {

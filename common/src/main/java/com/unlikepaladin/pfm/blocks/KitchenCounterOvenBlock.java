@@ -4,12 +4,12 @@ import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SmokerBlock;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -38,8 +37,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRenderLayerInterface, CustomItemBlockState {
     private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
@@ -115,13 +112,13 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     }
 
     protected static final VoxelShape COUNTER_OVEN = Shapes.or(box(0, 1, 0, 16, 14, 14),box(0, 0, 0, 16, 1, 12),box(0, 14, 0, 16, 16, 16),box(2, 10, 14.1, 14, 11, 15.1),box(4, 2, 14.1, 12, 3, 15.1));
-    protected static final VoxelShape COUNTER_OVEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN);
-    protected static final VoxelShape COUNTER_OVEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN);
-    protected static final VoxelShape COUNTER_OVEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN);
+    protected static final VoxelShape COUNTER_OVEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN);
+    protected static final VoxelShape COUNTER_OVEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN);
+    protected static final VoxelShape COUNTER_OVEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN);
     protected static final VoxelShape COUNTER_OVEN_MIDDLE = Shapes.or(box(0, 0, 0,16, 16, 13),box(0, 1, 13,16, 15, 14),box(2, 10, 14.1,14, 11, 15.1),box(4, 2, 14.1,12, 3, 15.1));
-    protected static final VoxelShape COUNTER_OVEN_MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN_MIDDLE);
-    protected static final VoxelShape COUNTER_OVEN_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN_MIDDLE);
-    protected static final VoxelShape COUNTER_OVEN_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN_MIDDLE);
+    protected static final VoxelShape COUNTER_OVEN_MIDDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN_MIDDLE);
+    protected static final VoxelShape COUNTER_OVEN_MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN_MIDDLE);
+    protected static final VoxelShape COUNTER_OVEN_MIDDLE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN_MIDDLE);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);

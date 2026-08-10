@@ -9,7 +9,6 @@ import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
-import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -97,7 +96,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
+                if (this.tileEntity.isItemFuel(slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }

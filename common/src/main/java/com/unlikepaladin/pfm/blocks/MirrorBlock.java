@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
@@ -22,8 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class MirrorBlock extends HorizontalDirectionalBlock {
 
@@ -73,9 +72,9 @@ public class MirrorBlock extends HorizontalDirectionalBlock {
     }
 
     protected static final VoxelShape MIRROR_NORTH = Shapes.or(box(0, 0, 0,16, 16, 1));
-    protected static final VoxelShape MIRROR_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIRROR_NORTH);
-    protected static final VoxelShape MIRROR_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIRROR_NORTH);
-    protected static final VoxelShape MIRROR_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIRROR_NORTH);
+    protected static final VoxelShape MIRROR_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIRROR_NORTH);
+    protected static final VoxelShape MIRROR_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIRROR_NORTH);
+    protected static final VoxelShape MIRROR_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIRROR_NORTH);
 
     public boolean canConnect(BlockState neighborState, BlockState state)
     {

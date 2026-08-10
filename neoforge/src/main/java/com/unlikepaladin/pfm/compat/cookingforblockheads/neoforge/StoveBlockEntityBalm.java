@@ -289,25 +289,12 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     }
 
 
-    public static boolean isItemFuel(Level world, ItemStack itemStack) {
+    public boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
             return itemStack.is(BalmItemTags.COOKING_OIL);
         } else {
-            return getBurnTime(world, itemStack) > 0;
+            return getBurnDuration(itemStack) > 0;
         }
-    }
-
-    protected static int getBurnTime(Level world, ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : world.fuelValues().burnDuration(itemStack);
-        }
-    }
-
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        return (int) Math.max(1.0, (double) getBurnTime(level, itemStack) * CookingForBlockheadsConfig.getActive().ovenFuelTimeMultiplier);
     }
 
     @Override
