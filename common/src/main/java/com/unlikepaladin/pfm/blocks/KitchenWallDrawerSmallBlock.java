@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -50,14 +51,14 @@ public class KitchenWallDrawerSmallBlock extends KitchenWallDrawerBlock {
     }
 
     protected static final VoxelShape SMALL_DRAWER = Shapes.or(box(0,6,0,16, 16, 13),box(9, 9, 14,10, 12, 15),box(6, 9, 14,7, 12, 15),box(1, 7, 13,15, 15, 14));
-    protected static final VoxelShape SMALL_DRAWER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, SMALL_DRAWER);
-    protected static final VoxelShape SMALL_DRAWER_EAST = rotateShape(Direction.NORTH, Direction.EAST, SMALL_DRAWER);
-    protected static final VoxelShape SMALL_DRAWER_WEST = rotateShape(Direction.NORTH, Direction.WEST, SMALL_DRAWER);
+    protected static final VoxelShape SMALL_DRAWER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, SMALL_DRAWER);
+    protected static final VoxelShape SMALL_DRAWER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, SMALL_DRAWER);
+    protected static final VoxelShape SMALL_DRAWER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, SMALL_DRAWER);
 
     protected static final VoxelShape SMALL_DRAWER_OPEN = Shapes.or(box(0,6,0,16, 16, 13),box(0, 7, 13,1, 15, 20),box(-1, 9, 18,0, 12, 19),box(15, 7, 13,16, 15, 20),box(16, 9, 18,17, 12, 19));
-    protected static final VoxelShape SMALL_DRAWER_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, SMALL_DRAWER_OPEN);
-    protected static final VoxelShape SMALL_DRAWER_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, SMALL_DRAWER_OPEN);
-    protected static final VoxelShape SMALL_DRAWER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, SMALL_DRAWER_OPEN);
+    protected static final VoxelShape SMALL_DRAWER_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, SMALL_DRAWER_OPEN);
+    protected static final VoxelShape SMALL_DRAWER_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, SMALL_DRAWER_OPEN);
+    protected static final VoxelShape SMALL_DRAWER_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, SMALL_DRAWER_OPEN);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {

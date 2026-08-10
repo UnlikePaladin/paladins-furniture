@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +17,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -35,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public static BooleanProperty OPEN = BlockStateProperties.OPEN;
@@ -139,40 +137,40 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     }
 
     static final VoxelShape NIGHT_STAND = Shapes.or(box(0, 14, 0,16, 16, 16),box(3, 1, 1,13, 3, 2),box(13, 1, 1,15, 14, 2),box(1, 1, 2,15, 14, 15),box(0.5, 0, 0,3.5, 1, 16),box(12.5, 0, 0,15.5, 1, 16),box(4, 9, 1,12, 13, 2),box(4, 4, 1,12, 8, 2),box(6.5, 5.5, 0,9.5, 6.5, 1),box(6.5, 10.5, 0,9.5, 11.5, 1));
-    static final VoxelShape NIGHT_STAND_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND);
-    static final VoxelShape NIGHT_STAND_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND);
-    static final VoxelShape NIGHT_STAND_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND);
+    static final VoxelShape NIGHT_STAND_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND);
+    static final VoxelShape NIGHT_STAND_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND);
+    static final VoxelShape NIGHT_STAND_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND);
     static final VoxelShape NIGHT_STAND_OPEN = Shapes.or(box(0, 14, 0,16, 16, 16),box(3, 1, 1,13, 3, 2),box(1, 1, 1,3, 14, 2),box(13, 1, 1,15, 14, 2),box(1, 1, 2,15, 14, 15),box(0.5, 0, 0,3.5, 1, 16),box(12.5, 0, 0,15.5, 1, 16),box(4, 9, 1,12, 13, 2),box(4, 4, -6,12, 8, 2),box(6.5, 10.5, 0,9.5, 11.5, 1),box(6.5, 5.5, -7,9.5, 6.5, -6));
-    static final VoxelShape NIGHT_STAND_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_OPEN);
-    static final VoxelShape NIGHT_STAND_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_OPEN);
-    static final VoxelShape NIGHT_STAND_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_OPEN);
+    static final VoxelShape NIGHT_STAND_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_OPEN);
+    static final VoxelShape NIGHT_STAND_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_OPEN);
+    static final VoxelShape NIGHT_STAND_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_OPEN);
 
     static final VoxelShape NIGHT_STAND_MIDDLE = Shapes.or(box(0, 14, 0, 2, 16, 16),box(15, 14, 0, 16, 16, 16),box(1, 1, 0, 2, 3, 16),box(2, 1, 0, 15, 16, 16),box(1, 9, 2.5, 2, 13, 13.5),box(0, 10.5, 6.5, 1, 11.5, 9.5),box(0, 10.5, 6.5, 1, 11.5, 9.5));
-    static final VoxelShape NIGHT_STAND_MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_MIDDLE);
-    static final VoxelShape NIGHT_STAND_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_MIDDLE);
-    static final VoxelShape NIGHT_STAND_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_MIDDLE);
+    static final VoxelShape NIGHT_STAND_MIDDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_MIDDLE);
+    static final VoxelShape NIGHT_STAND_MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_MIDDLE);
+    static final VoxelShape NIGHT_STAND_MIDDLE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_MIDDLE);
     static final VoxelShape NIGHT_STAND_MIDDLE_OPEN = Shapes.or(box(0, 14, 0, 2, 16, 16),box(15, 14, 0, 16, 16, 16),box(1, 1, 0, 2, 3, 16),box(2, 1, 0, 15, 16, 16),box(1, 9, 2.5, 2, 13, 13.5),box(0, 10.5, 6.5, 1, 11.5, 9.5),box(0, 10.5, 6.5, 1, 11.5, 9.5));
-    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_MIDDLE_OPEN);
-    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_MIDDLE_OPEN);
-    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_MIDDLE_OPEN);
+    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_MIDDLE_OPEN);
+    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_MIDDLE_OPEN);
+    static final VoxelShape NIGHT_STAND_MIDDLE_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_MIDDLE_OPEN);
 
     static final VoxelShape NIGHT_STAND_LEFT = Shapes.or(box(0, 14, 0, 2, 16, 16),box(15, 14, 1, 16, 16, 16),box(2, 14, 0, 16, 16, 1),box(1, 1, 3, 2, 3, 16),box(2, 1, 1, 15, 16, 16),box(1, 1, 1, 2, 14, 3),box(0, 0, 0.5, 16, 1, 3.5),box(1, 9, 4, 2, 13, 15),box(1, 4, 4, 2, 8, 15),box(0, 5.5, 8, 1, 6.5, 11),box(0, 10.5, 8, 1, 11.5, 11));
-    static final VoxelShape NIGHT_STAND_LEFT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_LEFT);
-    static final VoxelShape NIGHT_STAND_LEFT_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_LEFT);
-    static final VoxelShape NIGHT_STAND_LEFT_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_LEFT);
+    static final VoxelShape NIGHT_STAND_LEFT_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_LEFT);
+    static final VoxelShape NIGHT_STAND_LEFT_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_LEFT);
+    static final VoxelShape NIGHT_STAND_LEFT_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_LEFT);
     static final VoxelShape NIGHT_STAND_LEFT_OPEN = Shapes.or(box(0, 14, 1, 2, 16, 16),box(15, 14, 1, 16, 16, 16),box(0, 14, 0, 16, 16, 1),box(1, 1, 3, 2, 3, 16),box(-7, 5.5, 8, -6, 6.5, 11),box(-6, 4, 4, 2, 8, 15),box(1, 1, 1, 2, 14, 3),box(0, 0, 0.5, 16, 1, 3.5),box(1, 9, 4, 2, 13, 15),box(0, 10.5, 8, 1, 11.5, 11),box(2, 1, 1, 15, 16, 16));
-    static final VoxelShape NIGHT_STAND_LEFT_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_LEFT_OPEN);
-    static final VoxelShape NIGHT_STAND_LEFT_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_LEFT_OPEN);
-    static final VoxelShape NIGHT_STAND_LEFT_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_LEFT_OPEN);
+    static final VoxelShape NIGHT_STAND_LEFT_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_LEFT_OPEN);
+    static final VoxelShape NIGHT_STAND_LEFT_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_LEFT_OPEN);
+    static final VoxelShape NIGHT_STAND_LEFT_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_LEFT_OPEN);
 
     static final VoxelShape NIGHT_STAND_RIGHT = Shapes.or(box(0, 14, 0, 2, 16, 15),box(15, 14, 0, 16, 16, 15),box(0, 14, 15, 16, 16, 16),box(1, 1, 0, 2, 3, 13),box(1, 1, 13, 2, 14, 15),box(0, 0, 12.5, 16, 1, 15.5),box(1, 9, 1, 2, 13, 12),box(0, 10.5, 5, 1, 11.5, 8),box(0, 5.5, 5, 1, 6.5, 8),box(2, 1, 0, 15, 16, 15),box(1, 4, 1, 2, 8, 12));
-    static final VoxelShape NIGHT_STAND_RIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_RIGHT);
-    static final VoxelShape NIGHT_STAND_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_RIGHT);
-    static final VoxelShape NIGHT_STAND_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_RIGHT);
+    static final VoxelShape NIGHT_STAND_RIGHT_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_RIGHT);
+    static final VoxelShape NIGHT_STAND_RIGHT_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_RIGHT);
+    static final VoxelShape NIGHT_STAND_RIGHT_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_RIGHT);
     static final VoxelShape NIGHT_STAND_RIGHT_OPEN = Shapes.or(box(0, 14, 0, 2, 16, 15),box(15, 14, 0, 16, 16, 15),box(0, 14, 15, 16, 16, 16),box(1, 1, 0, 2, 3, 13),box(1, 1, 13, 2, 14, 15),box(0, 0, 12.5, 16, 1, 15.5),box(1, 9, 1, 2, 13, 12),box(0, 10.5, 5, 1, 11.5, 8),box(-7, 5.5, 5, -6, 6.5, 8),box(2, 1, 0, 15, 16, 15),box(-6, 4, 1, 2, 8, 12));
-    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_RIGHT_OPEN);
-    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_RIGHT_OPEN);
-    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_RIGHT_OPEN);
+    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NIGHT_STAND_RIGHT_OPEN);
+    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NIGHT_STAND_RIGHT_OPEN);
+    static final VoxelShape NIGHT_STAND_RIGHT_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NIGHT_STAND_RIGHT_OPEN);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
