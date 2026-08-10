@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,8 +42,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.ClassicChairBlock.rotateShape;
 
 public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements DynamicRenderLayerInterface {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
@@ -154,9 +153,9 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
 
     private final VoxelShape MICROWAVE = Shapes.or(box(1, 0, 4,15, 8, 14));
 
-    private final VoxelShape MICROWAVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
-    private final VoxelShape MICROWAVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
-    private final VoxelShape MICROWAVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
+    private final VoxelShape MICROWAVE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
+    private final VoxelShape MICROWAVE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
+    private final VoxelShape MICROWAVE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction direction = state.getValue(FACING);

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -119,14 +120,14 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     }
 
     private static final VoxelShape SHOWER_HANDLE = Shapes.or(box(11.5, 8, 14, 12.5, 9, 15), box(11, 7.5, 15, 13, 9.5, 16), box(11.5, 6.5, 13, 12.5, 10.5, 14), box(10, 8, 13, 14, 9, 14), box(3.5, 8, 14, 4.5, 9, 15), box(3, 7.5, 15, 5, 9.5, 16), box(3.5, 6.5, 13, 4.5, 10.5, 14), box(2, 8, 13, 6, 9, 14));
-    private static final VoxelShape SHOWER_HANDLE_SOUTH = BasicTableBlock.rotateShape(Direction.NORTH, Direction.SOUTH, SHOWER_HANDLE);
-    private static final VoxelShape SHOWER_HANDLE_EAST = BasicTableBlock.rotateShape(Direction.NORTH, Direction.EAST, SHOWER_HANDLE);
-    private static final VoxelShape SHOWER_HANDLE_WEST = BasicTableBlock.rotateShape(Direction.NORTH, Direction.WEST, SHOWER_HANDLE);
+    private static final VoxelShape SHOWER_HANDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, SHOWER_HANDLE);
+    private static final VoxelShape SHOWER_HANDLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, SHOWER_HANDLE);
+    private static final VoxelShape SHOWER_HANDLE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, SHOWER_HANDLE);
 
     private static final VoxelShape SHOWER_HANDLE_OPEN = Shapes.or(box(11, 7.5, 15, 13, 9.5, 16), box(11.5, 8, 13, 12.5, 9, 15), box(12.5, 9, 13, 13.5, 10, 14), box(12.5, 7, 13, 13.5, 8, 14), box(10.5, 9, 13, 11.5, 10, 14), box(10.5, 7, 13, 11.5, 8, 14), box(3.5, 8, 13, 4.5, 9, 15), box(4.5, 9, 13,5.5, 10, 14), box(4.5, 7, 13,5.5, 8, 14), box(2.5, 9, 13,3.5, 10, 14), box(2.5, 7, 13, 3.5, 8, 14), box(3, 7.5, 15,5, 9.5, 16));
-    private static final VoxelShape SHOWER_HANDLE_SOUTH_OPEN = BasicTableBlock.rotateShape(Direction.NORTH, Direction.SOUTH, SHOWER_HANDLE_OPEN);
-    private static final VoxelShape SHOWER_HANDLE_EAST_OPEN = BasicTableBlock.rotateShape(Direction.NORTH, Direction.EAST, SHOWER_HANDLE_OPEN);
-    private static final VoxelShape SHOWER_HANDLE_WEST_OPEN = BasicTableBlock.rotateShape(Direction.NORTH, Direction.WEST, SHOWER_HANDLE_OPEN);
+    private static final VoxelShape SHOWER_HANDLE_SOUTH_OPEN = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, SHOWER_HANDLE_OPEN);
+    private static final VoxelShape SHOWER_HANDLE_EAST_OPEN = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, SHOWER_HANDLE_OPEN);
+    private static final VoxelShape SHOWER_HANDLE_WEST_OPEN = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, SHOWER_HANDLE_OPEN);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction facing = getDirection(state);
