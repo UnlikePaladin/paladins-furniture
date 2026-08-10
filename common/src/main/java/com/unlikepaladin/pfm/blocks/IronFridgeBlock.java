@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -20,8 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class IronFridgeBlock extends FridgeBlock {
     private Supplier<FreezerBlock> freezer;
@@ -54,47 +53,47 @@ public class IronFridgeBlock extends FridgeBlock {
         if (top && bottom) {
             if (open) {
                 if (!FRIDGE_MIDDLE_OPEN.containsKey(dir))
-                    FRIDGE_MIDDLE_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_MIDDLE_OPEN.get(Direction.NORTH)));
+                    FRIDGE_MIDDLE_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_MIDDLE_OPEN.get(Direction.NORTH)));
                 return FRIDGE_MIDDLE_OPEN.get(dir);
             }
             if (!FRIDGE_MIDDLE.containsKey(dir))
-                FRIDGE_MIDDLE.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_MIDDLE.get(Direction.NORTH)));
+                FRIDGE_MIDDLE.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_MIDDLE.get(Direction.NORTH)));
             return FRIDGE_MIDDLE.get(dir);
         } else if (bottom) {
             if (open) {
                 if (!FRIDGE_BOTTOM_OPEN.containsKey(dir))
-                    FRIDGE_BOTTOM_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_BOTTOM_OPEN.get(Direction.NORTH)));
+                    FRIDGE_BOTTOM_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_BOTTOM_OPEN.get(Direction.NORTH)));
                 return FRIDGE_BOTTOM_OPEN.get(dir);
             }
             if (!FRIDGE_BOTTOM.containsKey(dir))
-                FRIDGE_BOTTOM.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_BOTTOM.get(Direction.NORTH)));
+                FRIDGE_BOTTOM.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_BOTTOM.get(Direction.NORTH)));
             return FRIDGE_BOTTOM.get(dir);
         } else if (top) {
             if (open) {
                 if (!FRIDGE_TOP_OPEN.containsKey(dir))
-                    FRIDGE_TOP_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_TOP_OPEN.get(Direction.NORTH)));
+                    FRIDGE_TOP_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_TOP_OPEN.get(Direction.NORTH)));
                 return FRIDGE_TOP_OPEN.get(dir);
             }
             if (!FRIDGE_TOP.containsKey(dir))
-                FRIDGE_TOP.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_TOP.get(Direction.NORTH)));
+                FRIDGE_TOP.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_TOP.get(Direction.NORTH)));
             return FRIDGE_TOP.get(dir);
         } else if (hasFreezer) {
             if (open) {
                 if (!FRIDGE_OPEN.containsKey(dir))
-                    FRIDGE_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_OPEN.get(Direction.NORTH)));
+                    FRIDGE_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_OPEN.get(Direction.NORTH)));
                 return FRIDGE_OPEN.get(dir);
             }
             if (!FRIDGE.containsKey(dir))
-                FRIDGE.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE.get(Direction.NORTH)));
+                FRIDGE.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE.get(Direction.NORTH)));
             return FRIDGE.get(dir);
         } else {
             if (open) {
                 if (!FRIDGE_SINGLE_OPEN.containsKey(dir))
-                    FRIDGE_SINGLE_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_SINGLE_OPEN.get(Direction.NORTH)));
+                    FRIDGE_SINGLE_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_SINGLE_OPEN.get(Direction.NORTH)));
                 return FRIDGE_SINGLE_OPEN.get(dir);
             }
             if (!FRIDGE_SINGLE.containsKey(dir))
-                FRIDGE_SINGLE.put(dir, rotateShape(Direction.NORTH, dir, FRIDGE_SINGLE.get(Direction.NORTH)));
+                FRIDGE_SINGLE.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FRIDGE_SINGLE.get(Direction.NORTH)));
             return FRIDGE_SINGLE.get(dir);
         }
     }

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.ItemInteractionResult;
@@ -43,8 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class PlateBlock extends HorizontalFacingBlockWithEntity {
 
@@ -173,9 +172,9 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     protected static final VoxelShape PLATE = Shapes.or(box(2,0,3, 12,1,13));
-    protected static final VoxelShape PLATE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, PLATE);
-    protected static final VoxelShape PLATE_EAST = rotateShape(Direction.NORTH, Direction.EAST, PLATE);
-    protected static final VoxelShape PLATE_WEST = rotateShape(Direction.NORTH, Direction.WEST, PLATE);
+    protected static final VoxelShape PLATE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, PLATE);
+    protected static final VoxelShape PLATE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, PLATE);
+    protected static final VoxelShape PLATE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, PLATE);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);
