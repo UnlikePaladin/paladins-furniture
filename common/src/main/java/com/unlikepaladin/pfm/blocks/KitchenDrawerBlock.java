@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -114,21 +115,6 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements EntityBlo
         }
     }
 
-    /**
-     * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
-     */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
-        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = Shapes.empty();
-        }
-
-        return buffer[0];
-    }
-
     protected static final VoxelShape STRAIGHT = Shapes.or(box(0, 0, 0,16, 1, 12), box(0, 1, 0,16, 14, 13),box(0, 14, 0,16, 16, 16), box(1, 8, 12,15, 13, 14), box(1, 2, 12, 15, 7, 14), box(6, 4, 14, 10, 5, 15), box(6, 10, 14, 10, 11, 15));
     protected static final VoxelShape STRAIGHT_OPEN = Shapes.or(box(0, 0, 0,16, 1, 12), box(0, 1, 0,16, 14, 13), box(6, 10, 19, 10, 11, 20), box(1, 8, 13, 15, 13, 19), box(0, 14, 0, 16, 16, 16),box(1, 2, 12, 15, 7, 14), box(6, 4, 14, 10, 5, 15));
     protected static final VoxelShape OUTER_CORNER_OPEN = Shapes.or(box(0, 0, 0,12, 1, 12),box(0, 1, 0,13, 14, 13),box(0, 14, 0,16, 16, 16),box(5, 10, 19,8, 11, 20),box(1, 8, 13,12, 13, 19),box(1, 2, 12,12, 7, 14),box(5, 4, 14,8, 5, 15),box(12, 8, 1,14, 13, 12),box(12, 2, 1,14, 7, 12),box(14, 4, 5,15, 5, 8),box(14, 10, 5,15, 11, 8));
@@ -139,54 +125,54 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements EntityBlo
     protected static final VoxelShape RIGHT_EDGE_OPEN =  Shapes.or(box(0, 14, 0,16, 16, 16),box(14, 0, 0,16, 14, 16),box(0, 0, 0,14, 1, 12),box(0, 1, 0,14, 14, 13),box(6, 10, 19,10, 11, 20),box(1, 8, 13,13, 13, 19),box(1, 2, 12,13, 7, 14),box(6, 4, 14,10, 5, 15));
     protected static final VoxelShape LEFT_EDGE_OPEN = Shapes.or(box(0, 14, 0,16, 16, 16),box(0, 0, 0,2, 14, 16),box(2, 0, 0,16, 1, 12),box(2, 1, 0,16, 14, 13),box(8, 10, 19,12, 11, 20),box(3, 8, 13,15, 13, 19),box(3, 2, 12,15, 7, 14),box(8, 4, 14,12, 5, 15));
 
-    protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
-    protected static final VoxelShape STRAIGHT_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
-    protected static final VoxelShape STRAIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
-    protected static final VoxelShape STRAIGHT_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT_OPEN);
-    protected static final VoxelShape STRAIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
-    protected static final VoxelShape STRAIGHT_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT_OPEN);
-    protected static final VoxelShape INNER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
-    protected static final VoxelShape INNER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
-    protected static final VoxelShape INNER_CORNER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
-    protected static final VoxelShape OUTER_CORNER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
-    protected static final VoxelShape OUTER_CORNER_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
-    protected static final VoxelShape OUTER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
-    protected static final VoxelShape OUTER_CORNER_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
-    protected static final VoxelShape OUTER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
-    protected static final VoxelShape OUTER_CORNER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
-    protected static final VoxelShape LEFT_EDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
-    protected static final VoxelShape LEFT_EDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
-    protected static final VoxelShape LEFT_EDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
-    protected static final VoxelShape LEFT_EDGE_WEST =  rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
-    protected static final VoxelShape LEFT_EDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
-    protected static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
-    protected static final VoxelShape RIGHT_EDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
-    protected static final VoxelShape RIGHT_EDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
-    protected static final VoxelShape RIGHT_EDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
-    protected static final VoxelShape RIGHT_EDGE_WEST =  rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
-    protected static final VoxelShape RIGHT_EDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
-    protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
+    protected static final VoxelShape STRAIGHT_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
+    protected static final VoxelShape STRAIGHT_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT_OPEN);
+    protected static final VoxelShape STRAIGHT_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT_OPEN);
+    protected static final VoxelShape INNER_CORNER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
+    protected static final VoxelShape OUTER_CORNER_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
+    protected static final VoxelShape OUTER_CORNER_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
+    protected static final VoxelShape LEFT_EDGE_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_WEST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_WEST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
 
     protected static final VoxelShape MIDDLE = Shapes.or(box(0, 0, 0,16, 16, 13),box(13, 2, 14,14, 6, 15),box(1, 1, 13,15, 15, 14));
     protected static final VoxelShape MIDDLE_OPEN = Shapes.or(box(0, 0, 0,16, 16, 13),box(1, 1, 13,2, 15, 27),box(0, 2, 25,1, 6, 26));
     protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN = Shapes.or(box(0, 0, 0,13, 16, 13),box(1, 2, 12.75,2, 15, 23.75),box(0, 2.5, 21.75,1, 6.5, 22.75),box(13, 2, 1,14, 15, 12),box(14, 2.5, 10,15, 6.5, 11));
     protected static final VoxelShape MIDDLE_OUTER_CORNER = Shapes.or(box(0, 0, 0,13, 16, 13),box(13, 2, 1,14, 15, 12),box(14, 2.5, 10,15, 6.5, 11),box(1, 2, 12,12, 15, 14),box(10, 2.5, 14,11, 6.5, 15));
     protected static final VoxelShape MIDDLE_INNER_CORNER = Shapes.or(box(3, 0, 13,16, 16, 16),box(0, 0, 0,16, 16, 13),box(2, 1, 14,3, 15, 16),box(0, 1, 13,3, 15, 14));
-    protected static final VoxelShape MIDDLE_INNER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_INNER_CORNER);
-    protected static final VoxelShape MIDDLE_INNER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_INNER_CORNER);
-    protected static final VoxelShape MIDDLE_INNER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_INNER_CORNER);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER_OPEN);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER_OPEN);
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER_OPEN);
-    protected static final VoxelShape MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIDDLE);
-    protected static final VoxelShape MIDDLE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OPEN);
-    protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE);
-    protected static final VoxelShape MIDDLE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OPEN);
-    protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
-    protected static final VoxelShape MIDDLE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OPEN);
+    protected static final VoxelShape MIDDLE_INNER_CORNER_WEST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_INNER_CORNER_EAST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_INNER_CORNER_SOUTH =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_WEST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_EAST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_SOUTH =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_WEST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_EAST =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_SOUTH =  PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OPEN);
+    protected static final VoxelShape MIDDLE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OPEN);
+    protected static final VoxelShape MIDDLE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OPEN);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {

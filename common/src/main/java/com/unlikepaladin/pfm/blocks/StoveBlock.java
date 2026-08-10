@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,8 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterface {
     private static final List<FurnitureBlock> STOVES = new ArrayList<>();
@@ -131,9 +130,9 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     protected static final VoxelShape STOVE = Shapes.or(box(0, 0, 1, 16, 1, 16),box(0, 1, 0, 16, 16, 16),box(0, 16, 15, 16, 19, 16));
-    protected static final VoxelShape STOVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVE);
-    protected static final VoxelShape STOVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVE);
-    protected static final VoxelShape STOVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVE);
+    protected static final VoxelShape STOVE_SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, STOVE);
+    protected static final VoxelShape STOVE_WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, STOVE);
+    protected static final VoxelShape STOVE_EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, STOVE);
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {

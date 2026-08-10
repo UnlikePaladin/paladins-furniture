@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,13 +33,13 @@ public class FroggyChairBlock extends BasicChairBlock {
     }
 
     protected static final VoxelShape FACE_WEST = Shapes.or(box(0.8, 9.5, 2.6,2.6, 19.5, 13.6), box(0.8, 17.5, 10.6,2.6, 21.5, 14.6), box(0.8, 17.5, 1.6, 2.6, 21.5, 5.6), box(0.8, 8, 2.6,13.3, 9.5, 13.6), box(12, 0, 1.5,14, 8, 3.5), box(11.5, 6.5, 2.5, 13.5, 8, 4.5), box(11.5, 6.5, 11.5, 13.5, 8, 13.5), box(12, 0, 12.5, 14, 8, 14.5), box(1.5, 6.5, 11, 3.5, 8, 13), box(0.5, 0, 12.5,2.5, 8, 14.5), box(0.5, 0, 1.5,2.5, 8, 3.5), box(1.5, 6.5, 2.5,3.5, 8, 4.5));
-    protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
-    protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
-    protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
-    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, FACE_NORTH);
-    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, FACE_SOUTH);
-    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, FACE_EAST);
-    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, FACE_WEST);
+    protected static final VoxelShape FACE_SOUTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
+    protected static final VoxelShape FACE_NORTH = PFMShapeUtil.rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
+    protected static final VoxelShape FACE_EAST = PFMShapeUtil.rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
+    protected static final VoxelShape FACE_NORTH_TUCKED = PFMShapeUtil.tuckShape(Direction.NORTH, FACE_NORTH);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = PFMShapeUtil.tuckShape(Direction.SOUTH, FACE_SOUTH);
+    protected static final VoxelShape FACE_EAST_TUCKED = PFMShapeUtil.tuckShape(Direction.EAST, FACE_EAST);
+    protected static final VoxelShape FACE_WEST_TUCKED = PFMShapeUtil.tuckShape(Direction.WEST, FACE_WEST);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
         Direction dir = state.getValue(FACING);
