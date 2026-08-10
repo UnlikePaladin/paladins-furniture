@@ -1,3 +1,23 @@
+#### PFM 1.5 Changes and Fixes:
+
+- Added new moveable desk chairs
+- Added 2 new styles of desks and chairs 
+- Port to 1.21.5, 1.21.6, 1.21.8, 1.21.10 and 1.21.11 (26.x coming soon)
+- New and Improved Oven, now cooks up to 9 items while being as fuel efficient as before
+- Fix random crashes with block rendering on Forge and Neo (again)
+- Fix 1.16.5 issues with missing recipes for blocksets and crashes on fabric
+- Fixed unrelated missing recipe issues across multiple versions
+- Added Spanish translation, fixed translation issues with unicode characters 
+- Herringbone Planks are now dynamically generated and work with modded wood types
+- Improved Search on workbench now works better on servers
+- Fix stacking issues with some items like lamps
+- Fix fridge issues on forge
+- Model Improvements (Thanks Toast)
+- Rebalance Freezer fuels
+- Fix toaster items not being visible
+- Food will now burn in oven if too full
+- Fix CFBH Compat
+
 #### PFM 1.4.4 Changes and Fixes:
 
 - Fix random crashes with block rendering on Forge and Neo
