@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,10 +83,6 @@ public class BasicTableBlock extends Block {
             return 20;
         }
         return 0;
-    }
-
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        return LogTableBlock.rotateShape(from, to, shape);
     }
 
     final static VoxelShape TABLE_BASIC_BASE = box(0, 14, 0, 16, 16, 16);
@@ -218,7 +215,7 @@ public class BasicTableBlock extends Block {
             if (north && south && !west) {
                 newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
             }
-            newVoxelShape = rotateShape(Direction.NORTH, Direction.EAST, newVoxelShape);
+            newVoxelShape = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, newVoxelShape);
         }
         VOXEL_SHAPES.put(key, newVoxelShape);
     }

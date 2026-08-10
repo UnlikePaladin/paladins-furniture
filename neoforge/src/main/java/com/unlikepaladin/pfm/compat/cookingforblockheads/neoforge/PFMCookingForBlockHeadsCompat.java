@@ -9,7 +9,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
@@ -27,7 +26,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -35,12 +33,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -137,7 +132,7 @@ public class PFMCookingForBlockHeadsCompat {
                     player.setItemInHand(hand, heldItem);
 
                     return InteractionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(level, heldItem)) {
+                } else if (!heldItem.isEmpty() && oven.isItemFuel(heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
                     return InteractionResult.SUCCESS;

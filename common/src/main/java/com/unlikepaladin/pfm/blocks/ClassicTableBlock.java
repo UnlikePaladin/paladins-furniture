@@ -82,10 +82,6 @@ public class ClassicTableBlock extends Block {
         return super.getFluidState(state);
     }
 
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        return LogTableBlock.rotateShape(from, to, shape);
-    }
-
     final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
     final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(12, 0, 2, 14, 15, 4);
     final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(2, 0, 2, 4, 15, 4);

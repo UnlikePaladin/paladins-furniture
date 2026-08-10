@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.SubContainer;
+import net.blay09.mods.balm.api.tag.BalmItemTags;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -13,6 +15,7 @@ import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +54,15 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
     @Override
     public boolean canProcess(RecipeType<?> recipeType) {
         return recipeType == RecipeType.SMELTING;
+    }
+
+    @Override
+    public int getBurnDuration(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            return 0;
+        } else {
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : level.fuelValues().burnDuration(itemStack);
+        }
     }
 
     @Override
