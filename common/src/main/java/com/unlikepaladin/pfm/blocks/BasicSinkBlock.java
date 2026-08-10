@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import com.mojang.datafixers.util.Function3;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -19,8 +20,6 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
-
 public class BasicSinkBlock extends AbstractSinkBlock {
     private static final List<BasicSinkBlock> SINKS = new ArrayList<>();
 
@@ -39,9 +38,9 @@ public class BasicSinkBlock extends AbstractSinkBlock {
     }
 
     public static final VoxelShape NORTH = Shapes.or(box(4, 1, 0.3,12, 11.3, 8.3), box(3, 0, 0.3,13, 1, 9.3),box(1.0625, 11.3, 0.3,14.9675, 16.3, 12.3));
-    public static final VoxelShape SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, NORTH);
-    public static final VoxelShape EAST = rotateShape(Direction.NORTH, Direction.EAST, NORTH);
-    public static final VoxelShape WEST = rotateShape(Direction.NORTH, Direction.WEST, NORTH);
+    public static final VoxelShape SOUTH = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.SOUTH, NORTH);
+    public static final VoxelShape EAST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.EAST, NORTH);
+    public static final VoxelShape WEST = PFMShapeUtil.rotateShape(Direction.NORTH, Direction.WEST, NORTH);
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);

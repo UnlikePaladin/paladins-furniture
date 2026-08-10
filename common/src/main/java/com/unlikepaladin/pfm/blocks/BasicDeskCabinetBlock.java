@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -227,26 +228,26 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
             newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
         }
         if (corner == "none") {
-            newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, middleDeskShape(left, right, open)));
+            newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.NORTH, facing, middleDeskShape(left, right, open)));
         } else if (corner == "outer") {
             if (!rotatedCorner) {
                 if (open) {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             } else {
                 if (open) {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             }
         } else {
             if (!rotatedCorner)
-                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.NORTH, facing, DESK_INSIDE_CORNER));
             else
-                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, PFMShapeUtil.rotateShape(Direction.WEST, facing, DESK_INSIDE_CORNER));
         }
 
         VOXEL_SHAPES.put(key, newVoxelShape);

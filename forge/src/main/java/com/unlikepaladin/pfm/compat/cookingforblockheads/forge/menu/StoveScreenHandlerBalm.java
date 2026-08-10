@@ -86,7 +86,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                if (StoveBlockEntityBalm.isItemFuel(tileEntity.getLevel(), slotStack)) {
+                if (this.tileEntity.isItemFuel(tileEntity.getLevel(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }

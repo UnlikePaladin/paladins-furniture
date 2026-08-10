@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -41,8 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
-import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
@@ -128,20 +127,20 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
         if (hasFridge) {
             if (open) {
                 if (!FREEZER_OPEN.containsKey(dir))
-                    FREEZER_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_OPEN.get(Direction.NORTH)));
+                    FREEZER_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FREEZER_OPEN.get(Direction.NORTH)));
                 return FREEZER_OPEN.get(dir);
             }
             if (!FREEZER.containsKey(dir))
-                FREEZER.put(dir, rotateShape(Direction.NORTH, dir, FREEZER.get(Direction.NORTH)));
+                FREEZER.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FREEZER.get(Direction.NORTH)));
             return FREEZER.get(dir);
         } else {
             if (open) {
                 if (!FREEZER_SINGLE_OPEN.containsKey(dir))
-                    FREEZER_SINGLE_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_SINGLE_OPEN.get(Direction.NORTH)));
+                    FREEZER_SINGLE_OPEN.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FREEZER_SINGLE_OPEN.get(Direction.NORTH)));
                 return FREEZER_SINGLE_OPEN.get(dir);
             }
             if (!FREEZER_SINGLE.containsKey(dir))
-                FREEZER_SINGLE.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_SINGLE.get(Direction.NORTH)));
+                FREEZER_SINGLE.put(dir, PFMShapeUtil.rotateShape(Direction.NORTH, dir, FREEZER_SINGLE.get(Direction.NORTH)));
             return FREEZER_SINGLE.get(dir);
         }
     }
