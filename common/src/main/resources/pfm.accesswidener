@@ -14,6 +14,5 @@ accessible field net/minecraft/world/flag/FeatureFlagSet universe Lnet/minecraft
 accessible field net/minecraft/world/flag/FeatureFlagSet mask J
 accessible field net/minecraft/world/flag/FeatureFlag mask J
 mutable field net/minecraft/world/flag/FeatureFlag mask J
-accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties material Lnet/minecraft/world/level/material/Material;
 accessible method net/minecraft/client/gui/screens/PopupScreen <init> (Lnet/minecraft/network/chat/Component;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
