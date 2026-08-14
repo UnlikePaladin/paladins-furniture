@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BreakingItemParticle.Provider.class)
 public class PFMCrackParticle$ItemFactoryMixin {
-    @ModifyReturnValue(method = "createParticle(Lnet/minecraft/core/particles/ItemParticleOption;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/math/random/Random;)Lnet/minecraft/client/particle/Particle;", at = @At("RETURN"))
+    @ModifyReturnValue(method = "createParticle(Lnet/minecraft/core/particles/ItemParticleOption;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/RandomSource;)Lnet/minecraft/client/particle/Particle;", at = @At("RETURN"))
     public Particle modifyParticle(Particle original, ItemParticleOption itemStackParticleEffect, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
         if (itemStackParticleEffect.getItem().getItem() instanceof BlockItem) {
             BlockState defaultState = ((BlockItem)itemStackParticleEffect.getItem().getItem()).getBlock().defaultBlockState();
