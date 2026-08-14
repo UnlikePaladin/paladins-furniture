@@ -32,7 +32,7 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
     @Unique
     private static final Map<Pair<BlockState, RenderType>, Boolean> pfm$renderLayers = new HashMap<>();
 
-    @Inject(method = "canRenderInLayer(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/client/renderer/RenderType;)Z", at = @At("TAIL"), cancellable = true, remap = false)
+    @Inject(method = "canRenderInLayer(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/client/renderer/RenderType;)Z", at = @At("TAIL"), cancellable = true)
     private static void modifyFurnitureRenderLayer(BlockState state, RenderType type, CallbackInfoReturnable<Boolean> cir) {
         if (state.getBlock().getDescriptionId().contains("pfm")) {
             Pair<BlockState, RenderType> renderLayerPair = new Pair<>(state, type);
