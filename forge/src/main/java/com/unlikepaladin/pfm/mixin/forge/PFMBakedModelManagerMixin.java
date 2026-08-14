@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.client.forge.PFMExtraModelsForge;
 import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
 import com.unlikepaladin.pfm.ducks.forge.PFMBakedModelManagerExtensions;
 import com.unlikepaladin.pfm.ducks.forge.PFModelBakerBakedExtensions;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -49,9 +49,9 @@ public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerE
         PFMExtraModelsForge.registerExtraModels(ids);
     }
 
-    @Inject(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/block/BlockModelShaper;replaceCache(Ljava/util/Map;)V", ordinal = 0))
-    private void onUpload(CallbackInfo ci, @Local ModelBakery.BakingResult bakedModels) {
-        pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) bakedModels).pfm_getExtraModels();
+    @Inject(method = "apply", at = @At("HEAD"))
+    private void onUpload(ModelManager.ReloadState reloadState, CallbackInfo ci) {
+        pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) reloadState.bakedModels()).pfm_getExtraModels();
     }
 
     @Override

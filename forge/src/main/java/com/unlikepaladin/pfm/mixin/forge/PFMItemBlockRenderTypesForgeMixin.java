@@ -41,7 +41,7 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
                 return;
             }
 
-            if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
+            if (Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
                     Collection<ChunkSectionLayer> baseRenderTypes = getRenderLayers(variant.getBaseBlock().defaultBlockState());

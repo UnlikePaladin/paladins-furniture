@@ -44,7 +44,7 @@ public record MicrowaveActivatePayload(BlockPos pos, Boolean isActive) implement
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(pos);
                     microwaveBlockEntity.setActive(isActive);
                 } else {
-                    player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.sendSystemMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             }
         });

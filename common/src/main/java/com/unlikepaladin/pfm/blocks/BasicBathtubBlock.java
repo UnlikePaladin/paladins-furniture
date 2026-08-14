@@ -11,6 +11,8 @@ import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
 import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -63,10 +65,10 @@ import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 
 public class BasicBathtubBlock extends BedBlock {
     public static final IntegerProperty LEVEL_8 = IntegerProperty.create("level", 0, 8);
-    private final Map<Item, BathtubBehavior> behaviorMap;
+    private final CauldronInteraction.Dispatcher behaviorMap;
     private final Biome.Precipitation precipitation;
     private static final List<BasicBathtubBlock> basicBathtubBlocks = new ArrayList<>();
-    public BasicBathtubBlock(BlockBehaviour.Properties settings, Map<Item, BathtubBehavior> map, Biome.Precipitation precipitation) {
+    public BasicBathtubBlock(BlockBehaviour.Properties settings, CauldronInteraction.Dispatcher map, Biome.Precipitation precipitation) {
         super(DyeColor.WHITE, settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
         this.registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(LEVEL_8, 0).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
         this.behaviorMap = map;
@@ -179,7 +181,7 @@ public class BasicBathtubBlock extends BedBlock {
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.below().below();
         ItemStack itemStack = player.getItemInHand(hand);
-        BathtubBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        CauldronInteraction sinkBehavior = this.behaviorMap.get(itemStack);
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
@@ -360,7 +362,7 @@ public class BasicBathtubBlock extends BedBlock {
         }
     }
 
-    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(propertiesCodec(), BathtubBehavior.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
+    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(propertiesCodec(), CauldronInteractions.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
     @Override
     public MapCodec<BedBlock> codec() {
         return (MapCodec<BedBlock>)(Object)CODEC;

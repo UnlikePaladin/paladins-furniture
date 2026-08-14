@@ -2,11 +2,11 @@ package com.unlikepaladin.pfm.blocks.models.bed;
 
 import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
 
 public interface BedInterface {
     default boolean isBed(BlockAndTintGetter world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState, boolean isClassic)

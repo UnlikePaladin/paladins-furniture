@@ -8,15 +8,15 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
@@ -29,7 +29,7 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    public PFMFabricBakedModel(ModelState settings, ModelRenderProperties itemBakeSettings, List<BlockModelPart> bakedModels) {
+    public PFMFabricBakedModel(ModelState settings, ModelRenderProperties itemBakeSettings, List<BlockStateModelPart> bakedModels) {
         super(settings, itemBakeSettings, bakedModels);
     }
 
@@ -110,7 +110,7 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
 
 
     public void emitModelQuads(QuadEmitter emitter, BlockStateModel model, RandomSource random) {
-        List<BlockModelPart> parts = model.collectParts(random);
+        List<BlockStateModelPart> parts = model.collectParts(random);
         int partCount = parts.size();
 
         for(int i = 0; i < partCount; ++i) {

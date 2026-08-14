@@ -10,6 +10,10 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.*;
@@ -60,7 +64,7 @@ public record UnbakedHerringboneModel(Variant variant) implements PFMUnbakedBloc
         if (!PFMRuntimeResources.modelCacheMap.containsKey(ID))
             PFMRuntimeResources.modelCacheMap.put(ID, new PFMBakedModelContainer());
 
-        List<BlockModelPart> bakedModelList = new ArrayList<>();
+        List<BlockStateModelPart> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : TEMPLATE_MODEL) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
@@ -70,7 +74,7 @@ public record UnbakedHerringboneModel(Variant variant) implements PFMUnbakedBloc
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockStateModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

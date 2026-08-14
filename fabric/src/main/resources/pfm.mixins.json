@@ -5,7 +5,6 @@
   "client": [
     "PFMBlockModelShaperMixin",
     "PFMCrackParticle$ItemFactoryMixin",
-    "PFMItemBlockRenderTypesFabricMixin",
     "PFMSpriteBillBoardParticleMixin",
     "PFMTerrainParticleMixin",
     "PFMUnbakedBlockStateModelMixin",

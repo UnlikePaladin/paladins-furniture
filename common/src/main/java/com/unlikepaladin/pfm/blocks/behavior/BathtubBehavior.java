@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,17 +35,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public interface BathtubBehavior {
+public interface BathtubBehavior extends CauldronInteraction {
     BathtubBehavior FILL_TUB_WITH_WATER = (state, world, pos, player, hand, stack) -> BathtubBehavior.fillTub(world, pos, player, hand, stack, state, SoundEvents.BUCKET_EMPTY, true);
-    Map<Item, BathtubBehavior> TUB_BEHAVIOR = BathtubBehavior.createMap();
+    Dispatcher TUB_BEHAVIOR = CauldronInteractions.newDispatcher("bathtub");
 
-    Codec<Map<Item, BathtubBehavior>> CODEC = MapCodec.unit(TUB_BEHAVIOR).codec();
     static Object2ObjectOpenHashMap<Item, BathtubBehavior> createMap() {
         return Util.make(new Object2ObjectOpenHashMap<>(), (map) -> {
             map.defaultReturnValue(null);});
     }
-
-    public InteractionResult interact(BlockState var1, Level var2, BlockPos var3, Player var4, InteractionHand var5, ItemStack var6);
 
     BathtubBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
         if (state.getValue(BasicBathtubBlock.LEVEL_8) == 0) {
@@ -65,9 +64,6 @@ public interface BathtubBehavior {
        if (state.getValue(BasicBathtubBlock.LEVEL_8) == 0) {
            return InteractionResult.TRY_WITH_EMPTY_HAND;
        }
-        if (!stack.is(ItemTags.DYEABLE)) {
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
-        }
         if (stack.get(DataComponents.DYED_COLOR) == null) {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
@@ -141,7 +137,7 @@ public interface BathtubBehavior {
         return InteractionResult.SUCCESS;
     }
 
-    static void registerBucketBehavior(Map<Item, BathtubBehavior> behavior) {
+    static void registerBucketBehavior(Dispatcher behavior) {
         behavior.put(Items.WATER_BUCKET, FILL_TUB_WITH_WATER);
     }
     static void registerBehavior() {
@@ -175,11 +171,7 @@ public interface BathtubBehavior {
             }
             return InteractionResult.SUCCESS;
         });
-        TUB_BEHAVIOR.put(Items.LEATHER_BOOTS, CLEAN_DYEABLE_ITEM);
-        TUB_BEHAVIOR.put(Items.LEATHER_LEGGINGS, CLEAN_DYEABLE_ITEM);
-        TUB_BEHAVIOR.put(Items.LEATHER_CHESTPLATE, CLEAN_DYEABLE_ITEM);
-        TUB_BEHAVIOR.put(Items.LEATHER_HELMET, CLEAN_DYEABLE_ITEM);
-        TUB_BEHAVIOR.put(Items.LEATHER_HORSE_ARMOR, CLEAN_DYEABLE_ITEM);
+        TUB_BEHAVIOR.put(ItemTags.CAULDRON_CAN_REMOVE_DYE, CLEAN_DYEABLE_ITEM);
         TUB_BEHAVIOR.put(Items.WHITE_BANNER, CLEAN_BANNER);
         TUB_BEHAVIOR.put(Items.GRAY_BANNER, CLEAN_BANNER);
         TUB_BEHAVIOR.put(Items.BLACK_BANNER, CLEAN_BANNER);

@@ -7,24 +7,20 @@ import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.config.option.DoubleConfigOption;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.BelowOrAboveWidgetTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -33,7 +29,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.Identifier;
 
 import java.util.*;
@@ -127,8 +122,8 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         }
 
         @Override
-        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-            context.drawString(PFMOptionListWidget.this.minecraft.font, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.minecraft.screen.width / 2 - this.textWidth / 2), getY() + defaultEntryHeight - (PFMOptionListWidget.this).minecraft.font.lineHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
+        public void extractContent(GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float a) {
+            context.text(PFMOptionListWidget.this.minecraft.font, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.minecraft.screen.width / 2 - this.textWidth / 2), getY() + defaultEntryHeight - (PFMOptionListWidget.this).minecraft.font.lineHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
         }
 
         public boolean changeFocus(boolean lookForwards) {
@@ -192,17 +187,17 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         }
 
         @Override
-        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
+        public void extractContent(GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.text(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
             this.resetButton.setX(getX() + 190);
             this.resetButton.setY(getY());
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption)) : !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption));
-            this.resetButton.render(context, mouseX, mouseY, tickDelta);
+            this.resetButton.extractRenderState(context, mouseX, mouseY, tickDelta);
             this.valueButton.setX(getX() + 105);
             this.valueButton.setY(getY());
             this.valueButton.setMessage((Boolean) PFMOptionListWidget.this.newConfigValues.get(configOption) ? CommonComponents.GUI_YES : CommonComponents.GUI_NO);
             this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
-            this.valueButton.render(context, mouseX, mouseY, tickDelta);
+            this.valueButton.extractRenderState(context, mouseX, mouseY, tickDelta);
         }
 
         @Override
@@ -274,15 +269,15 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         }
 
         @Override
-        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF));
+        public void extractContent(GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.text(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF));
             this.resetButton.setX(getX() + 190);
             this.resetButton.setY(getY());
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption)) : !this.configOption.getDefaultValue().equals(PFMOptionListWidget.this.newConfigValues.get(configOption));
-            this.resetButton.render(context, mouseX, mouseY, tickDelta);
+            this.resetButton.extractRenderState(context, mouseX, mouseY, tickDelta);
             this.valueEditBox.setX(getX() + 107);
             this.valueEditBox.setY(getY());
-            this.valueEditBox.render(context, mouseX, mouseY, tickDelta);
+            this.valueEditBox.extractRenderState(context, mouseX, mouseY, tickDelta);
         }
 
         @Override
@@ -352,11 +347,11 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         }
 
         @Override
-        public void renderContent(GuiGraphics context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
+        public void extractContent(GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            context.text(PFMOptionListWidget.this.minecraft.font, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + defaultEntryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
             this.button.setX(getX()+105);
             this.button.setY(getY());
-            this.button.render(context, mouseX, mouseY, deltaTicks);
+            this.button.extractRenderState(context, mouseX, mouseY, deltaTicks);
         }
 
         @Override

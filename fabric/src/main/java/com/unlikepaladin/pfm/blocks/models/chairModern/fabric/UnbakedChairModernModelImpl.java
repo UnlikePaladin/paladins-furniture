@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.blocks.models.chairModern.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.chairDinner.fabric.FabricChairDinnerModel;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.resources.Identifier;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UnbakedChairModernModelImpl {
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockStateModelPart> modelParts) {
         if (PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().containsKey(settings))
             return PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().get(settings);
 

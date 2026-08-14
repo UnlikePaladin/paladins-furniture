@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 import com.unlikepaladin.pfm.ducks.forge.PFModelBakerBakedExtensions;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;

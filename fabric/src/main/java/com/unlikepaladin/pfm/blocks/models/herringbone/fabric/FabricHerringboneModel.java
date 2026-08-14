@@ -9,11 +9,11 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricHerringboneModel extends PFMFabricBakedModel {
-    public FabricHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public FabricHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -52,7 +52,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(emitter, variant);
-            for (BlockModelPart model : getTemplateBakedModels()) {
+            for (BlockStateModelPart model : getTemplateBakedModels()) {
                 model.emitQuads(emitter, cullTest);
             }
             emitter.popTransform();
@@ -76,7 +76,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         VariantBase<?> variant = getVariant(blockState);
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(emitter, variant);
-            for (BlockModelPart model : getTemplateBakedModels()) {
+            for (BlockStateModelPart model : getTemplateBakedModels()) {
                 model.emitQuads(emitter, any -> false);
             }
             emitter.popTransform();

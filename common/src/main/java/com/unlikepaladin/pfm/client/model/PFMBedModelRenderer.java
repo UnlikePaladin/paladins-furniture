@@ -6,35 +6,28 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.entity.render.PFMBedBlockEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.Identifier;
-import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
     private final PFMBedBlockEntityRenderer blockEntityRenderer;
-    private final Material textureId;
+    private final SpriteId textureId;
 
-    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, Material textureId) {
+    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, SpriteId textureId) {
         this.blockEntityRenderer = blockEntityRenderer;
         this.textureId = textureId;
     }
 
 
     @Override
-    public void submit(ItemDisplayContext displayContext, PoseStack matrices, SubmitNodeCollector queue, int light, int overlay, boolean glint, int i) {
+    public void submit(PoseStack matrices, SubmitNodeCollector queue, int light, int overlay, boolean glint, int i) {
         this.blockEntityRenderer.renderAsItem(matrices, queue, light, overlay, this.textureId, i);
 
     }
@@ -57,7 +50,7 @@ public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
 
         @Override
         public SpecialModelRenderer<?> bake(BakingContext entityModels) {
-            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), Sheets.createBedMaterial(color));
+            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), Sheets.createBedSprite(color));
         }
     }
 }

@@ -4,13 +4,13 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,14 +27,14 @@ import net.minecraft.util.RandomSource;
 
 public class ForgeFreezerModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
-    public ForgeFreezerModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public ForgeFreezerModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
-        List<BlockModelPart> quads = new ArrayList<>();
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+        List<BlockStateModelPart> quads = new ArrayList<>();
         BlockState state = extraData.get(STATE);
         if (state != null) {
             Boolean hasFridge = extraData.get(HAS_FRIDGE_PROPERTY);

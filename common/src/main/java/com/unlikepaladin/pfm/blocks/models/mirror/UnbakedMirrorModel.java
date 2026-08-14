@@ -9,6 +9,10 @@ import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -50,7 +54,7 @@ public record UnbakedMirrorModel(Variant variant) implements PFMUnbakedBlockStat
     public BlockStateModel bake(ModelBaker baker){
         ModelState settings = variant.modelState().asModelState();
 
-        Map<String,BlockModelPart> bakedModels = new LinkedHashMap<>();
+        Map<String, BlockStateModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPartName: BASE_MODEL_PARTS) {
             String part = modelPartName.replace("mirror", "gray_mirror");
             bakedModels.put(modelPartName, SimpleModelWrapper.bake(baker, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part), settings));
@@ -60,7 +64,7 @@ public record UnbakedMirrorModel(Variant variant) implements PFMUnbakedBlockStat
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ModelState settings, Map<String,BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public static BlockStateModel getBakedModel(ModelState settings, Map<String,BlockStateModelPart> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

@@ -9,13 +9,13 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
@@ -28,16 +28,16 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicLampBlock))
             return;
 
-        List<BlockModelPart> quads = new ArrayList<>();
+        List<BlockStateModelPart> quads = new ArrayList<>();
 
         WoodVariant variant = WoodVariantRegistry.OAK;
         BlockEntity entity = world.getBlockEntity(pos);

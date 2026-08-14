@@ -4,10 +4,10 @@ import com.unlikepaladin.pfm.blocks.IronFreezerBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class FabricIronFridgeModel extends PFMFabricBakedModel {
-    public FabricIronFridgeModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public FabricIronFridgeModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
     }
 

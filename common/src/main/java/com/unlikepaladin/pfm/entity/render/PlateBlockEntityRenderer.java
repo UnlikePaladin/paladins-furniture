@@ -5,13 +5,11 @@ import com.unlikepaladin.pfm.blocks.PlateBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -66,7 +64,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
         ItemStack itemStack = blockEntity.getItemInPlate();
         state.itemRenderState = new ItemStackRenderState();
         itemModelManager.updateForTopItem(state.itemRenderState, itemStack, ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
-        state.lightAbove = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above());
+        state.lightAbove = LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above());
         state.itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
     }
 

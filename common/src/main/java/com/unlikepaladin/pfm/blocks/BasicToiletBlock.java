@@ -108,7 +108,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
                 world.setBlockAndUpdate(pos, state.setValue(TOILET_STATE, ToiletState.CLEAN));
                 return InteractionResult.SUCCESS;
             } else if (world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::isVehicle).isEmpty()) {
-                player.displayClientMessage(Component.translatable("message.pfm.toilet_use"), false);
+                player.sendOverlayMessage(Component.translatable("message.pfm.toilet_use"));
             }
         }
         else if (!world.isClientSide() && (state.getValue(TOILET_STATE) == ToiletState.DIRTY)) {

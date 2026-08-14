@@ -6,11 +6,10 @@ import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -20,7 +19,6 @@ import net.minecraft.network.chat.Style;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 
 public class PFMConfigScreen extends Screen {
     private final Screen parent;
@@ -106,12 +104,12 @@ public class PFMConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(context, mouseX, mouseY, delta);
         if (this.optionListWidget != null)
-            this.optionListWidget.render(context, mouseX, mouseY, delta);
+            this.optionListWidget.extractRenderState(context, mouseX, mouseY, delta);
 
-        context.drawCenteredString(this.font, TITLE.setStyle(Style.EMPTY.withColor(PFMFileUtil.adjustColor(0xf77f34)).withBold(true)), this.width / 2, 8, PFMFileUtil.adjustColor(0xFFFFFF));
+        context.centeredText(this.font, TITLE.setStyle(Style.EMPTY.withColor(PFMFileUtil.adjustColor(0xf77f34)).withBold(true)), this.width / 2, 8, PFMFileUtil.adjustColor(0xFFFFFF));
         boolean bl = false;
         for (Map.Entry<AbstractConfigOption, Object> optionEntry : optionListWidget.newConfigValues.entrySet()) {
             if (optionEntry.getValue().equals(optionEntry.getKey().getDefaultValue())) continue;

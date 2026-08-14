@@ -1,14 +1,17 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMResourceProgress;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.MipmapStrategy;
 import net.minecraft.client.renderer.texture.TextureContents;
@@ -84,8 +87,9 @@ public class PFMGeneratingOverlay extends Overlay {
     }
 
     private float lastNotifAlpha = 1.0f;
+
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
         long l = Util.getMillis();
         if (this.reloading && this.reloadStartTime == -1L) {
             this.reloadStartTime = l;
@@ -166,7 +170,7 @@ public class PFMGeneratingOverlay extends Overlay {
         }
     }
 
-    private void renderProgressBar(GuiGraphics context, int minX, int minY, int maxX, int maxY, float opacity) {
+    private void renderProgressBar(GuiGraphicsExtractor context, int minX, int minY, int maxX, int maxY, float opacity) {
         int i = Mth.ceil((float)(maxX - minX - 2) * this.progress);
         int j = Math.round(opacity * 255.0f);
         int k = ARGB.color(j, 255, 255, 255);
@@ -211,8 +215,7 @@ public class PFMGeneratingOverlay extends Overlay {
     private static final RenderPipeline PFM_LOGO_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
                     .withLocation("pipeline/pfm_logo")
-                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-                    .withDepthWrite(false)
+                    .withColorTargetState(new ColorTargetState(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE)))
                     .build()
     );
 }

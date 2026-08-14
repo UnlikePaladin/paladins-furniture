@@ -56,7 +56,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Conta
             }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
             SingleRecipeInput inventory = new SingleRecipeInput(itemStack);
-            ItemStack itemStack2 = world.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, world.registryAccess())).orElse(itemStack);
+            ItemStack itemStack2 = world.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory)).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
                     stovetopBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
@@ -85,7 +85,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Conta
 
     public static void clientTick(Level world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
         int i;
-        RandomSource random = world.random;
+        RandomSource random = world.getRandom();
         i = state.getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
         for (int j = 0; j < stovetopBlockEntity.itemsBeingCooked.size(); ++j) {
             ItemStack stack = stovetopBlockEntity.itemsBeingCooked.get(j);

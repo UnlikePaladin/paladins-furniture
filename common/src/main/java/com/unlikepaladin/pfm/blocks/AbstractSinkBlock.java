@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -43,10 +44,10 @@ import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 
 public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements EntityBlock {
     public static final IntegerProperty LEVEL_4 = IntegerProperty.create("level", 0, 3);
-    final CauldronInteraction.InteractionMap behaviorMap;
+    final CauldronInteraction.Dispatcher behaviorMap;
     final Biome.Precipitation precipitation;
 
-    public AbstractSinkBlock(BlockBehaviour.Properties settings, Biome.Precipitation precipitation, CauldronInteraction.InteractionMap behaviorMap) {
+    public AbstractSinkBlock(BlockBehaviour.Properties settings, Biome.Precipitation precipitation, CauldronInteraction.Dispatcher behaviorMap) {
         super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false), behaviorMap);
         this.behaviorMap = behaviorMap;
         this.precipitation = precipitation;
@@ -56,7 +57,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
             CODEC = RecordCodecBuilder.mapCodec((instance) -> {
                 return instance.group(Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter((block) -> {
                     return block.precipitation;
-                }), CauldronInteraction.CODEC.fieldOf("interactions").forGetter((block) -> {
+                }), CauldronInteractions.CODEC.fieldOf("interactions").forGetter((block) -> {
                     return block.behaviorMap;
                 }), propertiesCodec()).apply(instance, (precipitation1, cauldronBehaviorMap, settings1) -> getSinkConstructor().apply(settings1, precipitation1, cauldronBehaviorMap));
             });
@@ -77,7 +78,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
-        CauldronInteraction sinkBehavior = this.behaviorMap.map().get(itemStack.getItem());
+        CauldronInteraction sinkBehavior = this.behaviorMap.get(itemStack);
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
@@ -242,5 +243,5 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
         return CODEC;
     }
 
-    public abstract Function3<Properties, Biome.Precipitation, CauldronInteraction.InteractionMap, AbstractSinkBlock> getSinkConstructor();
+    public abstract Function3<Properties, Biome.Precipitation, CauldronInteraction.Dispatcher, AbstractSinkBlock> getSinkConstructor();
 }

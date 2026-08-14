@@ -10,11 +10,11 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class NeoForgeHerringboneModel extends PFMNeoForgeBakedModel {
-    public NeoForgeHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -48,12 +48,12 @@ public class NeoForgeHerringboneModel extends PFMNeoForgeBakedModel {
 
     static Material herringboneTextureId = new Material(TextureAtlas.LOCATION_BLOCKS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
             if (variant instanceof WoodVariant) {
                 TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
-                List<BlockModelPart> quads = new ArrayList<>(getTemplateBakedModels());
+                List<BlockStateModelPart> quads = new ArrayList<>(getTemplateBakedModels());
                 parts.addAll(getPartsWithTexture(quads, new SpriteData(replacement)));
             }
         }
@@ -88,7 +88,7 @@ public class NeoForgeHerringboneModel extends PFMNeoForgeBakedModel {
         if (variant instanceof WoodVariant) {
             TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
             List<BakedQuad> quads = new ArrayList<>();
-            for (BlockModelPart model : getTemplateBakedModels()) {
+            for (BlockStateModelPart model : getTemplateBakedModels()) {
                 quads.addAll(model.getQuads(face));
             }
             return getQuadsWithTexture(quads, new SpriteData(replacement));

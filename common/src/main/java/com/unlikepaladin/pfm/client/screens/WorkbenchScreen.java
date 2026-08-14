@@ -2,11 +2,11 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
@@ -50,7 +50,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     private EditBox searchBox;
 
     public WorkbenchScreen(WorkbenchScreenHandler menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
+        super(menu, inventory, title, 180, 176);
         menu.setContentsChangedListener(this::onInventoryChange);
         this.canCraft = menu.canCraft();
     }
@@ -64,8 +64,6 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         this.searchBox.setVisible(true);
         this.searchBox.setTextColor(0xFFFFFFFF);
         this.addWidget(this.searchBox);
-        this.imageHeight = 180;
-        this.imageWidth = 176;
         this.inventoryLabelY = this.imageHeight - 92;
     }
 
@@ -153,14 +151,16 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             //this.searchBox.tick();
         }
     }
+
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        this.renderTooltip(context, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float a) {
+        super.extractRenderState(context, mouseX, mouseY, a);
+        this.extractTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
+        super.extractBackground(context, mouseX, mouseY, delta);
         int x = this.leftPos;
         int y = this.topPos;
         context.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
@@ -171,12 +171,12 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         int scrollOffsetForIcons = this.scrollOffset + 18;
         this.renderRecipeBackground(context, mouseX, mouseY, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
         this.renderRecipeIcons(context, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
-        this.searchBox.render(context, mouseX, mouseY, delta);
+        this.searchBox.extractRenderState(context, mouseX, mouseY, delta);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics context, int x, int y) {
-        super.renderTooltip(context, x, y);
+    protected void extractTooltip(GuiGraphicsExtractor context, int x, int y) {
+        super.extractTooltip(context, x, y);
         int xOffsetForTooltip = this.leftPos + RECIPE_LIST_OFFSET_X;
         int yOffsetForTooltip = this.topPos + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForTooltip = this.scrollOffset + 18;
@@ -214,7 +214,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
 
-    private void renderRecipeBackground(GuiGraphics context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
+    private void renderRecipeBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -237,7 +237,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
 
-    private void renderRecipeIcons(GuiGraphics context, int x, int y, int scrollOffset) {
+    private void renderRecipeIcons(GuiGraphicsExtractor context, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -247,7 +247,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            context.renderItem(this.menu.getSortedRecipes().get(iCopy).getRecipeOuput(), xOffset, yOffset);
+            context.item(this.menu.getSortedRecipes().get(iCopy).getRecipeOuput(), xOffset, yOffset);
         }
     }
 

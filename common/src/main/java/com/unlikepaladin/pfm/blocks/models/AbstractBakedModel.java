@@ -8,17 +8,18 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.DyeColor;
@@ -29,11 +30,11 @@ import java.util.*;
 
 public abstract class AbstractBakedModel implements BlockStateModel {
     private final ModelState settings;
-    private final List<BlockModelPart> templateBakedModels;
+    private final List<BlockStateModelPart> templateBakedModels;
     public ModelRenderProperties itemDisplaySettings;
 
     public static boolean reloading = false;
-    public AbstractBakedModel(ModelState settings, ModelRenderProperties itemBakeSettings, List<BlockModelPart> templateBakedModels) {
+    public AbstractBakedModel(ModelState settings, ModelRenderProperties itemBakeSettings, List<BlockStateModelPart> templateBakedModels) {
         this.settings = settings;
         this.templateBakedModels = Objects.requireNonNull(templateBakedModels);
         this.itemDisplaySettings = itemBakeSettings;
@@ -43,17 +44,12 @@ public abstract class AbstractBakedModel implements BlockStateModel {
         return itemDisplaySettings;
     }
 
-    public List<BlockModelPart> getTemplateBakedModels() {
+    public List<BlockStateModelPart> getTemplateBakedModels() {
         return templateBakedModels;
     }
 
     @Override
-    public List<BlockModelPart> collectParts(RandomSource random) {
-        return templateBakedModels;
-    }
-
-    @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> parts) {
         parts.addAll(getTemplateBakedModels());
     }
 
@@ -76,8 +72,8 @@ public abstract class AbstractBakedModel implements BlockStateModel {
         List<TextureAtlasSprite> spriteList = getSpriteListWrapped(element);
         if (spriteList == null || spriteList.isEmpty() || spriteList.size() < 2) {
             VariantBase<?> variant = WoodVariantRegistry.OAK;
-            Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(variant.getBaseBlock()));
-            Material secondTexture = new Material(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(variant.getSecondaryBlock()));
+            SpriteId mainTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(variant.getBaseBlock()));
+            SpriteId secondTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(variant.getSecondaryBlock()));
             return List.of(ModelHelper.getSprite(mainTexture), ModelHelper.getSprite(secondTexture));
         }
         return spriteList;
@@ -115,11 +111,11 @@ public abstract class AbstractBakedModel implements BlockStateModel {
             blockItemBlockStateMap.put(blockItem, state);
             return getSpriteFromState(state);
         } else if (element == null) {
-            return Collections.singletonList(getTemplateBakedModels().get(0).particleIcon());
+            return Collections.singletonList(getTemplateBakedModels().get(0).particleMaterial().sprite());
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Invalid element for sprite list method");
         }
-        return Collections.singletonList(getTemplateBakedModels().get(0).particleIcon());
+        return Collections.singletonList(getTemplateBakedModels().get(0).particleMaterial().sprite());
     }
     protected List<TextureAtlasSprite> getBedSprites(DyeColor color, BlockState state) {
         List<TextureAtlasSprite> list = new ArrayList<>(3);
@@ -137,30 +133,30 @@ public abstract class AbstractBakedModel implements BlockStateModel {
         List<TextureAtlasSprite> list = new ArrayList<>(3);
         if (state.getBlock() instanceof SimpleBedBlock) {
             DyeColor color = ModelHelper.getColor(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
-            Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PLANKS));
-            Material spriteIdentifier = Sheets.getBedMaterial(color);
+            SpriteId mainTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PLANKS));
+            SpriteId spriteIdentifier = Sheets.getBedSprite(color);
             list.add(ModelHelper.getSprite(mainTexture));
             list.add(ModelHelper.getSprite(spriteIdentifier));
         }  else if (state.getBlock() instanceof LogStoolBlock) {
-            Material mainTexture = stripped ? new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG));
-            Material secondTexture = stripped ? new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG_TOP)) : new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG_TOP));
+            SpriteId mainTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG));
+            SpriteId secondTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG_TOP)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG_TOP));
             list.add(ModelHelper.getSprite(mainTexture));
             list.add(ModelHelper.getSprite(secondTexture));
         } else if (!state.getBlock().getDescriptionId().contains("_raw_")) {
-            Material mainTexture = stripped ? new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY));
-            Material secondTexture = stripped ? new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY)) : new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.SECONDARY));
+            SpriteId mainTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY));
+            SpriteId secondTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.SECONDARY));
             list.add(ModelHelper.getSprite(mainTexture));
             list.add(ModelHelper.getSprite(secondTexture));
         } else {
-            Material mainTexture = stripped ? new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.SECONDARY));
+            SpriteId mainTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.SECONDARY));
             list.add(ModelHelper.getSprite(mainTexture));
             list.add(ModelHelper.getSprite(mainTexture));
         }
         boolean isKitchen = state.getBlock().getDescriptionId().contains("kitchen_");
         if (isKitchen && !(variant instanceof WoodVariant)) {
-            Tuple<Block, Block> counterMaterials = PFMRecipeProvider.getCounterMaterials(variant);
-            Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(counterMaterials.getA()));
-            Material secondTexture = new Material(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(counterMaterials.getB()));
+            Tuple<Block, Block> counterSpriteIds = PFMRecipeProvider.getCounterMaterials(variant);
+            SpriteId mainTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(counterSpriteIds.getA()));
+            SpriteId secondTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getTextureId(counterSpriteIds.getB()));
             list.set(0, ModelHelper.getSprite(mainTexture));
             list.set(1, ModelHelper.getSprite(secondTexture));
         }

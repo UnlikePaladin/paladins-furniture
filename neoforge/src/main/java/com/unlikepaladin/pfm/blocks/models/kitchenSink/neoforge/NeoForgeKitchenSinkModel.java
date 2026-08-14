@@ -3,10 +3,10 @@ package com.unlikepaladin.pfm.blocks.models.kitchenSink.neoforge;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -18,17 +18,17 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeKitchenSinkModel extends PFMNeoForgeBakedModel {
-    public NeoForgeKitchenSinkModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeKitchenSinkModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof KitchenSinkBlock))
             return;
 
         int level = state.getValue(KitchenSinkBlock.LEVEL_4);
-        BlockModelPart originalQuads = getTemplateBakedModels().get(level);
+        BlockStateModelPart originalQuads = getTemplateBakedModels().get(level);
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
         parts.add(getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList));
     }

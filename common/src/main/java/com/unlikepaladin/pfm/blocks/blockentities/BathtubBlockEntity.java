@@ -1,10 +1,9 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
@@ -36,9 +35,8 @@ public class BathtubBlockEntity extends BedBlockEntity {
     public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
         return this.writeIdentifyingTubData(new CompoundTag());
     }
-
     private CompoundTag writeIdentifyingTubData(CompoundTag nbt) {
-        Identifier identifier = BlockEntityType.getKey(this.getType());
+        Identifier identifier = BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(this.getType());
         if (identifier == null) {
             throw new RuntimeException(this.getClass() + " is missing a mapping! This is a bug!");
         }

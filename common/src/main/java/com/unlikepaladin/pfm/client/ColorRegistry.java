@@ -5,40 +5,69 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ColorRegistry {
     public static final Map<ItemLike, ItemLike> itemColorProviders = new HashMap<>();
 
     public static void registerBlockColors(){
-        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_TOILET, addToiletColor());
-        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, addWaterColor());
-        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_SINK, addWaterColor());
-        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_LAMP, (state, world, pos, tintIndex) -> {
-            if (world != null) {
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity != null && tintIndex == 1) {
-                    if (entity instanceof LampBlockEntity) {
-                        DyeColor color = ((LampBlockEntity)entity).getPFMColor();
-                        return color.getMapColor().col;
+        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_TOILET, List.of(addToiletColor()));
+        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, List.of(state -> 0xFFFFFF, addWaterColor()));
+        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_SINK, List.of(state -> 0xFFFFFF, addWaterColor()));
+        registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(
+            new BlockTintSource() {
+                @Override
+                public int color(BlockState state) {
+                    return 0xFFFFFF;
+                }
+
+                @Override
+                public int colorInWorld(BlockState state, BlockAndTintGetter world, BlockPos pos) {
+                    if (world != null && pos != null) {
+                        BlockEntity entity = world.getBlockEntity(pos);
+                        if (entity instanceof LampBlockEntity lamp) {
+                            List<BlockTintSource> logBlockTintSources = getBlockTintSources(lamp.getVariant().getLogBlock());
+                            if (logBlockTintSources != null && !logBlockTintSources.isEmpty()) {
+                                return logBlockTintSources.get(0).colorInWorld(state, world, pos);
+                            }
+                        }
                     }
-                } else if (entity != null && tintIndex == 0) {
-                    if (entity instanceof LampBlockEntity && getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
-                        return getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()).getColor(state, world, pos, tintIndex);
+                    return 0xFFFFFF;
+                }
+            },
+            new BlockTintSource() {
+                @Override
+                public int color(BlockState state) {
+                    return 0xFFFFFF;
+                }
+
+                @Override
+                public int colorInWorld(BlockState state, BlockAndTintGetter world, BlockPos pos) {
+                    if (world != null && pos != null) {
+                        BlockEntity entity = world.getBlockEntity(pos);
+                        if (entity instanceof LampBlockEntity lamp) {
+                            DyeColor color = lamp.getPFMColor();
+                            return color.getMapColor().col;
+                        }
                     }
+                    return 0xFFFFFF;
                 }
             }
-            return 0xFFFFFF;
-        });
+        ));
+
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> {
             if (pfmModCompatibility.getClientModCompatiblity().isPresent()){
                 pfmModCompatibility.getClientModCompatiblity().get().registerBlockColors();
@@ -46,36 +75,28 @@ public class ColorRegistry {
         });
         PaladinFurnitureMod.furnitureEntryMap.forEach((key, value) -> {
             value.getVariantToBlockMap().forEach((variantBase, block) -> {
-                BlockColor blockColorProvider = getBlockColor(variantBase.getBaseBlock());
+                List<BlockTintSource> blockTintSources = getBlockTintSources(variantBase.getBaseBlock());
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
-                    registerBlockColor(block, ((state, world, pos, tintIndex) -> {
-                        if (tintIndex == 1) {
-                            return addWaterColor().getColor(state, world, pos, tintIndex);
-                        } else if (blockColorProvider == null) {
-                            return 0xFFFFFFF;
-                        }
-                        return blockColorProvider.getColor(state, world, pos, tintIndex);
-                    }));
+                    BlockTintSource baseSource = (blockTintSources != null && !blockTintSources.isEmpty()) 
+                        ? blockTintSources.get(0) 
+                        : (state -> 0xFFFFFF);
+                    registerBlockColor(block, List.of(baseSource, addWaterColor()));
                 } else {
-                    if (blockColorProvider != null) {
-                        registerBlockColor(block, blockColorProvider);
+                    if (blockTintSources != null && !blockTintSources.isEmpty()) {
+                        registerBlockColor(block, blockTintSources);
                     }
                 }
             });
             value.getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
-                BlockColor blockColorProvider = getBlockColor(variantBase.getBaseBlock());
+                List<BlockTintSource> blockTintSources = getBlockTintSources(variantBase.getBaseBlock());
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
-                    registerBlockColor(block, ((state, world, pos, tintIndex) -> {
-                        if (tintIndex == 1) {
-                            return addWaterColor().getColor(state, world, pos, tintIndex);
-                        } else if (blockColorProvider == null) {
-                            return 0xFFFFFFF;
-                        }
-                        return blockColorProvider.getColor(state, world, pos, tintIndex);
-                    }));
+                    BlockTintSource baseSource = (blockTintSources != null && !blockTintSources.isEmpty()) 
+                        ? blockTintSources.get(0) 
+                        : (state -> 0xFFFFFF);
+                    registerBlockColor(block, List.of(baseSource, addWaterColor()));
                 } else {
-                    if (blockColorProvider != null) {
-                        registerBlockColor(block, blockColorProvider);
+                    if (blockTintSources != null && !blockTintSources.isEmpty()) {
+                        registerBlockColor(block, blockTintSources);
                     }
                 }
             });
@@ -83,12 +104,7 @@ public class ColorRegistry {
     }
 
     public static void registerBlockRenderLayers() {
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, ChunkSectionLayer.CUTOUT);
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, ChunkSectionLayer.CUTOUT);
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, ChunkSectionLayer.CUTOUT);
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, ChunkSectionLayer.CUTOUT);
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.BASIC_LAMP, ChunkSectionLayer.CUTOUT);
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP, ChunkSectionLayer.CUTOUT);
+        // In 26.1, block render layers are dynamically derived from texture quad transparency.
     }
 
     public static void registerItemColors() {
@@ -103,11 +119,17 @@ public class ColorRegistry {
     }
 
     @ExpectPlatform
-    public static void registerBlockColor(Block block, BlockColor blockColorProvider){
+    public static void registerBlockColor(Block block, List<BlockTintSource> blockTintSources){
         throw new RuntimeException();
     }
+
     @ExpectPlatform
-    public static BlockColor getBlockColor(Block block){
+    public static void registerBlockColor(Block block, BlockTintSource blockTintSource){
+        throw new RuntimeException();
+    }
+
+    @ExpectPlatform
+    public static List<BlockTintSource> getBlockTintSources(Block block){
         throw new RuntimeException();
     }
 
@@ -116,11 +138,37 @@ public class ColorRegistry {
         throw new RuntimeException();
     }
 
-    private static BlockColor addToiletColor() {
-        return (state, view, pos, index) -> view != null && state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getAverageWaterColor(view, pos) : state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
+    private static BlockTintSource addToiletColor() {
+        return new BlockTintSource() {
+            @Override
+            public int color(BlockState state) {
+                return state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
+            }
+
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter view, BlockPos pos) {
+                if (view != null && pos != null && state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY) {
+                    return BiomeColors.getAverageWaterColor(view, pos);
+                }
+                return color(state);
+            }
+        };
     }
 
-    private static BlockColor addWaterColor() {
-        return (state, view, pos, index) -> view != null && index == 1 ? BiomeColors.getAverageWaterColor(view, pos) : index == 1 ? 0x3c44a9 : 0xFFFFFF;
+    private static BlockTintSource addWaterColor() {
+        return new BlockTintSource() {
+            @Override
+            public int color(BlockState state) {
+                return 0x3c44a9;
+            }
+
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter view, BlockPos pos) {
+                if (view != null && pos != null) {
+                    return BiomeColors.getAverageWaterColor(view, pos);
+                }
+                return color(state);
+            }
+        };
     }
 }

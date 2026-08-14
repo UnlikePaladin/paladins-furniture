@@ -271,7 +271,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
     @Nullable
@@ -398,7 +398,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
         this.singleSlotRecipeWrapper = new SingleRecipeInput( itemStack);
         Optional<? extends RecipeHolder<? extends AbstractCookingRecipe>> recipe = quickCheck.getRecipeFor(this.singleSlotRecipeWrapper, level);
         if (recipe != null && recipe.isPresent()) {
-            ItemStack result = recipe.get().value().result();
+            ItemStack result = recipe.get().value().result().create();
             if (!result.isEmpty() && result.has(DataComponents.FOOD)) {
                 return recipe.get();
             }
@@ -522,7 +522,7 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
                     Item item = fuelStack.getItem();
                     fuelStack.shrink(1);
                     if (fuelStack.isEmpty()) {
-                        ItemStack containerItem = item.getCraftingRemainder();
+                        ItemStack containerItem = item.getCraftingRemainder().create();
                         be.setItem(fuelIndex, containerItem == null ? ItemStack.EMPTY : containerItem);
                     } else {
                         be.setItem(fuelIndex, fuelStack);
@@ -567,9 +567,9 @@ public class OvenBlockEntity extends BaseContainerBlockEntity implements Contain
             if (be.slotCookTime[slotIdx] >= be.slotCookTimeTotal[slotIdx]) {
                 // attempted to produce result
                 RecipeHolder<? extends AbstractCookingRecipe> recipe = be.getSmokingRecipeHolder(procStack, (ServerLevel) level);
-                if (recipe != null && !recipe.value().result().isEmpty()) {
+                if (recipe != null && !recipe.value().result().create().isEmpty()) {
                     // replace the processing input with the result item so transfer logic can move it
-                    be.setItem(i, recipe.value().result().copy());
+                    be.setItem(i, recipe.value().result().create());
                     be.slotRecipes[slotIdx] = recipe.id();
                     hasChanged = true;
                 }

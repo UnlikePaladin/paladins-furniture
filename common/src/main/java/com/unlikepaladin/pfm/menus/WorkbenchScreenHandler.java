@@ -131,7 +131,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
     void populateResult(Player player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.set(simpleFurnitureRecipe.assemble(new FurnitureRecipe.FurnitureRecipeInput(player.getInventory()), player.level().registryAccess()));
+            this.outputSlot.set(simpleFurnitureRecipe.assemble(new FurnitureRecipe.FurnitureRecipeInput(player.getInventory())));
         } else {
             this.outputSlot.set(ItemStack.EMPTY);
         }

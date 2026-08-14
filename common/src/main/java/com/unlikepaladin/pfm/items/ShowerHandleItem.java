@@ -80,7 +80,7 @@ public class ShowerHandleItem extends BlockItem {
 
             double distance = Math.sqrt(headPos.distToLowCornerSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
             if (distance > 16 && world.isClientSide()){
-                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.shower_handle_far", headPos.toString()), false);
+                context.getPlayer().sendSystemMessage(Component.translatable("message.pfm.shower_handle_far", headPos.toString()));
             }
             if (distance > 16) {
                 context.getItemInHand().remove(PFMComponents.ACTIVATOR_COMPONENT);

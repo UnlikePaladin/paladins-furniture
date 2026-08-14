@@ -13,7 +13,7 @@ public abstract class PFMMinecraftClientMixin extends ReentrantBlockableEventLoo
     @Shadow @Final private TextureManager textureManager;
 
     protected PFMMinecraftClientMixin() {
-        super("Client");
+        super("Client", true);
     }
 
     @Override

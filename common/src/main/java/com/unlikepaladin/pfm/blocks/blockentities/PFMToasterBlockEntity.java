@@ -183,7 +183,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
 
                 boolean changed = false;
                 if(match.isPresent()) {
-                    items.set(i, match.get().value().result().copy());
+                    items.set(i, match.get().value().result().create());
                     changed = true;
                 } else {
                     if(items.get(i).has(DataComponents.FOOD)) {

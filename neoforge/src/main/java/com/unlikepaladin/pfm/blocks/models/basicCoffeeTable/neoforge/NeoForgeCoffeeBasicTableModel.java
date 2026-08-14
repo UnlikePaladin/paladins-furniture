@@ -2,11 +2,11 @@ package com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.neoforge;
 
 import com.unlikepaladin.pfm.blocks.BasicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeCoffeeBasicTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeCoffeeBasicTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicCoffeeTableBlock))
             return;
 
-        List<BlockModelPart> baseParts = new ArrayList<>();
-        List<BlockModelPart> secondarParts = new ArrayList<>();
+        List<BlockStateModelPart> baseParts = new ArrayList<>();
+        List<BlockStateModelPart> secondarParts = new ArrayList<>();
         BasicCoffeeTableBlock block = (BasicCoffeeTableBlock) state.getBlock();
         boolean north = block.canConnect(world, state, pos.north(), pos);
         boolean east = block.canConnect(world, state, pos.east(), pos);
@@ -156,7 +156,7 @@ public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
             }
         }
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
-        List<BlockModelPart> quads = getPartsWithTexture(baseParts, new SpriteData(spriteList.get(0)));
+        List<BlockStateModelPart> quads = getPartsWithTexture(baseParts, new SpriteData(spriteList.get(0)));
         quads.addAll(getPartsWithTexture(secondarParts, new SpriteData(spriteList.get(1))));
         parts.addAll(quads);
     }

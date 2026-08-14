@@ -4,10 +4,10 @@ import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class FabricMirrorModel extends PFMFabricBakedModel {
-    public FabricMirrorModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public FabricMirrorModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> MODEL_PARTS) {
         super(settings, null, bakedModels.values().stream().toList());
     }
 

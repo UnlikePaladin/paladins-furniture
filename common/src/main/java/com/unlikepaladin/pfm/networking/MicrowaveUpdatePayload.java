@@ -50,7 +50,7 @@ public record MicrowaveUpdatePayload(BlockPos pos, Boolean isActive) implements 
             });
         }
         else {
-            client.player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
+            client.player.sendSystemMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"));
         }
     }
 }

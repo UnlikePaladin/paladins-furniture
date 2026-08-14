@@ -367,7 +367,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
@@ -385,7 +385,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = recipe.value().assemble(new SingleRecipeInput(slots.get(0)), registryManager);
+        ItemStack itemStack = recipe.value().assemble(new SingleRecipeInput(slots.get(0)));
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -407,7 +407,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
             return false;
         }
         ItemStack itemStack = slots.get(0);
-        ItemStack itemStack2 = recipe.value().assemble(new SingleRecipeInput(itemStack), registryManager);
+        ItemStack itemStack2 = recipe.value().assemble(new SingleRecipeInput(itemStack));
         ItemStack itemStack3 = slots.get(2);
         if (itemStack2.is(Items.OBSIDIAN) || itemStack2.is(Items.ICE) || itemStack2.is(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
@@ -457,7 +457,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
                         Item item = itemStack.getItem();
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            Item item2 = item.getCraftingRemainder().getItem();
+                            Item item2 = item.getCraftingRemainder().item().value();
                             blockEntity.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
                         }
                     }

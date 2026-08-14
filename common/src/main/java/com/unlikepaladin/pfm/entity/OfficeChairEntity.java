@@ -166,7 +166,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
+    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (player.isSpectator() || player.isShiftKeyDown()) {
             return InteractionResult.PASS;
         }
@@ -180,7 +180,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             player.startRiding(this, true, true);
             return InteractionResult.SUCCESS;
         }
-        return super.interactAt(player, hitPos, hand);
+        return super.interact(player, hand, location);
     }
 
     @Override

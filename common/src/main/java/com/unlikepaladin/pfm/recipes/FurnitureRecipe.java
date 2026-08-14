@@ -31,6 +31,11 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
     List<CraftableFurnitureRecipe> getInnerRecipes(FeatureFlagSet features);
 
+    @Override
+    default boolean showNotification() {
+        return false;
+    }
+
     String outputClass();
 
     default List<CraftableFurnitureRecipe> getAvailableOutputs(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager) {
@@ -89,7 +94,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
         ItemStack getResult(HolderLookup.Provider registryManager);
 
-        ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager);
+        ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory);
 
         boolean matches(FurnitureRecipe.FurnitureRecipeInput playerInventory, Level world);
 

@@ -18,8 +18,8 @@ public class RecipeRegistryFabric {
             public String toString() {return RecipeTypes.FREEZING_ID.getPath();}
         });
 
-        RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.SIMPLE_FURNITURE_ID, new SimpleFurnitureRecipe.Serializer());
-        RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.DYNAMIC_FURNITURE_ID, new DynamicFurnitureRecipe.Serializer());
+        RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.SIMPLE_FURNITURE_ID, new RecipeSerializer<>(SimpleFurnitureRecipe.Serializer.CODEC, SimpleFurnitureRecipe.Serializer.PACKET_CODEC));
+        RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.DYNAMIC_FURNITURE_ID, new RecipeSerializer<>(DynamicFurnitureRecipe.Serializer.CODEC, DynamicFurnitureRecipe.Serializer.PACKET_CODEC));
 
         RecipeTypes.FURNITURE_RECIPE = Registry.register(BuiltInRegistries.RECIPE_TYPE, RecipeTypes.FURNITURE_ID,  new RecipeType<FurnitureRecipe>() {
             @Override

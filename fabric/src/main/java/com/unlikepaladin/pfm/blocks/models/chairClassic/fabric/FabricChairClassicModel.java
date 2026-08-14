@@ -6,8 +6,8 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class FabricChairClassicModel extends PFMFabricBakedModel {
-    public FabricChairClassicModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> bakedModels) {
+    public FabricChairClassicModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> bakedModels) {
         super(settings, modelSettings, bakedModels);
     }
 

@@ -3,10 +3,10 @@ package com.unlikepaladin.pfm.blocks.models.basicDesk.fabric;
 import com.unlikepaladin.pfm.blocks.BasicDeskBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FabricBasicDeskModel extends PFMFabricBakedModel {
-    public FabricBasicDeskModel(ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public FabricBasicDeskModel(ModelState settings, ModelRenderProperties itemSettings, List<BlockStateModelPart> modelParts) {
         super(settings, itemSettings, modelParts);
     }
 

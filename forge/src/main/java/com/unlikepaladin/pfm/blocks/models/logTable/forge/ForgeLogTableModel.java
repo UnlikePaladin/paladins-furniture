@@ -5,9 +5,9 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,7 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class ForgeLogTableModel extends PFMForgeBakedModel {
-    public ForgeLogTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeLogTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -49,11 +49,11 @@ public class ForgeLogTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof LogTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BlockModelPart> baseQuads = new ArrayList<>();
-            List<BlockModelPart> secondaryQuads = new ArrayList<>();
+            List<BlockStateModelPart> baseQuads = new ArrayList<>();
+            List<BlockStateModelPart> secondaryQuads = new ArrayList<>();
 
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
@@ -72,7 +72,7 @@ public class ForgeLogTableModel extends PFMForgeBakedModel {
                 secondaryQuads.add(getTemplateBakedModels().get(3));
             }
             List<TextureAtlasSprite> spriteList = getSpriteList(state);
-            List<BlockModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+            List<BlockStateModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
             quads.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
             dest.addAll(quads);
         }

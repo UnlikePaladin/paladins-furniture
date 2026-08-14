@@ -2,10 +2,10 @@ package com.unlikepaladin.pfm.blocks.models.mirror.neoforge;
 
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -15,14 +15,14 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeMirrorModel extends PFMNeoForgeBakedModel {
-    public NeoForgeMirrorModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public NeoForgeMirrorModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> MODEL_PARTS) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
 
     @Override
-    public void collectParts(BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof MirrorBlock))
             return;
 
@@ -39,7 +39,7 @@ public class NeoForgeMirrorModel extends PFMNeoForgeBakedModel {
         boolean six = block.canConnect(blockView.getBlockState(pos.relative(facing.getCounterClockWise()).above()), state);
         boolean seven = block.canConnect(blockView.getBlockState(pos.relative(facing.getCounterClockWise()).below()), state);
 
-        List<BlockModelPart> quads = new ArrayList<>();
+        List<BlockStateModelPart> quads = new ArrayList<>();
         quads.add(getTemplateBakedModels().get((0)));
 
         if (!zero) {

@@ -7,19 +7,24 @@ import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Axis;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, OfficeChairEntityRenderState, OfficeChairModelEmpty> {
     public static final Identifier[] MODEL_IDS = {Identifier.parse("pfm:block/office_chair/office_chair"), Identifier.parse("pfm:block/office_chair/office_chair_top"),
@@ -111,7 +116,9 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
     }
 
     private void submitBlockPart(OfficeChairEntityRenderState mobEntity, PoseStack matrixStack, SubmitNodeCollector orderedRenderCommandQueue, RenderType damagedLayer, BlockStateModel model, float red, float green, float blue) {
-        orderedRenderCommandQueue.submitBlockModel(matrixStack, RenderTypes.cutoutMovingBlock(), model, red, green, blue, mobEntity.lightCoords,
+        List<BlockStateModelPart> blockStateModelParts = new ArrayList<>();
+        model.collectParts(RandomSource.create(), blockStateModelParts);
+        orderedRenderCommandQueue.submitBlockModel(matrixStack, RenderTypes.cutoutMovingBlock(), blockStateModelParts, new int[0], mobEntity.lightCoords,
                 OverlayTexture.NO_OVERLAY,
                 mobEntity.outlineColor);
         if (mobEntity.invulnerableTime > 0) {

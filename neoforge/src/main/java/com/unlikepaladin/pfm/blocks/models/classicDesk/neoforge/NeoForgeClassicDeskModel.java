@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,12 +26,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class NeoForgeClassicDeskModel extends PFMNeoForgeBakedModel {
-    public NeoForgeClassicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeClassicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
             Direction dir = state.getValue(HorizontalDirectionalBlock.FACING);
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
@@ -83,7 +83,7 @@ public class NeoForgeClassicDeskModel extends PFMNeoForgeBakedModel {
             List<TextureAtlasSprite> spriteList = getSpriteList(state);
             parts.add(getQuadsWithTexture(getTemplateBakedModels().get(0), ModelHelper.getOakPlankLogSprites(), spriteList));
 
-            List<BlockModelPart> preTransformParts = new ArrayList<>();
+            List<BlockStateModelPart> preTransformParts = new ArrayList<>();
             boolean wasOuterCorner = false;
             if (isCabinet) {
                 if (canConnectSimple.apply(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
@@ -371,7 +371,7 @@ public class NeoForgeClassicDeskModel extends PFMNeoForgeBakedModel {
         }
     }
 
-    private BlockModelPart middleDesk(boolean left, boolean right, int openOffset) {
+    private BlockStateModelPart middleDesk(boolean left, boolean right, int openOffset) {
         if (left && right) {
             return ( getTemplateBakedModels().get((22 + openOffset)));
         }  else if (left) {

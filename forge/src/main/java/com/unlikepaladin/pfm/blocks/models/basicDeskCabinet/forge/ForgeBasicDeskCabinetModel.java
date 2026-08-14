@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
-    public ForgeBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -97,10 +97,10 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof BasicDeskCabinetBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BlockModelPart> secondaryQuads = new ArrayList<>();
+            List<BlockStateModelPart> secondaryQuads = new ArrayList<>();
             BasicDeskCabinetBlock block = (BasicDeskCabinetBlock) state.getBlock();
 
             BitSet set = extraData.get(CONNECTIONS).connections;
@@ -169,8 +169,8 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
         }
     }
 
-    private List<BlockModelPart> legsDesk(boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
-        List<BlockModelPart> quads = new ArrayList<>();
+    private List<BlockStateModelPart> legsDesk(boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+        List<BlockStateModelPart> quads = new ArrayList<>();
         if (!north && !east) {
             quads.add(getTemplateBakedModels().get(northLeg));
         }
@@ -187,7 +187,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
 
-    private BlockModelPart middleDesk(boolean left, boolean right, int openOffset) {
+    private BlockStateModelPart middleDesk(boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((3 + openOffset));
         }  else if (left) {

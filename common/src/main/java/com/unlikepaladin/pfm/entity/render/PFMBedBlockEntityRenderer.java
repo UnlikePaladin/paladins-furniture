@@ -12,9 +12,10 @@ import net.minecraft.client.renderer.blockentity.state.BedRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.MaterialSet;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +31,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.resources.model.Material;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.Direction;
@@ -44,16 +44,16 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity, BedRenderState> {
-    private final MaterialSet materials;
+    private final SpriteGetter materials;
     public PFMBedBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
-        this(ctx.materials(), ctx.entityModelSet());
+        this(ctx.sprites(), ctx.entityModelSet());
     }
 
     public PFMBedBlockEntityRenderer(SpecialModelRenderer.BakingContext ctx) {
-        this(ctx.materials(), ctx.entityModelSet());
+        this(ctx.sprites(), ctx.entityModelSet());
     }
 
-    public PFMBedBlockEntityRenderer(MaterialSet materials, EntityModelSet models) {
+    public PFMBedBlockEntityRenderer(SpriteGetter materials, EntityModelSet models) {
         this.bedHead = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_HEAD_LAYER), RenderTypes::entitySolid);
         this.bedFoot = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_FOOT_LAYER), RenderTypes::entitySolid);
         this.materials = materials;
@@ -87,22 +87,21 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
 
     @Override
     public void submit(BedRenderState state, PoseStack matrixStack, SubmitNodeCollector queue, CameraRenderState cameraState) {
-        Material spriteIdentifier = state != null ? Sheets.getBedMaterial(state.color) : Sheets.getBedMaterial(DyeColor.WHITE);
+        SpriteId spriteIdentifier = state != null ? Sheets.getBedSprite(state.color) : Sheets.getBedSprite(DyeColor.WHITE);
         if (state != null) {
-            BlockState blockState = state.blockState;
-            renderPart(matrixStack, queue, blockState.getValue(BedBlock.PART) == BedPart.HEAD ? this.bedHead : this.bedFoot, blockState.getValue(BedBlock.FACING), spriteIdentifier, state.lightCoords, OverlayTexture.NO_OVERLAY, state.breakProgress, 0);
+            renderPart(matrixStack, queue, state.part == BedPart.HEAD ? this.bedHead : this.bedFoot, state.facing, spriteIdentifier, state.lightCoords, OverlayTexture.NO_OVERLAY, state.breakProgress, 0);
         } else {
             matrixStack.pushPose();
             matrixStack.mulPose(Axis.YP.rotationDegrees(270.0f));
             matrixStack.translate(0.0,0,-2.0);
-            renderPart(matrixStack, queue, this.bedHead, Direction.NORTH, spriteIdentifier, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, null, 0);
+            renderPart(matrixStack, queue, this.bedHead, Direction.NORTH, spriteIdentifier, -1, OverlayTexture.NO_OVERLAY, null, 0);
             matrixStack.translate(0.0,0,1.0);
-            renderPart(matrixStack, queue, this.bedFoot, Direction.NORTH, spriteIdentifier, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, null, 0);
+            renderPart(matrixStack, queue, this.bedFoot, Direction.NORTH, spriteIdentifier, -1, OverlayTexture.NO_OVERLAY, null, 0);
             matrixStack.popPose();
         }
     }
 
-    private void renderPart(PoseStack matrix, OrderedSubmitNodeCollector queue, Model.Simple part, Direction direction, Material sprite, int light, int overlay, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, int i) {
+    private void renderPart(PoseStack matrix, OrderedSubmitNodeCollector queue, Model.Simple part, Direction direction, SpriteId sprite, int light, int overlay, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay, int i) {
         matrix.pushPose();
         matrix.mulPose(Axis.XP.rotationDegrees(180.0f));
 
@@ -118,7 +117,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         matrix.popPose();
     }
 
-    public void renderAsItem(PoseStack matrices, OrderedSubmitNodeCollector queue, int light, int overlay, Material textureId, int i) {
+    public void renderAsItem(PoseStack matrices, OrderedSubmitNodeCollector queue, int light, int overlay, SpriteId textureId, int i) {
         matrices.pushPose();
         matrices.mulPose(Axis.YP.rotationDegrees(90.0f));
         matrices.translate(-1.0,0,1.0);
@@ -147,7 +146,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         BlockEntityRenderer.super.extractRenderState(bedBlockEntity, bedBlockEntityRenderState, tickProgress, cameraPos, crumblingOverlay);
         bedBlockEntityRenderState.color = bedBlockEntity.getColor();
         bedBlockEntityRenderState.facing = bedBlockEntity.getBlockState().getValue(BedBlock.FACING);
-        bedBlockEntityRenderState.isHead = bedBlockEntity.getBlockState().getValue(BedBlock.PART) == BedPart.HEAD;
+        bedBlockEntityRenderState.part = bedBlockEntity.getBlockState().getValue(BedBlock.PART);
         if (bedBlockEntity.getLevel() != null) {
             DoubleBlockCombiner.NeighborCombineResult<? extends BedBlockEntity> propertySource = DoubleBlockCombiner.combineWithNeigbour(BlockEntityType.BED, BedBlock::getBlockType, BedBlock::getConnectedDirection, ChestBlock.FACING, bedBlockEntity.getBlockState(), bedBlockEntity.getLevel(), bedBlockEntity.getBlockPos(), (world, pos) -> false);
             bedBlockEntityRenderState.lightCoords = propertySource.apply(new BrightnessCombiner<>()).get(bedBlockEntityRenderState.lightCoords);

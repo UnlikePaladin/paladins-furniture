@@ -68,11 +68,6 @@ public class ChairEntity extends Mob {
         return !this.isRemoved();
     }
 
-
-    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
-        return super.interactAt(player, hitPos, hand);
-    }
-
     @Override
     public boolean isPushedByFluid() {
         return false;

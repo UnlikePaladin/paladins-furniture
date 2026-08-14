@@ -78,7 +78,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
 
     public static void addShowerParticles(Level world, BlockPos pos, float[] offset, float[] difference) {
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        RandomSource rand = world.random;
+        RandomSource rand = world.getRandom();
         if (rand.nextBoolean()) {
             world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {

@@ -56,7 +56,7 @@ public class TrashcanBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        this.level.playSound(null, getBlockPos(), soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
+        this.level.playSound(null, getBlockPos(), soundEvent, SoundSource.BLOCKS, 0.5f, this.level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
     @Override

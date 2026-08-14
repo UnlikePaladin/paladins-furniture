@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ForgeClassicDeskModel extends PFMForgeBakedModel {
-    public ForgeClassicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeClassicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -141,7 +141,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
 
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderLayer) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderLayer) {
         BlockState state = extraData.get(STATE);
         DeskModelData deskData = extraData.get(DESK_DATA);
         if (deskData != null && (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock)) {
@@ -172,7 +172,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
             BlockState neighborStateFacingNeighbor = deskData.neighborStateFacingNeighbor;
             BlockState neigborStateOppositeNeigbor = deskData.neigborStateOppositeNeigbor;
 
-            List<BlockModelPart> blockQuads = new ArrayList<>();
+            List<BlockStateModelPart> blockQuads = new ArrayList<>();
             blockQuads.add(getTemplateBakedModels().get(0));
 
             boolean wasOuterCorner = false;
@@ -463,7 +463,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
 
     }
 
-    private BlockModelPart middleDesk(boolean left, boolean right, int openOffset) {
+    private BlockStateModelPart middleDesk(boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((22 + openOffset));
         }  else if (left) {

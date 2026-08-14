@@ -10,11 +10,11 @@ import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.client.model.geom.builders.UVPair;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return quads;
     }
 
-    public PFMForgeBakedModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> templateBakedModels) {
+    public PFMForgeBakedModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> templateBakedModels) {
         super(settings, modelSettings, templateBakedModels);
     }
     public static ModelProperty<BlockState> STATE = new ModelProperty<>();
@@ -59,9 +59,9 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return tileData.derive().with(STATE, state).build();
     }
 
-    public BlockModelPart getQuadsWithTexture(List<BakedQuad> quads, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
+    public BlockStateModelPart getQuadsWithTexture(List<BakedQuad> quads, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
         List<BakedQuad> quadList = getQuadsWithTextureInner(quads, toReplace, replacements);
-        return new BlockModelPart() {
+        return new BlockStateModelPart() {
             @Override
             public List<BakedQuad> getQuads(@Nullable Direction side) {
                 return quadList;
@@ -79,20 +79,20 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             @Override
             public boolean equals(Object obj) {
-                if (!(obj instanceof BlockModelPart))
+                if (!(obj instanceof BlockStateModelPart))
                     return false;
 
                 for (Direction direction : Direction.values()) {
-                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                    if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
+                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
     }
 
-    public BlockModelPart getQuadsWithTexture(BlockModelPart modelPart, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
-        return new BlockModelPart() {
+    public BlockStateModelPart getQuadsWithTexture(BlockStateModelPart modelPart, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
+        return new BlockStateModelPart() {
             @Override
             public List<BakedQuad> getQuads(@Nullable Direction side) {
                 return getQuadsWithTextureInner(modelPart.getQuads(side), toReplace, replacements);
@@ -110,22 +110,22 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             @Override
             public boolean equals(Object obj) {
-                if (!(obj instanceof BlockModelPart))
+                if (!(obj instanceof BlockStateModelPart))
                     return false;
 
                 for (Direction direction : Direction.values()) {
-                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                    if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
+                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
     }
 
-    public List<BlockModelPart> getTexturedParts(List<BlockModelPart> quads, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
-        List<BlockModelPart> modelParts = new ArrayList<>();
-        for (BlockModelPart quad : quads) {
-            modelParts.add(new BlockModelPart() {
+    public List<BlockStateModelPart> getTexturedParts(List<BlockStateModelPart> quads, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
+        List<BlockStateModelPart> modelParts = new ArrayList<>();
+        for (BlockStateModelPart quad : quads) {
+            modelParts.add(new BlockStateModelPart() {
                 @Override
                 public List<BakedQuad> getQuads(@Nullable Direction side) {
                     return getQuadsWithTextureInner(quad.getQuads(side), toReplace, replacements);
@@ -144,14 +144,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
                 @Override
                 public boolean equals(Object obj) {
-                    if (!(obj instanceof BlockModelPart))
+                    if (!(obj instanceof BlockStateModelPart))
                         return false;
 
                     for (Direction direction : Direction.values()) {
-                        if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                        if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                             return false;
                     }
-                    return particleIcon().equals(((BlockModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
+                    return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
                 }
             });
         }
@@ -225,24 +225,24 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    public List<BlockModelPart> getPartsWithTexture(List<BlockModelPart> parts, SpriteData spriteData) {
-        List<BlockModelPart> partsWithTexture = new ArrayList<>();
-        for (BlockModelPart part : parts) {
+    public List<BlockStateModelPart> getPartsWithTexture(List<BlockStateModelPart> parts, SpriteData spriteData) {
+        List<BlockStateModelPart> partsWithTexture = new ArrayList<>();
+        for (BlockStateModelPart part : parts) {
             partsWithTexture.add(getPartWithTexture(part, spriteData));
         }
         return partsWithTexture;
     }
 
 
-    Map<Pair<SpriteData, BlockModelPart>, BlockModelPart> partToTransformedPart = new ConcurrentHashMap<>();
-    public BlockModelPart getPartWithTexture(BlockModelPart ogPart, SpriteData spriteData) {
-        Pair<SpriteData, BlockModelPart> pair = new Pair<>(spriteData, ogPart);
+    Map<Pair<SpriteData, BlockStateModelPart>, BlockStateModelPart> partToTransformedPart = new ConcurrentHashMap<>();
+    public BlockStateModelPart getPartWithTexture(BlockStateModelPart ogPart, SpriteData spriteData) {
+        Pair<SpriteData, BlockStateModelPart> pair = new Pair<>(spriteData, ogPart);
 
         if (partToTransformedPart.containsKey(pair)) {
             return partToTransformedPart.get(pair);
         }
 
-        BlockModelPart part = new BlockModelPart() {
+        BlockStateModelPart part = new BlockStateModelPart() {
             @Override
             public List<BakedQuad> getQuads(@Nullable Direction side) {
                 return getQuadsWithTexture(ogPart.getQuads(side), spriteData);
@@ -260,14 +260,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             @Override
             public boolean equals(Object obj) {
-                if (!(obj instanceof BlockModelPart))
+                if (!(obj instanceof BlockStateModelPart))
                     return false;
 
                 for (Direction direction : Direction.values()) {
-                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                    if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
+                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
         partToTransformedPart.put(pair, part);

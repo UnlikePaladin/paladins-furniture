@@ -96,7 +96,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         double d = (double) this.worldPosition.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double e = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        float i = pitch == 0 ? (i = this.level.random.nextFloat() * 0.2f + 0.9f) : (i = pitch);
+        float i = pitch == 0 ? (i = this.level.getRandom().nextFloat() * 0.2f + 0.9f) : (i = pitch);
         this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, i);
     }
 
@@ -311,7 +311,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         if (slots.isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = input.value().assemble(slots, registryManager);
+        ItemStack itemStack = input.value().assemble(slots);
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -339,7 +339,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     private static boolean craftRecipe(RecipeManager.CachedCheck<SingleRecipeInput, SmokingRecipe> recipeMatchGetter, ServerLevel world, NonNullList<ItemStack> slots, int count) {
         SingleRecipeInput singleStackRecipeInput = new SingleRecipeInput(slots.getFirst());
         ItemStack itemStack2 = recipeMatchGetter.getRecipeFor(singleStackRecipeInput, world)
-                .map(recipe -> recipe.value().assemble(singleStackRecipeInput, world.registryAccess()))
+                .map(recipe -> recipe.value().assemble(singleStackRecipeInput))
                 .orElse(slots.getFirst());
         slots.set(0, itemStack2.copy());
         return true;

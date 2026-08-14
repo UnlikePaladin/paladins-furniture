@@ -26,10 +26,10 @@ public class RecipeRegistryNeoForge {
                     RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new AbstractCookingRecipe.Serializer<>(FreezingRecipe::new, 200)
             );
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new FurnitureSerializerNeoForge<>(new SimpleFurnitureRecipe.Serializer())
+                    RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new RecipeSerializer<>(SimpleFurnitureRecipe.Serializer.CODEC, SimpleFurnitureRecipe.Serializer.PACKET_CODEC)
             );
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.DYNAMIC_FURNITURE_ID, RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER = new FurnitureSerializerNeoForge<>(new DynamicFurnitureRecipe.Serializer())
+                    RecipeTypes.DYNAMIC_FURNITURE_ID, RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER = new RecipeSerializer<>(DynamicFurnitureRecipe.Serializer.CODEC, DynamicFurnitureRecipe.Serializer.PACKET_CODEC)
             );
             // Can't run resource gen until the recipe serializer has been registered or it dies because it needs the ID
             // PFMRuntimeResources.prepareAsyncResourceGen(); Had to disable async gen because Forge dies and I can't be bothered to figure out why, this is cursed enough as it is

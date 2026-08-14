@@ -13,18 +13,20 @@ import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import de.androidpit.colorthief.ColorThief;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.item.DyeColor;
@@ -46,8 +48,8 @@ public class ModelHelper {
     public static List<TextureAtlasSprite> OAK_SPRITES_PLANKS_TO_REPLACE = null;
     public static List<TextureAtlasSprite> getOakPlankLogSprites() {
         if (OAK_SPRITES_PLANKS_TO_REPLACE == null) {
-            Material planksId = new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_planks"));
-            Material logId = new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log"));
+            SpriteId planksId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_planks"));
+            SpriteId logId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log"));
             OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(getSprite(planksId), getSprite(logId));
         }
         return OAK_SPRITES_PLANKS_TO_REPLACE;
@@ -55,8 +57,8 @@ public class ModelHelper {
     public static List<TextureAtlasSprite> OAK_SPRITES_BED_TO_REPLACE = null;
     public static List<TextureAtlasSprite> getOakBedSprites() {
         if (OAK_SPRITES_BED_TO_REPLACE == null) {
-            Material planksId = new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_planks"));
-            Material bedId = Sheets.getBedMaterial(DyeColor.RED);
+            SpriteId planksId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_planks"));
+            SpriteId bedId = Sheets.getBedSprite(DyeColor.RED);
             OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(getSprite(planksId), getSprite(bedId));
         }
         return OAK_SPRITES_BED_TO_REPLACE;
@@ -64,8 +66,8 @@ public class ModelHelper {
     public static List<TextureAtlasSprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
     public static List<TextureAtlasSprite> getOakLogLogTopSprites() {
         if (OAK_SPRITES_LOG_TOP_TO_REPLACE == null) {
-            Material logId = new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log"));
-            Material logTopId = new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log_top"));
+            SpriteId logId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log"));
+            SpriteId logTopId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_log_top"));
             OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(getSprite(logId), getSprite(logTopId));
         }
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
@@ -264,7 +266,7 @@ public class ModelHelper {
         return BlockType.BLOCK;
     }
 
-    public static TextureAtlasSprite getSprite(Material identifier) {
+    public static TextureAtlasSprite getSprite(SpriteId identifier) {
         return Minecraft.getInstance().getAtlasManager().get(identifier);
     }
 
@@ -367,11 +369,13 @@ public class ModelHelper {
 
         Identifier id;
         if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
-            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
+            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.NORTH);
+                List<BlockStateModelPart> partList = new ArrayList<>();
+                model.collectParts(RandomSource.create(42L), partList);
+                List<BakedQuad> quadList = partList.getFirst().getQuads(Direction.NORTH);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().contents().name();
+                    id = quadList.get(0).materialInfo().sprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -379,19 +383,24 @@ public class ModelHelper {
                 }
             }
         } else if (postfix.equals("_top") && !PFMDataGenerator.areAssetsRunning()) {
-            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
+            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.UP);
+                List<BlockStateModelPart> partList = new ArrayList<>();
+                model.collectParts(RandomSource.create(42L), partList);
+                List<BakedQuad> quadList =  partList.getFirst().getQuads(Direction.UP);;
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().contents().name();
+                    id = quadList.get(0).materialInfo().sprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
                     }
                 }
-                quadList = model.collectParts(RandomSource.create(42L)).getFirst().getQuads(Direction.DOWN);
+                partList.clear();
+                model.collectParts(RandomSource.create(42L), partList);
+
+                quadList = partList.getFirst().getQuads(Direction.DOWN);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).sprite().contents().name();
+                    id = quadList.get(0).materialInfo().sprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -400,29 +409,29 @@ public class ModelHelper {
             }
         }
 
-        if (idExists(TextureMapping.getBlockTexture(block, postfix), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMapping.getBlockTexture(block, postfix);
+        if (idExists(TextureMapping.getBlockTexture(block, postfix).sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, postfix).sprite();
         }
         else if(idExists(getLogId(block, postfix), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, postfix);
         }
-        else if (idExists(TextureMapping.getBlockTexture(block), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMapping.getBlockTexture(block);
+        else if (idExists(TextureMapping.getBlockTexture(block).sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block).sprite();
         }
-        else if (idExists(TextureMapping.getBlockTexture(block, "_side"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMapping.getBlockTexture(block, "_side");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_side").sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block, "_side").sprite();
         }
-        else if (idExists(TextureMapping.getBlockTexture(block, "_side_1"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            id = TextureMapping.getBlockTexture(block, "_side_1");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_side_1").sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = TextureMapping.getBlockTexture(block, "_side_1").sprite();
         }
-        else if (idExists(TextureMapping.getBlockTexture(block, "_bottom"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMapping.getBlockTexture(block, "_bottom");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_bottom").sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_bottom").sprite();
         }
-        else if (idExists(TextureMapping.getBlockTexture(block, "_top"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMapping.getBlockTexture(block, "_top");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_top").sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_top").sprite();
         }
-        else if (idExists(TextureMapping.getBlockTexture(block, "_middle"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            id = TextureMapping.getBlockTexture(block, "_middle");
+        else if (idExists(TextureMapping.getBlockTexture(block, "_middle").sprite(), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = TextureMapping.getBlockTexture(block, "_middle").sprite();
         }
         else if(idExists(getPlankId(block), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getPlankId(block);
@@ -443,7 +452,7 @@ public class ModelHelper {
             id = getLogId(block, "_bottom");
         }
         else if (BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("quark")) {
-            id = TextureMapping.getBlockTexture(block, postfix);
+            id = TextureMapping.getBlockTexture(block, postfix).sprite();
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}, this is attempt {} at finding it", block, attemptNum);
             id = MissingTextureAtlasSprite.getLocation();

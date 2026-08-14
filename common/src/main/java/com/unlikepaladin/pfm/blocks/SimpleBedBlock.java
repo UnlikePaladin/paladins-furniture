@@ -92,13 +92,13 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         }
         if (state.getValue(OCCUPIED)) {
             if (!this.isFree(world, pos)) {
-                player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
+                player.sendOverlayMessage(Component.translatable("block.minecraft.bed.occupied"));
             }
             return InteractionResult.SUCCESS;
         }
         player.startSleepInBed(pos).ifLeft(reason -> {
             if (reason.message() != null) {
-                player.displayClientMessage(reason.message(), true);
+                player.sendOverlayMessage(reason.message());
             }
         });
         return InteractionResult.SUCCESS;

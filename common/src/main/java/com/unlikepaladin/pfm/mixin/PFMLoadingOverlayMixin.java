@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.client.screens.overlay.GLText;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,8 +28,8 @@ public class PFMLoadingOverlayMixin {
     @Unique
     private GLText.GLTtext pfm$assemblingFurniture;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
-    private void onRender(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
+    private void onRender(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!PFMRuntimeResources.isAnyGeneratorRunning()) {
             if (this.pfm$assemblingFurniture != null) {
                 GLText.gltDeleteText(this.pfm$assemblingFurniture);

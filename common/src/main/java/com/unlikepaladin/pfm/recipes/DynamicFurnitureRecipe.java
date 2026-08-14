@@ -178,9 +178,14 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager) {
+    public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory) {
         PaladinFurnitureMod.GENERAL_LOGGER.debug("Something has tried to craft a dynamic furniture recipe without context");
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public String group() {
+        return group;
     }
 
     @Override
@@ -337,7 +342,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         }
 
         @Override
-        public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager) {
+        public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory) {
             return output.copy();
         }
 
@@ -461,8 +466,8 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         }
     }
 
-    public static class Serializer implements RecipeSerializer<DynamicFurnitureRecipe> {
-        MapCodec<DynamicFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+    public static class Serializer {
+        public static final MapCodec<DynamicFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                 Codec.STRING.optionalFieldOf("group", "").forGetter(DynamicFurnitureRecipe::group),
                 FurnitureOutput.CODEC.fieldOf("result").forGetter(DynamicFurnitureRecipe::getOutput),
                 Identifier.CODEC.listOf().fieldOf("supportedVariants").forGetter(DynamicFurnitureRecipe::getSupportedVariants),
@@ -474,12 +479,10 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                 Serializer::write, Serializer::read
         );
 
-        @Override
         public MapCodec<DynamicFurnitureRecipe> codec() {
             return CODEC;
         }
 
-        @Override
         public StreamCodec<RegistryFriendlyByteBuf, DynamicFurnitureRecipe> streamCodec() {
             return PACKET_CODEC;
         }

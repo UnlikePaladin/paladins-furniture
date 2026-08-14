@@ -1,12 +1,9 @@
 package com.unlikepaladin.pfm.blocks.models.bed;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
-import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel;
 import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -15,22 +12,19 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public record UnbakedBedModel(Variant variant) implements PFMUnbakedBlockStateModel {
@@ -93,7 +87,7 @@ public record UnbakedBedModel(Variant variant) implements PFMUnbakedBlockStateMo
         }
     };
 
-    public static Tuple<BlockModelPart, BlockModelPart> inventoryModels = new Tuple<>(null,null);
+    public static Tuple<BlockStateModelPart, BlockStateModelPart> inventoryModels = new Tuple<>(null,null);
     @Override
     public BlockStateModel bake(ModelBaker baker){
         ModelState settings = variant.modelState().asModelState();
@@ -105,9 +99,9 @@ public record UnbakedBedModel(Variant variant) implements PFMUnbakedBlockStateMo
         if (!PFMRuntimeResources.modelCacheMap.containsKey(BED_MODEL_ID))
             PFMRuntimeResources.modelCacheMap.put(BED_MODEL_ID, new PFMBakedModelContainer());
 
-        List<BlockModelPart> bakedModelList = new ArrayList<>();
+        List<BlockStateModelPart> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : BED_MODEL_PARTS_BASE) {
-            BlockModelPart model = SimpleModelWrapper.bake(baker, modelPart, settings);
+            BlockStateModelPart model = SimpleModelWrapper.bake(baker, modelPart, settings);
             bakedModelList.add(model);
             if (modelPart.getPath().contains("full")) {
                 if (modelPart.getPath().contains("simple"))
@@ -122,7 +116,7 @@ public record UnbakedBedModel(Variant variant) implements PFMUnbakedBlockStateMo
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier model, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier model, ModelState settings, ModelRenderProperties itemSettings, List<BlockStateModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

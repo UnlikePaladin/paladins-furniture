@@ -2,11 +2,11 @@ package com.unlikepaladin.pfm.blocks.models.classicTable.neoforge;
 
 import com.unlikepaladin.pfm.blocks.ClassicTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,17 +17,17 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeClassicTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeClassicTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> parts) {
+    public NeoForgeClassicTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> parts) {
         super(settings, modelSettings, parts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof ClassicTableBlock))
             return;
 
-        List<BlockModelPart> baseQuads = new ArrayList<>();
-        List<BlockModelPart> secondaryQuads = new ArrayList<>();
+        List<BlockStateModelPart> baseQuads = new ArrayList<>();
+        List<BlockStateModelPart> secondaryQuads = new ArrayList<>();
 
         ClassicTableBlock block = (ClassicTableBlock) state.getBlock();
         boolean north = block.canConnect(world.getBlockState(pos.north()));
@@ -50,7 +50,7 @@ public class NeoForgeClassicTableModel extends PFMNeoForgeBakedModel {
         }
 
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
-        List<BlockModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+        List<BlockStateModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         parts.addAll(quads);
     }

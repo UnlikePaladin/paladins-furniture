@@ -29,6 +29,15 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentFabric.extendsFrom common
+
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 repositories {
@@ -73,17 +82,17 @@ repositories {
 
 if (rootProject.sandwichable_compatibility == "true") {
     dependencies {
-        modImplementation("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
+        implementation("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
-        modImplementation("dev.lambdaurora:spruceui:${rootProject.spruceui_version}"){
+        implementation("dev.lambdaurora:spruceui:${rootProject.spruceui_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
 }
 else {
     dependencies {
-        modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
+        compileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -91,26 +100,26 @@ else {
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+        implementation("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
             transitive(false)
         }
-        modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        runtimeOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
             exclude(group: "net.fabricmc.fabric-api")
         }
-        modRuntimeOnly("dev.architectury:architectury-fabric:${rootProject.architectury_version}") {
+        runtimeOnly("dev.architectury:architectury-fabric:${rootProject.architectury_version}") {
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
 } else {
     dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+        compileOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
             transitive(false)
         }
     }
 }
 if (rootProject.emi_compatibility == "true"){
     dependencies {
-        modRuntimeOnly("dev.emi:emi-fabric:${emi_version}"){
+        runtimeOnly("dev.emi:emi-fabric:${emi_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -118,14 +127,14 @@ if (rootProject.emi_compatibility == "true"){
 
 if (rootProject.patchouli_compatibility == "true") {
     dependencies {
-        modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}"){
+        implementation("vazkii.patchouli:patchouli-fabric:${rootProject.patchouli_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
 }
 else {
     dependencies {
-        modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}"){
+        compileOnly("vazkii.patchouli:patchouli-fabric:${rootProject.patchouli_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -133,7 +142,7 @@ else {
 
 if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
-        modImplementation ("com.github.iPortalTeam:ImmersivePortalsMod:${rootProject.immersive_portals_version_fabric}"){
+        implementation ("com.github.iPortalTeam:ImmersivePortalsMod:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -141,25 +150,25 @@ if (rootProject.immersive_portals_compatibility_fabric == "true"){
 
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
-        modRuntimeOnly ("maven.modrinth:lazydfu:${rootProject.lazy_dfu_version_fabric}")
+        runtimeOnly ("maven.modrinth:lazydfu:${rootProject.lazy_dfu_version_fabric}")
     }
 }
 if (rootProject.jei_compatibility == "true") {
     dependencies {
-        modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
+        runtimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
     }
 }
 
 if (rootProject.cookingfor_blockheads_compatibility_fabric == "true") {
     dependencies {
-        modImplementation "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
-        modImplementation "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
-        modApi("net.blay09.mods:kuma-api-fabric:$rootProject.kuma_version")
+        implementation "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
+        implementation "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
+        api("net.blay09.mods:kuma-api-fabric:$rootProject.kuma_version")
     }
 } else {
     dependencies {
-        modCompileOnly "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
-        modCompileOnly "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
+        compileOnly "curse.maven:balm-fabric-531761:${rootProject.balm_version_fabric}"
+        compileOnly "curse.maven:cooking-for-blockheads-fabric-231484:${rootProject.cookingforblockheads_version_fabric}"
     }
 }
 
@@ -169,30 +178,30 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
 
-    modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
+    implementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
 
-   // modRuntimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}") {
+   // runtimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
+    compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}") {
         transitive(false)
     }
-    modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
+    compileOnly("maven.modrinth:iris:${rootProject.iris_version}")
 
-    modCompileOnly("maven.modrinth:farmers-delight-refabricated:${rootProject.farmers_delight_version_fabric}"){
+    compileOnly("maven.modrinth:farmers-delight-refabricated:${rootProject.farmers_delight_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
+    compileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
         exclude group: "mezz.jei"
     }
 
-    modCompileOnly("com.github.iPortalTeam:ImmersivePortalsMod:${rootProject.immersive_portals_version_fabric}"){
+    compileOnly("com.github.iPortalTeam:ImmersivePortalsMod:${rootProject.immersive_portals_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
-    modCompileOnly("com.github.iPortalTeam:DimLib:${rootProject.dimlib_version_fabric}"){
+    compileOnly("com.github.iPortalTeam:DimLib:${rootProject.dimlib_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
@@ -200,16 +209,16 @@ dependencies {
     include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.3")))
 
-    modImplementation 'me.fallenbreath:conditional-mixin-fabric:0.6.4'
+    implementation 'me.fallenbreath:conditional-mixin-fabric:0.6.4'
     include 'me.fallenbreath:conditional-mixin-fabric:0.6.4'
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
-    modApi "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_api_version}"
+    implementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    api "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    api "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_api_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
@@ -234,21 +243,17 @@ sourceSets {
 }
 
 shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "dev-shadow"
-}
-
-remapJar {
-    injectAccessWidener = true
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier = "fabric-mc${rootProject.minecraft_version}"
+    archiveClassifier = null
 }
 
 jar {
-    archiveClassifier = "dev"
+    archiveClassifier = "raw"
 }
 
 sourcesJar {

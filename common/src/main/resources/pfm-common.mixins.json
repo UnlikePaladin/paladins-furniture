@@ -24,6 +24,8 @@
     "ItemRenderState$LayerRenderStateAccessor",
     "ItemRenderStateAccessor",
     "PFMBlockModelRendererAccessor",
+    "PFMBlockStateModelWrapperAccessor",
+    "PFMCompositeBlockModelAccessor",
     "PFMLanguageManagerAccessor",
     "PFMLoadingOverlayMixin",
     "PFMMinecraftClientAcccessor",

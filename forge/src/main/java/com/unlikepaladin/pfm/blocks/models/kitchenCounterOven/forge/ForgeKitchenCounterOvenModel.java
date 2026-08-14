@@ -6,9 +6,9 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -23,16 +23,16 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
-    public ForgeKitchenCounterOvenModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeKitchenCounterOvenModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof KitchenCounterOvenBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BlockModelPart> quads = new ArrayList<>();
+            List<BlockStateModelPart> quads = new ArrayList<>();
             BitSet data = extraData.get(CONNECTIONS).connections;
             int openOffset = state.getValue(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
             List<TextureAtlasSprite> spriteList = getSpriteList(state);

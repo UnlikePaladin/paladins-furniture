@@ -48,9 +48,9 @@ public record ToiletUsePayload(BlockPos pos) implements CustomPacketPayload {
             Level world = player.level();
             if (world.hasChunkAt(blockPos)) {
                 world.setBlockAndUpdate(blockPos, world.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
-                world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, world.getRandom().nextFloat() * 0.1f + 0.9f);
             } else {
-                player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
+                player.sendSystemMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
             }
         });
     }

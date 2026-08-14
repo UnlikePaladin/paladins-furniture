@@ -21,7 +21,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.WeightedVariants;
 import net.minecraft.client.renderer.block.model.Variant;

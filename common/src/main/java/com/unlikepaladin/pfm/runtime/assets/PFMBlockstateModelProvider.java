@@ -60,13 +60,13 @@ import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.block.model.BlockModelDefinition;
-import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.block.model.multipart.CombinedCondition;
-import net.minecraft.client.renderer.block.model.multipart.Condition;
+import net.minecraft.client.renderer.block.dispatch.Variant;
+import net.minecraft.client.renderer.block.dispatch.multipart.CombinedCondition;
+import net.minecraft.client.renderer.block.dispatch.multipart.Condition;
 import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.WeightedList;
@@ -444,20 +444,20 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         public static TextureMapping createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier top = ModelHelper.getTextureId(variantBase.getBaseBlock());
             Identifier legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
-            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
+            return new TextureMapping().put(TextureSlot.TEXTURE, new Material(top)).put(LOG_KEY, new Material(legs));
 
         }
 
         public static TextureMapping createRawBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
+            return new TextureMapping().put(TextureSlot.TEXTURE, new Material(top)).put(LOG_KEY, new Material(legs));
         }
 
         public static TextureMapping createPlankLogBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
             Identifier legs = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            return new TextureMapping().put(TextureSlot.TEXTURE, top).put(LOG_KEY, legs);
+            return new TextureMapping().put(TextureSlot.TEXTURE, new Material(top)).put(LOG_KEY, new Material(legs));
         }
 
         public static TextureMapping createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
@@ -480,13 +480,13 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_BLACKSTONE);
                 counterBase = ModelHelper.getTextureId(Blocks.CRIMSON_PLANKS);
             }
-            return new TextureMapping().put(TextureSlot.TEXTURE, counterBase).put(LOG_KEY, counterTop);
+            return new TextureMapping().put(TextureSlot.TEXTURE, new Material(counterBase)).put(LOG_KEY, new Material(counterTop));
         }
 
         public static TextureMapping createLogLogTopBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier legs = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             Identifier top = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log"), "_top") : ModelHelper.getTextureId(variantBase.getSecondaryBlock(), "_top");
-            return new TextureMapping().put(LOG_KEY, legs).put(LOG_TOP_KEY, top);
+            return new TextureMapping().put(LOG_KEY, new Material(legs)).put(LOG_TOP_KEY, new Material(top));
         }
 
         public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionGenerator> stateSupplierBiFunction) {

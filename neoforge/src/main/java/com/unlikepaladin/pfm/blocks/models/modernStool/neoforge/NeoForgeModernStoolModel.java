@@ -3,11 +3,11 @@ package com.unlikepaladin.pfm.blocks.models.modernStool.neoforge;
 import com.unlikepaladin.pfm.blocks.ModernStoolBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,19 +18,19 @@ import java.util.List;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeModernStoolModel extends PFMNeoForgeBakedModel {
-    public NeoForgeModernStoolModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> templateBakedModels) {
+    public NeoForgeModernStoolModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> templateBakedModels) {
         super(settings, modelSettings, templateBakedModels);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof ModernStoolBlock))
             return;
 
         int tucked = state.getValue(ModernStoolBlock.TUCKED) ? 1 : 0;
 
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
-        BlockModelPart quads = getTemplateBakedModels().get(tucked);
+        BlockStateModelPart quads = getTemplateBakedModels().get(tucked);
         parts.add(getQuadsWithTexture(quads, ModelHelper.getOakPlankLogSprites(), spriteList));
     }
 

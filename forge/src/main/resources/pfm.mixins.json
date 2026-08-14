@@ -7,7 +7,6 @@
     "BlockColorsAccessor",
     "BlockStateModelUnbakedMixinFabricAPI",
     "PFMBakedModelManagerMixin",
-    "PFMItemBlockRenderTypesForgeMixin",
     "PFMModelBakerBakedModelsMixin",
     "PFMModelBakerMixin"
   ],

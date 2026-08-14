@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,20 +34,20 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
         if (this.narrow) {
-            this.renderBackground(context, mouseX, mouseY, delta);
+            this.extractBackground(context, mouseX, mouseY, delta);
         } else {
-            super.render(context, mouseX, mouseY, delta);
+            super.extractRenderState(context, mouseX, mouseY, delta);
         }
-        this.renderTooltip(context, mouseX, mouseY);
+        this.extractTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         int i = this.leftPos;
         int j = this.topPos;
-        context.blit(RenderPipelines.GUI_TEXTURED, background, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, background, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
 }

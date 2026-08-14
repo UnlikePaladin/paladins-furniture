@@ -3,13 +3,13 @@ package com.unlikepaladin.pfm.blocks.models.mirror.forge;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +23,7 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class ForgeMirrorModel extends PFMForgeBakedModel {
-    public ForgeMirrorModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public ForgeMirrorModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> MODEL_PARTS) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
@@ -32,9 +32,9 @@ public class ForgeMirrorModel extends PFMForgeBakedModel {
     public static ModelProperty<ModelBitSetProperty> DIRECTIONS = new ModelProperty<>();
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
-        List<BlockModelPart> quads = new ArrayList<>();
+        List<BlockStateModelPart> quads = new ArrayList<>();
         quads.add(getTemplateBakedModels().get((0)));
         if (state != null && state.getBlock() instanceof MirrorBlock && extraData.get(DIRECTIONS) != null && extraData.get(DIRECTIONS).connections != null) {
             BitSet connections = extraData.get(DIRECTIONS).connections;

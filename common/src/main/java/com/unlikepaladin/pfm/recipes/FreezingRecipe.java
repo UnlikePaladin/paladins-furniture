@@ -4,13 +4,14 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.resources.Identifier;
 
 public class FreezingRecipe extends AbstractCookingRecipe {
 
     public FreezingRecipe(String group, CookingBookCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
-        super(group, category, input, output, experience, cookTime);
+        super(new CommonInfo(false), new CookingBookInfo(category, group), input, ItemStackTemplate.fromNonEmptyStack(output), experience, cookTime);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.neoforge;
 
 import com.unlikepaladin.pfm.client.neoforge.PaladinFurnitureModClientNeoForge;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.resources.Identifier;
 
 public class ModelHelperImpl {

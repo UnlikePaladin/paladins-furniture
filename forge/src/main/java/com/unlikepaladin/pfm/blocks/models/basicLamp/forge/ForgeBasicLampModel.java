@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -33,7 +33,7 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class ForgeBasicLampModel extends PFMForgeBakedModel {
-    public ForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -86,10 +86,10 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BlockModelPart> quads = new ArrayList<>();
+            List<BlockStateModelPart> quads = new ArrayList<>();
             int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;
             WoodVariant variant = extraData.get(VARIANT);
             BitSet set = extraData.get(CONNECTIONS).connections;

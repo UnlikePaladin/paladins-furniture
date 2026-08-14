@@ -23,13 +23,13 @@ import java.util.stream.Stream;
 public class BasicSinkBlock extends AbstractSinkBlock {
     private static final List<BasicSinkBlock> SINKS = new ArrayList<>();
 
-    public BasicSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronInteraction.InteractionMap behaviorMap) {
+    public BasicSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronInteraction.Dispatcher behaviorMap) {
         super(settings, precipitationPredicate, behaviorMap);
         SINKS.add(this);
     }
 
     @Override
-    public Function3<Properties, Biome.Precipitation, CauldronInteraction.InteractionMap, AbstractSinkBlock> getSinkConstructor() {
+    public Function3<Properties, Biome.Precipitation, CauldronInteraction.Dispatcher, AbstractSinkBlock> getSinkConstructor() {
         return BasicSinkBlock::new;
     }
 

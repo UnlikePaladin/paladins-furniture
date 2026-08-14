@@ -20,7 +20,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.forge.PFMUnbakedBlockStateModelRegistryFabricAPI;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SingleVariant;
 import net.minecraft.client.resources.model.WeightedVariants;
 import net.minecraft.client.renderer.block.model.Variant;

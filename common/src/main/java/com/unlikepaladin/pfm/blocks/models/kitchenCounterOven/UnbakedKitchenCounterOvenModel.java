@@ -11,15 +11,15 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -71,7 +71,7 @@ public record UnbakedKitchenCounterOvenModel(Variant variant) implements PFMUnba
         if (!PFMRuntimeResources.modelCacheMap.containsKey(OVEN_MODEL_ID))
             PFMRuntimeResources.modelCacheMap.put(OVEN_MODEL_ID, new PFMBakedModelContainer());
 
-        List<BlockModelPart> bakedModelList = new ArrayList<>();
+        List<BlockStateModelPart> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : OVEN_MODEL_PARTS_BASE) {
             bakedModelList.add(SimpleModelWrapper.bake(baker, modelPart, settings));
         }
@@ -81,7 +81,7 @@ public record UnbakedKitchenCounterOvenModel(Variant variant) implements PFMUnba
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelState settings, ModelRenderProperties itemSettings, List<BlockStateModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

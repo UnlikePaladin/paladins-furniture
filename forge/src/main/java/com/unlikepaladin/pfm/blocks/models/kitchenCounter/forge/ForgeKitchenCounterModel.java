@@ -7,9 +7,9 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,7 +25,7 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
-    public ForgeKitchenCounterModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeKitchenCounterModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -80,7 +80,7 @@ public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof KitchenCounterBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
@@ -136,7 +136,7 @@ public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
         return getQuadsWithTextureInner(getTemplateBakedModels().get(0).getQuads(face), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 
-    private BlockModelPart getMiddleQuads(boolean left, boolean right) {
+    private BlockStateModelPart getMiddleQuads(boolean left, boolean right) {
         if (left && right) {
             return getTemplateBakedModels().get(0);
         } else if (left) {

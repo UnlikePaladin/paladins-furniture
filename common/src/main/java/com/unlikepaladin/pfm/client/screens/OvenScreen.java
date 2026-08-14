@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,9 +13,7 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
     private static final Identifier TEXTURE = Identifier.parse("pfm:textures/gui/container/oven.png");
 
     public OvenScreen(OvenScreenHandler handler, Inventory inventory, Component title) {
-        super(handler, inventory, title);
-        this.imageWidth = 176;
-        this.imageHeight = 195;
+        super(handler, inventory, title, 176, 195);
     }
 
     @Override
@@ -26,7 +24,7 @@ public class OvenScreen extends AbstractContainerScreen<OvenScreenHandler> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float f, int i, int j) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         int x = this.leftPos;
         int y = this.topPos;
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);

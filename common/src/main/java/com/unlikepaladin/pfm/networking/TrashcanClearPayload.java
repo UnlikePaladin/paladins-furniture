@@ -47,7 +47,7 @@ public record TrashcanClearPayload(BlockPos pos) implements CustomPacketPayload 
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
                     trashcanBlockEntity.clearContent();
                 } else {
-                    player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.sendSystemMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             }
         });

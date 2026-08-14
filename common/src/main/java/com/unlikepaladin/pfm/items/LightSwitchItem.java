@@ -68,7 +68,7 @@ public class LightSwitchItem extends BlockItem {
                }
                else {
                     if (context.getLevel().isClientSide())
-                        context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_not_canopy"), false);
+                        context.getPlayer().sendOverlayMessage(Component.translatable("message.pfm.light_switch_not_canopy"));
                }
            }
            else {
@@ -109,7 +109,7 @@ public class LightSwitchItem extends BlockItem {
             }
 
             if (!removedLights.isEmpty() && context.getLevel().isClientSide()){
-                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
+                context.getPlayer().sendOverlayMessage(Component.translatable("message.pfm.light_switch_far", removedLights.toString()));
             }
         }
         return true;

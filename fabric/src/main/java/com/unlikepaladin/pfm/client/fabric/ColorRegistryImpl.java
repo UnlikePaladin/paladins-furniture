@@ -1,23 +1,27 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.client.color.block.BlockColor;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+
+import java.util.List;
 
 public class ColorRegistryImpl {
-    public static void registerBlockColor(Block block, BlockColor blockColorProvider) {
-        ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
+    public static void registerBlockColor(Block block, List<BlockTintSource> blockTintSources) {
+        BlockColorRegistry.register(blockTintSources, block);
+    }
+
+    public static void registerBlockColor(Block block, BlockTintSource blockTintSource) {
+        BlockColorRegistry.register(List.of(blockTintSource), block);
     }
 
     public static void registerBlockToRenderLayer(Block block, ChunkSectionLayer renderLayer) {
-        BlockRenderLayerMap.putBlock(block, renderLayer);
+        // No-op in 26.1
     }
 
-    public static BlockColor getBlockColor(Block block) {
-        return ColorProviderRegistry.BLOCK.get(block);
+    public static List<BlockTintSource> getBlockTintSources(Block block) {
+        return Minecraft.getInstance().getBlockColors().getTintSources(block.defaultBlockState());
     }
-
 }

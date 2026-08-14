@@ -67,7 +67,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput playerInventory, HolderLookup.Provider registryManager) {
+    public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput playerInventory) {
         if (!this.output.getComponents().isEmpty() && output.has(DataComponents.BLOCK_ENTITY_DATA)) {
             ItemStack stack = this.output.copy();
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
@@ -138,13 +138,12 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         return Objects.hash(group, output, input);
     }
 
-    public static class Serializer
-            implements RecipeSerializer<SimpleFurnitureRecipe> {
+    public static class Serializer {
 
-        private static final MapCodec<SimpleFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
+        public static final MapCodec<SimpleFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
                 instance.group(
                                 Codec.STRING.optionalFieldOf("group", "").forGetter(SimpleFurnitureRecipe::group),
-                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
+                                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                                 Ingredient.CODEC.listOf().fieldOf("ingredients").flatXmap((ingredients) -> {
                                     NonNullList<Ingredient> defaultedList = NonNullList.create();
                                     defaultedList.addAll(ingredients);
@@ -156,7 +155,6 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
                                 }, DataResult::success).forGetter(SimpleFurnitureRecipe::getIngredients))
                         .apply(instance, SimpleFurnitureRecipe::new));
 
-        @Override
         public MapCodec<SimpleFurnitureRecipe> codec() {
             return CODEC;
         }
@@ -164,7 +162,6 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         public static final StreamCodec<RegistryFriendlyByteBuf, SimpleFurnitureRecipe> PACKET_CODEC = StreamCodec.of(
                 SimpleFurnitureRecipe.Serializer::write, SimpleFurnitureRecipe.Serializer::read
         );
-        @Override
         public StreamCodec<RegistryFriendlyByteBuf, SimpleFurnitureRecipe> streamCodec() {
             return PACKET_CODEC;
         }

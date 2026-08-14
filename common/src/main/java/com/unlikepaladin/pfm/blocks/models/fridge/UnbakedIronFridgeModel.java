@@ -8,17 +8,14 @@ import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.resources.model.SpriteGetter;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.InventoryMenu;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -65,7 +62,7 @@ public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlock
     public BlockStateModel bake(ModelBaker baker){
         ModelState settings = variant.modelState().asModelState();
 
-        Map<String,BlockModelPart> bakedModels = new LinkedHashMap<>();
+        Map<String, BlockStateModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
             bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
         }
@@ -74,7 +71,7 @@ public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlock
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public static BlockStateModel getBakedModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 

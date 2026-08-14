@@ -3,11 +3,11 @@ package com.unlikepaladin.pfm.blocks.models.classicNightstand.neoforge;
 import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,16 +19,16 @@ import net.minecraft.util.RandomSource;
 
 public class NeoForgeClassicNightstandModel extends PFMNeoForgeBakedModel {
 
-    public NeoForgeClassicNightstandModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeClassicNightstandModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof ClassicNightstandBlock))
             return;
 
-        List<BlockModelPart> originalQuads = new ArrayList<>();
+        List<BlockStateModelPart> originalQuads = new ArrayList<>();
 
         ClassicNightstandBlock block = (ClassicNightstandBlock) state.getBlock();
         Direction dir = state.getValue(ClassicNightstandBlock.FACING);

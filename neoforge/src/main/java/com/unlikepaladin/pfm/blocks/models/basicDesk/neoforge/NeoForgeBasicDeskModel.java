@@ -2,11 +2,11 @@ package com.unlikepaladin.pfm.blocks.models.basicDesk.neoforge;
 
 import com.unlikepaladin.pfm.blocks.BasicDeskBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgeBasicDeskModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> templateBakedModels) {
+    public NeoForgeBasicDeskModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> templateBakedModels) {
         super(settings, modelSettings, templateBakedModels);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicDeskBlock))
             return;
 
-        List<BlockModelPart> baseQuads = new ArrayList<>();
-        List<BlockModelPart> secondaryQuads = new ArrayList<>();
+        List<BlockStateModelPart> baseQuads = new ArrayList<>();
+        List<BlockStateModelPart> secondaryQuads = new ArrayList<>();
 
         BasicDeskBlock block = (BasicDeskBlock) state.getBlock();
 
@@ -51,7 +51,7 @@ public class NeoForgeBasicDeskModel extends PFMNeoForgeBakedModel {
             secondaryQuads.add((getTemplateBakedModels().get(4)));
         }
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
-        List<BlockModelPart> transformedParts = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+        List<BlockStateModelPart> transformedParts = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         transformedParts.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
 
         parts.addAll(transformedParts);

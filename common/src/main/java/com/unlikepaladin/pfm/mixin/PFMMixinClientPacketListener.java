@@ -26,6 +26,6 @@ public abstract class PFMMixinClientPacketListener extends ClientCommonPacketLis
         }
 
         PaladinFurnitureMod.getUpdateChecker().getUpdateMessage().ifPresent(msg ->
-                this.minecraft.player.displayClientMessage(msg, false));
+                this.minecraft.player.sendSystemMessage(msg));
     }
 }

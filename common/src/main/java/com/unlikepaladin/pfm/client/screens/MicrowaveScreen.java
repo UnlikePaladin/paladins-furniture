@@ -4,8 +4,8 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,22 +43,22 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
         // if (this.recipeBook.isOpen() && this.narrow) {
         if (this.narrow) {
-            this.renderBackground(context, mouseX, mouseY, delta);
+            this.extractBackground(context, mouseX, mouseY, delta);
             //this.recipeBook.render(context, mouseX, mouseY, delta);
         } else {
             //this.recipeBook.render(context, mouseX, mouseY, delta);
-            super.render(context, mouseX, mouseY, delta);
+            super.extractRenderState(context, mouseX, mouseY, delta);
             //this.recipeBook.drawGhostSlots(context, this.x, this.y, true, delta);
         }
-        this.renderTooltip(context, mouseX, mouseY);
+        this.extractTooltip(context, mouseX, mouseY);
         //this.recipeBook.drawTooltip(context, this.x, this.y, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float a) {
         int k;
         int i = this.leftPos;
         int j = this.topPos;

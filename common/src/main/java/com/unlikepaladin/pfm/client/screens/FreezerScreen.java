@@ -2,14 +2,10 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
-import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -29,17 +25,17 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if (this.narrow) {
-            this.renderBackground(context, mouseX, mouseY, delta);
+            this.extractBackground(graphics, mouseX, mouseY, a);
         } else {
-            super.render(context, mouseX, mouseY, delta);
+            super.extractRenderState(graphics, mouseX, mouseY, a);
         }
-        this.renderTooltip(context, mouseX, mouseY);
+        this.extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float a) {
         int k;
         int i = this.leftPos;
         int j = this.topPos;

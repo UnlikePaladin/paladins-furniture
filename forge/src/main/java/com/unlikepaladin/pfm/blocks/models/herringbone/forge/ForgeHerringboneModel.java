@@ -12,9 +12,9 @@ import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForgeHerringboneModel extends PFMForgeBakedModel {
-    public ForgeHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeHerringboneModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -63,13 +63,13 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     static Material herringboneTextureId = new Material(TextureAtlas.LOCATION_BLOCKS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
-    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData data, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData data, @Nullable ChunkSectionLayer renderType) {
         BlockState state = data.get(STATE);
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
             if (variant instanceof WoodVariant) {
                 TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
-                for (BlockModelPart model : getTemplateBakedModels()) {
+                for (BlockStateModelPart model : getTemplateBakedModels()) {
                     dest.add(getPartWithTexture(model, new SpriteData(replacement)));
                 }
             }
@@ -101,7 +101,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         if (variant instanceof WoodVariant) {
             TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
             List<BakedQuad> quads = new ArrayList<>();
-            for (BlockModelPart model : getTemplateBakedModels()) {
+            for (BlockStateModelPart model : getTemplateBakedModels()) {
                 quads.addAll(model.getQuads(face));
             }
             return getQuadsWithTexture(quads, new SpriteData(replacement));

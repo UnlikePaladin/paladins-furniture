@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockState
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,17 +26,23 @@ public class PFMFabricItemModel<T> extends PFMItemModel<T>  {
 
     @Override
     public BlockStateModel unwrapBlockStateModel(BlockStateModel model) {
-        BlockStateModel model1 = model;
-
-        int ctr = 0;
-        while (model1 instanceof WrapperBlockStateModel) {
-            model1 = ((PFMWrapperBlockstateModelAccessor) model1).pfm$getWrapped();
-            ctr++;
-            if (ctr > 15)
+        Object current = model;
+        int depth = 0;
+        while (current != null && depth < 20) {
+            depth++;
+            if (current instanceof WrapperBlockStateModel wrapper) {
+                current = ((PFMWrapperBlockstateModelAccessor) wrapper).pfm$getWrapped();
+            } else if (current instanceof BlockStateModel bsm) {
+                BlockStateModel unwrapped = super.unwrapBlockStateModel(bsm);
+                if (unwrapped == bsm) {
+                    break;
+                }
+                current = unwrapped;
+            } else {
                 break;
+            }
         }
-
-        return model1;
+        return current instanceof BlockStateModel bsm ? bsm : model;
     }
 
     @Override

@@ -106,14 +106,9 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
         return this;
     }
 
-    public SimpleFurnitureRecipeJsonFactory showNotification(boolean showNotification) {
-        this.showNotification = showNotification;
-        return this;
-    }
-
     @Override
-    public Item getResult() {
-        return this.stack.getItem();
+    public ResourceKey<Recipe<?>> defaultId() {
+        return RecipeBuilder.getDefaultRecipeId(this.stack);
     }
 
     @Override

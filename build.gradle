@@ -1,5 +1,5 @@
 plugins {
-    id 'dev.architectury.loom' version '1.17-SNAPSHOT' apply false
+    id 'dev.architectury.loom-no-remap' version "1.17-SNAPSHOT" apply false
     id 'architectury-plugin' version '3.5-SNAPSHOT'
     id 'com.gradleup.shadow' version '9.4.3' apply false
 }
@@ -14,7 +14,7 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'dev.architectury.loom-no-remap'
     apply plugin: 'architectury-plugin'
     apply plugin: 'maven-publish'
 
@@ -32,7 +32,6 @@ subprojects {
 
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings loom.officialMojangMappings()
 
         implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}")
     }
@@ -40,13 +39,13 @@ subprojects {
     java {
         withSourcesJar()
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_25
+        targetCompatibility = JavaVersion.VERSION_25
     }
 
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
-        it.options.release = 21
+        it.options.release = 25
     }
 }
 

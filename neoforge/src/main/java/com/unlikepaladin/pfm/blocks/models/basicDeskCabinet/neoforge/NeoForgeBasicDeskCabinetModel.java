@@ -3,11 +3,11 @@ package com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.neoforge;
 import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeBasicDeskCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicDeskCabinetBlock))
             return;
 
@@ -59,7 +59,7 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
         BlockState leftState = world.getBlockState(pos.relative(isFacing.getClockWise()));
         boolean left = block.canConnect(leftState) && leftState.getBlock() instanceof BasicDeskCabinetBlock;
 
-        List<BlockModelPart> secondaryQuads = new ArrayList<>();
+        List<BlockStateModelPart> secondaryQuads = new ArrayList<>();
         switch (isFacing) {
             case SOUTH:
                 secondaryQuads.addAll(legsDesk(north, south, east, west, 18, 19, 16, 17));
@@ -112,8 +112,8 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
         parts.addAll(getTexturedParts(secondaryQuads, ModelHelper.getOakPlankLogSprites(), spriteList));
     }
 
-    private List<BlockModelPart> legsDesk(boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
-        List<BlockModelPart> modelParts = new ArrayList<>();
+    private List<BlockStateModelPart> legsDesk(boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+        List<BlockStateModelPart> modelParts = new ArrayList<>();
         if (!north && !east) {
             modelParts.add(getTemplateBakedModels().get(northLeg));
         }
@@ -130,7 +130,7 @@ public class NeoForgeBasicDeskCabinetModel extends PFMNeoForgeBakedModel {
     }
 
 
-    private BlockModelPart middleDesk(boolean left, boolean right, int openOffset) {
+    private BlockStateModelPart middleDesk(boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((3 + openOffset));
         }  else if (left) {

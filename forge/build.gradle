@@ -26,6 +26,15 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
+
+    apiElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
+    runtimeElements {
+        outgoing.artifacts.clear()
+        outgoing.artifact(shadowJar)
+    }
 }
 
 repositories {
@@ -67,22 +76,22 @@ repositories {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
-    //modCompileOnlyApi("mezz.jei:jei-1.21.8-forge-api:${rootProject.jei_version}")
-    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}") {
+    compileOnly("vazkii.patchouli:patchouli-neoforge:${rootProject.patchouli_version_forge}")
+    //compileOnlyApi("mezz.jei:jei-1.21.8-forge-api:${rootProject.jei_version}")
+    compileOnlyApi("me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}") {
         transitive(false)
     }
-    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}") {
+    compileOnlyApi("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}") {
         transitive(false)
     }
-    //modRuntimeOnly("curse.maven:biomesop-220318:3562256")
-    modCompileOnly("maven.modrinth:iris:${rootProject.oculus_version}")
+    //runtimeOnly("curse.maven:biomesop-220318:3562256")
+    compileOnly("maven.modrinth:iris:${rootProject.oculus_version}")
 
-    modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
-    modCompileOnly(files("../libs/immersive-portals-2.5.4-mc1.19.3-forge.jar"))
+    compileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
+    compileOnly(files("../libs/immersive-portals-2.5.4-mc1.19.3-forge.jar"))
 
     include(forgeRuntimeLibrary("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
 
@@ -92,41 +101,41 @@ dependencies {
 
 if(rootProject.jei_compatibility == "true") {
     dependencies {
-        //modRuntimeOnly("mezz.jei:jei-1.21.8-forge:${rootProject.jei_version}")
+        //runtimeOnly("mezz.jei:jei-1.21.8-forge:${rootProject.jei_version}")
     }
 }
 if (rootProject.immersive_portals_compatibility_forge == "true"){
     dependencies {
-        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
+        implementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
     }
 }
 
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
-        modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
+        runtimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
     }
 }
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
+        compileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
     }
 } else {
     dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
+        compileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
     }
 }
 
 if (rootProject.cookingfor_blockheads_compatibility_forge == "true") {
     dependencies {
-        modImplementation "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
-        modImplementation "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
-        modApi("net.blay09.mods:kuma-api-forge:$rootProject.kuma_version")
+        implementation "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
+        implementation "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
+        api("net.blay09.mods:kuma-api-forge:$rootProject.kuma_version")
     }
 } else {
     dependencies {
-        modCompileOnly "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
-        modCompileOnly "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
+        compileOnly "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
+        compileOnly "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
     }
 }
 
@@ -143,25 +152,18 @@ processResources {
 }
 
 shadowJar {
+    dependsOn(jar)
+    mainSpec.sourcePaths.clear()
+    from(zipTree(jar.archiveFile))
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "dev-shadow"
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
-remapJar {
-    inputFile.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier = "minecraftforge-mc${rootProject.minecraft_version}"
+    archiveClassifier = null
 }
 
 jar {
-    archiveClassifier = "dev"
+    archiveClassifier = "raw"
 }
 
 sourcesJar {

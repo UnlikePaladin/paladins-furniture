@@ -3,12 +3,12 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCounter.neoforge;
 import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -20,12 +20,12 @@ import java.util.*;
 import net.minecraft.util.RandomSource;
 
 public class NeoForgeKitchenCounterModel extends PFMNeoForgeBakedModel {
-    public NeoForgeKitchenCounterModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeKitchenCounterModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof KitchenCounterBlock))
             return;
 
@@ -100,7 +100,7 @@ public class NeoForgeKitchenCounterModel extends PFMNeoForgeBakedModel {
         return getQuadsWithTextureInner(getTemplateBakedModels().get(0).getQuads(face), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 
-    private BlockModelPart getMiddleQuads(boolean left, boolean right) {
+    private BlockStateModelPart getMiddleQuads(boolean left, boolean right) {
         if (left && right) {
             return getTemplateBakedModels().get(0);
         } else if (left) {

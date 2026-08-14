@@ -4,10 +4,10 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -18,13 +18,13 @@ import net.minecraft.util.RandomSource;
 
 public class NeoForgeFridgeModel extends PFMNeoForgeBakedModel {
     private final List<String> modelParts;
-    public NeoForgeFridgeModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+    public NeoForgeFridgeModel(ModelState settings, Map<String, BlockStateModelPart> bakedModels, List<String> modelParts) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof FridgeBlock))
             return;
 

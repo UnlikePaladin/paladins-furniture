@@ -30,14 +30,4 @@ public class ItemModelRegistry {
     public static void registerTintSourceTypes(RegisterColorHandlersEvent.ItemTintSources event) {
         event.register(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
     }
-
-    @SubscribeEvent
-    public static void registerSpecialModelRenderers(RegisterSpecialBlockModelRendererEvent event) {
-        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-            if (block instanceof DyeableFurnitureBlock)
-                event.register(block, new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));
-        }
-    }
-
-
 }

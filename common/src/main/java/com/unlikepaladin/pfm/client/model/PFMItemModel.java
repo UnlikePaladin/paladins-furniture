@@ -11,14 +11,15 @@ import com.unlikepaladin.pfm.mixin.*;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -27,7 +28,6 @@ import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.client.color.item.Constant;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,6 +43,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4fc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,16 +58,7 @@ public class PFMItemModel<T> implements ItemModel {
     private final List<ItemTintSource> pfm$parentTints = new ArrayList<>();
 
     private static final Function<ItemStack, RenderType> ITEMS_ATLAS_RENDER_LAYER_GETTER = stack -> Sheets.translucentItemSheet();
-    private static final Function<ItemStack, RenderType> BLOCKS_ATLAS_RENDER_LAYER_GETTER = stack -> {
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            ChunkSectionLayer blockRenderLayer = ItemBlockRenderTypes.getChunkRenderType(blockItem.getBlock().defaultBlockState());
-            if (blockRenderLayer != ChunkSectionLayer.TRANSLUCENT) {
-                return Sheets.cutoutBlockSheet();
-            }
-        }
-
-        return Sheets.translucentBlockItemSheet();
-    };
+    private static final Function<ItemStack, RenderType> BLOCKS_ATLAS_RENDER_LAYER_GETTER = stack -> Sheets.translucentBlockItemSheet();
 
     public PFMItemModel(Supplier<BlockStateModel> model, SpecialModelRenderer<T> specialModelType, List<ItemTintSource> tints) {
         this.model = model;
@@ -75,7 +67,19 @@ public class PFMItemModel<T> implements ItemModel {
     }
 
     public BlockStateModel unwrapBlockStateModel(BlockStateModel model) {
-        return model;
+        Object current = model;
+        int depth = 0;
+        while (current != null && depth < 20) {
+            depth++;
+            if (current instanceof PFMBlockStateModelWrapperAccessor accessor) {
+                current = accessor.pfm$getModel();
+            } else if (current instanceof PFMCompositeBlockModelAccessor accessor) {
+                current = accessor.pfm$getNormal();
+            } else {
+                break;
+            }
+        }
+        return current instanceof BlockStateModel bsm ? bsm : model;
     }
 
     @Override
@@ -97,9 +101,6 @@ public class PFMItemModel<T> implements ItemModel {
             layerRenderState.setFoilType(ItemStackRenderState.FoilType.STANDARD);
         }
 
-        RenderType renderLayer = BLOCKS_ATLAS_RENDER_LAYER_GETTER.apply(stack);
-        layerRenderState.setRenderType(renderLayer);
-
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints.isEmpty()) {
             Item item = ColorRegistry.itemColorProviders.get(stack.getItem()).asItem();
 
@@ -120,15 +121,16 @@ public class PFMItemModel<T> implements ItemModel {
             tintsToUse.add(new Constant(0xffffffff));
         }
 
-        int[] tintArray = layerRenderState.prepareTintLayers(tintCount);
+        IntList tintArray = layerRenderState.tintLayers();
+        tintArray.size(tintCount);
 
         for (int index = 0; index < tintCount; index++) {
             if (index == 1 && stack.has(PFMComponents.COLOR_COMPONENT)) {
-                tintArray[index] =  PFMFileUtil.adjustColor(stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().col);
+                tintArray.set(index, PFMFileUtil.adjustColor(stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().col));
             } else {
-                tintArray[index] = PFMFileUtil.adjustColor(tintsToUse.get(index).calculate(stack, world, heldItemContext != null ? heldItemContext.asLivingEntity() : null));
+                tintArray.set(index, PFMFileUtil.adjustColor(tintsToUse.get(index).calculate(stack, world, heldItemContext != null ? heldItemContext.asLivingEntity() : null)));
             }
-            state.appendModelIdentityElement(tintArray[index]);
+            state.appendModelIdentityElement(tintArray.getInt(index));
         }
 
         setProperties(stack, state);
@@ -199,7 +201,7 @@ public class PFMItemModel<T> implements ItemModel {
     }
 
     @Environment(EnvType.CLIENT)
-    public record Unbaked(Block block, Optional<SpecialModelRenderer.Unbaked> specialModel, List<ItemTintSource> tints, Optional<BlockState> blockState) implements ItemModel.Unbaked {
+    public record Unbaked(Block block, Optional<SpecialModelRenderer.Unbaked<?>> specialModel, List<ItemTintSource> tints, Optional<BlockState> blockState) implements ItemModel.Unbaked {
         public static final MapCodec<Unbaked> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(
                                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").forGetter(Unbaked::block),
@@ -215,8 +217,8 @@ public class PFMItemModel<T> implements ItemModel {
         }
 
         @Override
-        public ItemModel bake(BakingContext context) {
-            Supplier<BlockStateModel> model = () -> Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(blockState.orElse(block.defaultBlockState()));
+        public ItemModel bake(BakingContext context, Matrix4fc transformation) {
+            Supplier<BlockStateModel> model = () -> Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(blockState.orElse(block.defaultBlockState()));
             if (specialModel.isPresent()) {
                 SpecialModelRenderer<?> specialModelRenderer = this.specialModel.get().bake(context);
                 return getItemModelFunc().apply(model, specialModelRenderer, this.tints);
