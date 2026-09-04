@@ -22,7 +22,7 @@ public class PFMCrackParticle$ItemFactoryMixin {
             BlockState defaultState = ((BlockItem)itemStackParticleEffect.getItem().item()).getBlock().defaultBlockState();
             BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(defaultState);
             if (model instanceof PFMBakedModelParticleExtension) {
-                ((PFMSpriteBillBoardParticleMixin)original).setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(clientWorld, BlockPos.containing(d, e, f), defaultState));
+                ((PFMSpriteBillBoardParticleMixin)original).pfm$setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(clientWorld, BlockPos.containing(d, e, f), defaultState));
             }
         }
         return original;

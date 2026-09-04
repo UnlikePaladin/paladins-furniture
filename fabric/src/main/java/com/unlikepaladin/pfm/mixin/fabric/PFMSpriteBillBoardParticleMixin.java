@@ -10,5 +10,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface PFMSpriteBillBoardParticleMixin {
     @Invoker("setSprite")
     @Intrinsic
-    void setSprite(TextureAtlasSprite sprite);
+    void pfm$setSprite(TextureAtlasSprite sprite);
 }

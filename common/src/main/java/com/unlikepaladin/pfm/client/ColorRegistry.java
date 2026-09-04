@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class ColorRegistry {
     public static final Map<ItemLike, ItemLike> itemColorProviders = new HashMap<>();
@@ -75,29 +76,19 @@ public class ColorRegistry {
         });
         PaladinFurnitureMod.furnitureEntryMap.forEach((key, value) -> {
             value.getVariantToBlockMap().forEach((variantBase, block) -> {
-                List<BlockTintSource> blockTintSources = getBlockTintSources(variantBase.getBaseBlock());
+                Block baseBlock = variantBase.getBaseBlock();
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
-                    BlockTintSource baseSource = (blockTintSources != null && !blockTintSources.isEmpty()) 
-                        ? blockTintSources.get(0) 
-                        : (state -> 0xFFFFFF);
-                    registerBlockColor(block, List.of(baseSource, addWaterColor()));
+                    registerBlockColor(block, List.of(lazyBlockTintSource(() -> getBlockTintSources(baseBlock), 0), addWaterColor()));
                 } else {
-                    if (blockTintSources != null && !blockTintSources.isEmpty()) {
-                        registerBlockColor(block, blockTintSources);
-                    }
+                    registerBlockColor(block, List.of(lazyBlockTintSource(() -> getBlockTintSources(baseBlock), 0)));
                 }
             });
             value.getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
-                List<BlockTintSource> blockTintSources = getBlockTintSources(variantBase.getBaseBlock());
+                Block baseBlock = variantBase.getBaseBlock();
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
-                    BlockTintSource baseSource = (blockTintSources != null && !blockTintSources.isEmpty()) 
-                        ? blockTintSources.get(0) 
-                        : (state -> 0xFFFFFF);
-                    registerBlockColor(block, List.of(baseSource, addWaterColor()));
+                    registerBlockColor(block, List.of(lazyBlockTintSource(() -> getBlockTintSources(baseBlock), 0), addWaterColor()));
                 } else {
-                    if (blockTintSources != null && !blockTintSources.isEmpty()) {
-                        registerBlockColor(block, blockTintSources);
-                    }
+                    registerBlockColor(block, List.of(lazyBlockTintSource(() -> getBlockTintSources(baseBlock), 0)));
                 }
             });
         });
@@ -168,6 +159,28 @@ public class ColorRegistry {
                     return BiomeColors.getAverageWaterColor(view, pos);
                 }
                 return color(state);
+            }
+        };
+    }
+
+    private static BlockTintSource lazyBlockTintSource(Supplier<List<BlockTintSource>> sourcesSupplier, int index) {
+        return new BlockTintSource() {
+            @Override
+            public int color(BlockState state) {
+                List<BlockTintSource> sources = sourcesSupplier.get();
+                if (sources != null && index < sources.size()) {
+                    return sources.get(index).color(state);
+                }
+                return 0xFFFFFF;
+            }
+
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter world, BlockPos pos) {
+                List<BlockTintSource> sources = sourcesSupplier.get();
+                if (sources != null && index < sources.size()) {
+                    return sources.get(index).colorInWorld(state, world, pos);
+                }
+                return 0xFFFFFF;
             }
         };
     }

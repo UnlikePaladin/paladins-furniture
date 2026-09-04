@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Mixin(SpriteLoader.class)
 public class PFMSpriteLoaderMixin {
 
-    @Inject(method = "method_47662", at = @At("HEAD"))
+    @Inject(method = "lambda$runSpriteSuppliers$2", at = @At("HEAD"))
     private static void pfm$InjectAdditionalSprites(List<SpriteContents> sprites, CallbackInfoReturnable<List<SpriteContents>> cir,
                                                     @Local(argsOnly = true) LocalRef<List<SpriteContents>> spriteList) {
 
