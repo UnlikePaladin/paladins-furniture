@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.renderer.BiomeColors;
@@ -75,6 +76,9 @@ public class ColorRegistry {
             }
         });
         PaladinFurnitureMod.furnitureEntryMap.forEach((key, value) -> {
+            if (BasicLampBlock.class.isAssignableFrom(key)) {
+                return;
+            }
             value.getVariantToBlockMap().forEach((variantBase, block) -> {
                 Block baseBlock = variantBase.getBaseBlock();
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
@@ -133,7 +137,7 @@ public class ColorRegistry {
         return new BlockTintSource() {
             @Override
             public int color(BlockState state) {
-                return state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
+                return state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? PFMFileUtil.adjustColor(0x3c44a9) : PFMFileUtil.adjustColor(0x534230);
             }
 
             @Override
