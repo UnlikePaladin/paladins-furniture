@@ -20,14 +20,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
@@ -76,10 +73,16 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                 builder.set(PFMComponents.VARIANT_COMPONENT, variant.identifier);
             }
 
-            ItemStack output = new ItemStack(optionalOutput.get().asItem(), furnitureOutput.getOutputCount());
             DataComponentMap finalComponents = builder.build();
+            DataComponentPatch.Builder finalPatch = DataComponentPatch.builder();
+            finalComponents.iterator().forEachRemaining(finalPatch::set);
+
+
+            ItemStackTemplate output;
             if (!finalComponents.isEmpty())
-                output.applyComponents(builder.build());
+                output = new ItemStackTemplate(optionalOutput.get().asItem().builtInRegistryHolder(), furnitureOutput.getOutputCount(), finalPatch.build());
+            else
+                output = new ItemStackTemplate(optionalOutput.get().asItem(), furnitureOutput.getOutputCount());
 
             Map<String, Integer> childrenToCountMap = ingredients.variantChildren;
 
@@ -121,9 +124,11 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                 Optional<Block> strippedOptional = PaladinFurnitureMod.furnitureEntryMap.get(getOutputBlockClass()).getEntryFromVariant(variant, true);
                 if (strippedOptional.isPresent()) {
 
-                    ItemStack strippedOutput = new ItemStack(strippedOptional.get(), furnitureOutput.getOutputCount());
+                    ItemStackTemplate strippedOutput;
                     if (!finalComponents.isEmpty())
-                        strippedOutput.applyComponents(finalComponents);
+                        strippedOutput = new ItemStackTemplate(strippedOptional.get().asItem().builtInRegistryHolder(), furnitureOutput.getOutputCount(), finalPatch.build());
+                    else
+                        strippedOutput = new ItemStackTemplate(strippedOptional.get().asItem(), furnitureOutput.getOutputCount());
 
                     FurnitureInnerRecipe stripped = new FurnitureInnerRecipe(this, strippedOutput, strippedIngredients);
                     recipes.add(stripped);
@@ -290,14 +295,14 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         return Objects.hash(group, furnitureOutput, ingredients);
     }
 
-    Map<ItemStack, FurnitureInnerRecipe> outputToInnerRecipe = new HashMap<>();
+    Map<ItemStackTemplate, FurnitureInnerRecipe> outputToInnerRecipe = new HashMap<>();
     Map<Item, FurnitureInnerRecipe> outputItemToInnerRecipe = new HashMap<>();
     public static final class FurnitureInnerRecipe implements CraftableFurnitureRecipe {
         private final DynamicFurnitureRecipe parentRecipe;
-        private final ItemStack output;
+        private final ItemStackTemplate output;
         private final List<Ingredient> ingredients;
         private final List<Ingredient> combinedIngredients;
-        public FurnitureInnerRecipe(DynamicFurnitureRecipe parentRecipe, ItemStack output, List<Ingredient> ingredients) {
+        public FurnitureInnerRecipe(DynamicFurnitureRecipe parentRecipe, ItemStackTemplate output, List<Ingredient> ingredients) {
             this.parentRecipe = parentRecipe;
             this.output = output;
             this.ingredients = ingredients;
@@ -305,12 +310,12 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             this.combinedIngredients.addAll(ingredients);
             this.combinedIngredients.addAll(parentRecipe.ingredients.vanillaIngredients);
             parentRecipe.outputToInnerRecipe.put(output, this);
-            parentRecipe.outputItemToInnerRecipe.put(output.getItem(), this);
+            parentRecipe.outputItemToInnerRecipe.put(output.item().value(), this);
         }
 
         @Override
         public ItemStack getResult(HolderLookup.Provider registryManager) {
-            return output;
+            return output.create();
         }
 
         @Override
@@ -345,19 +350,19 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
         @Override
         public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory) {
-            return output.copy();
+            return output.create();
         }
 
         @Override
         public ItemStack getRecipeOuput() {
-            return output;
+            return output.create();
         }
 
         @Override
         public boolean equals(Object object) {
             if (this == object) return true;
             if (!(object instanceof FurnitureInnerRecipe that)) return false;
-            return Objects.equals(parentRecipe, that.parentRecipe) && ItemStack.matches(output, that.output) && Objects.equals(combinedIngredients, that.combinedIngredients);
+            return Objects.equals(parentRecipe, that.parentRecipe) && ItemStack.matches(output.create(), that.output.create()) && Objects.equals(combinedIngredients, that.combinedIngredients);
         }
 
         @Override

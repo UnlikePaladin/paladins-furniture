@@ -33,11 +33,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BedBlock;
@@ -284,7 +280,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
         if (!generatedRecipes.contains(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDefaultInstance().copyWithCount(6)).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM, 6).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
             generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
@@ -313,7 +309,7 @@ public class PFMRecipeProvider extends PFMProvider {
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD))) {
             offerShowerHeadRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, Ingredient.of(Items.WATER_BUCKET), exporter);
-            offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM.getDefaultInstance(), Ingredient.of(Blocks.LEVER), exporter);
+            offerShowerHandleRecipe(new ItemStackTemplate(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM), Ingredient.of(Blocks.LEVER), exporter);
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD));
             generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM));
         }
@@ -628,8 +624,8 @@ public class PFMRecipeProvider extends PFMProvider {
         SimpleFurnitureRecipeJsonFactory.create(output, 1).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 1).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    public static void offerShowerHandleRecipe(ItemStack output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.getItem().getDescriptionId().replace("block.pfm.", "")));
+    public static void offerShowerHandleRecipe(ItemStackTemplate output, Ingredient base, RecipeOutput exporter) {
+        SimpleFurnitureRecipeJsonFactory.create(output).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.item().value().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerShowerTowelRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {

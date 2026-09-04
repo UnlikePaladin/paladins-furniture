@@ -13,6 +13,7 @@ import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.resources.ResourceKey;
@@ -25,7 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
-    private final ItemStack stack;
+    private final ItemStackTemplate stack;
     private final NonNullList<Ingredient> inputs = NonNullList.create();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
@@ -35,15 +36,14 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     private String group;
 
     public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount) {
-        this.stack = new ItemStack(output, outputCount);
+        this.stack = new ItemStackTemplate(output.asItem(), outputCount);
     }
 
     public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount, @NotNull DataComponentPatch components) {
-        this.stack = new ItemStack(output, outputCount);
-        this.stack.applyComponents(components);
+        this.stack = new ItemStackTemplate(output.asItem().builtInRegistryHolder(), outputCount, components);
     }
 
-    public SimpleFurnitureRecipeJsonFactory(ItemStack stack) {
+    public SimpleFurnitureRecipeJsonFactory(ItemStackTemplate stack) {
         this.stack = stack;
     }
 
@@ -63,7 +63,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
         return new SimpleFurnitureRecipeJsonFactory(output, count);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemStack stack) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemStackTemplate stack) {
         return new SimpleFurnitureRecipeJsonFactory(stack);
     }
 

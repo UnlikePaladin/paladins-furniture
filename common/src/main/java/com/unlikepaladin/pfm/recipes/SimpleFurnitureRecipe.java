@@ -13,6 +13,7 @@ import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
@@ -20,11 +21,11 @@ import java.util.*;
 
 public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.CraftableFurnitureRecipe {
     final String group;
-    final ItemStack output;
+    final ItemStackTemplate output;
     final NonNullList<Ingredient> input;
 
 
-    public SimpleFurnitureRecipe(String group, ItemStack output, List<Ingredient> input) {
+    public SimpleFurnitureRecipe(String group, ItemStackTemplate output, List<Ingredient> input) {
         this.group = group;
         this.output = output;
         this.input = NonNullList.createWithCapacity(input.size());
@@ -63,17 +64,17 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
     @Override
     public ItemStack getRecipeOuput() {
-        return output;
+        return output.create();
     }
 
     @Override
     public ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput playerInventory) {
-        if (!this.output.getComponents().isEmpty() && output.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            ItemStack stack = this.output.copy();
+        if (!this.output.components().isEmpty() && output.get(DataComponents.BLOCK_ENTITY_DATA) != null) {
+            ItemStack stack = this.output.create();
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
             return stack;
         }
-        return this.output.copy();
+        return this.output.create();
     }
 
     @Override
@@ -83,7 +84,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
     @Override
     public ItemStack getResult(HolderLookup.Provider registryManager) {
-        return this.output;
+        return this.output.create();
     }
 
     @Override
@@ -108,7 +109,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
     @Override
     public String outputClass() {
-        return this.output.getItem().getClass().getSimpleName();
+        return this.output.item().getClass().getSimpleName();
     }
 
     @Override
@@ -143,7 +144,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         public static final MapCodec<SimpleFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
                 instance.group(
                                 Codec.STRING.optionalFieldOf("group", "").forGetter(SimpleFurnitureRecipe::group),
-                                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
+                                ItemStackTemplate.CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                                 Ingredient.CODEC.listOf().fieldOf("ingredients").flatXmap((ingredients) -> {
                                     NonNullList<Ingredient> defaultedList = NonNullList.create();
                                     defaultedList.addAll(ingredients);
@@ -169,14 +170,14 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         public static SimpleFurnitureRecipe read(RegistryFriendlyByteBuf packetByteBuf) {
             String string = packetByteBuf.readUtf();
             NonNullList<Ingredient> defaultedList = packetByteBuf.readCollection(NonNullList::createWithCapacity, buf1 -> Ingredient.CONTENTS_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf1));
-            ItemStack itemStack = ItemStack.STREAM_CODEC.decode(packetByteBuf);
+            ItemStackTemplate itemStack = ItemStackTemplate.STREAM_CODEC.decode(packetByteBuf);
             return new SimpleFurnitureRecipe(string, itemStack, defaultedList);
         }
 
         public static void write(RegistryFriendlyByteBuf packetByteBuf, SimpleFurnitureRecipe simpleFurnitureRecipe) {
             packetByteBuf.writeUtf(simpleFurnitureRecipe.group);
             packetByteBuf.writeCollection(simpleFurnitureRecipe.input, (buff, ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buff, ingredient));
-            ItemStack.STREAM_CODEC.encode(packetByteBuf, simpleFurnitureRecipe.output);
+            ItemStackTemplate.STREAM_CODEC.encode(packetByteBuf, simpleFurnitureRecipe.output);
         }
     }
 }
