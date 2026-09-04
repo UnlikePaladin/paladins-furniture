@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveData;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,7 +16,7 @@ import net.minecraft.core.BlockPos;
 
 ;
 
-public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedScreenHandlerFactory<StoveData> {
+public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedMenuProvider<StoveData> {
 
     public StoveBlockEntityImpl(BlockPos pos, BlockState state) {
         super(pos, state);

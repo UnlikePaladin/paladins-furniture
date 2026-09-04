@@ -24,15 +24,15 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
     }
 
     public static InteractionResult openBook(Level world, Player user, InteractionHand hand) {
-        if (!world.isClientSide() && ModList.get().isLoaded("patchouli")) {
+        if (!world.isClientSide() && ModList.isLoaded("patchouli")) {
             //TODO: FIX when patchouli updates or i replace the book system
             //PatchouliAPI.get().openBookGUI((ServerPlayer) user, Identifier.parse("pfm:guide_book"));
             return InteractionResult.SUCCESS;
         }
-        else if (world.isClientSide() && !ModList.get().isLoaded("patchouli"))
+        else if (world.isClientSide() && !ModList.isLoaded("patchouli"))
         {
             Component text = Component.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
-            user.displayClientMessage(text,false);
+            user.sendOverlayMessage(text);
         }
         return InteractionResult.PASS;
     }

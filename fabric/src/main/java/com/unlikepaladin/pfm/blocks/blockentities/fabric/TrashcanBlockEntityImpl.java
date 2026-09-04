@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 
 import org.jetbrains.annotations.Nullable;
 
-public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements ExtendedScreenHandlerFactory<TrashcanScreenHandler.TrashCanData> {
+public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements ExtendedMenuProvider<TrashcanScreenHandler.TrashCanData> {
     public TrashcanBlockEntityImpl(BlockPos pos, BlockState state) {
         super(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
     }

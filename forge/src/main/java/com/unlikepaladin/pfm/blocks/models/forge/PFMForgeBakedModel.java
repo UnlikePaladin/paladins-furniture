@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.client.model.geom.builders.UVPair;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
@@ -19,7 +20,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -73,8 +74,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             }
 
             @Override
-            public TextureAtlasSprite particleIcon() {
-                return replacements.getFirst();
+            public Material.Baked particleMaterial() {
+                return new Material.Baked(replacements.getFirst(), false);
+            }
+
+            @Override
+            public @BakedQuad.MaterialFlags int materialFlags() {
+                return 0;
             }
 
             @Override
@@ -86,7 +92,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
+                return particleMaterial().equals(((BlockStateModelPart) obj).particleMaterial()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
     }
@@ -104,8 +110,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             }
 
             @Override
-            public TextureAtlasSprite particleIcon() {
-                return replacements.getFirst();
+            public Material.Baked particleMaterial() {
+                return new Material.Baked(replacements.getFirst(), false);
+            }
+
+            @Override
+            public @BakedQuad.MaterialFlags int materialFlags() {
+                return modelPart.materialFlags();
             }
 
             @Override
@@ -117,7 +128,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
+                return particleMaterial().equals(((BlockStateModelPart) obj).particleMaterial()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
     }
@@ -137,10 +148,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                 }
 
                 @Override
-                public TextureAtlasSprite particleIcon() {
-                    return quad.particleIcon();
+                public Material.Baked particleMaterial() {
+                    return quad.particleMaterial();
                 }
 
+                @Override
+                public @BakedQuad.MaterialFlags int materialFlags() {
+                    return quad.materialFlags();
+                }
 
                 @Override
                 public boolean equals(Object obj) {
@@ -151,7 +166,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                         if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                             return false;
                     }
-                    return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
+                    return particleMaterial().equals(((BlockStateModelPart) obj).particleMaterial()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
                 }
             });
         }
@@ -183,7 +198,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             return quads;
 
         for (BakedQuad quad : quads) {
-            SpriteData sprite = new SpriteData(quad.sprite());
+            SpriteData sprite = new SpriteData(quad.materialInfo().sprite());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
 
             separatedQuads.compute(pair, (key, existingList) -> {
@@ -254,8 +269,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             }
 
             @Override
-            public TextureAtlasSprite particleIcon() {
-                return ogPart.particleIcon();
+            public Material.Baked particleMaterial() {
+                return ogPart.particleMaterial();
+            }
+
+            @Override
+            public @BakedQuad.MaterialFlags int materialFlags() {
+                return ogPart.materialFlags();
             }
 
             @Override
@@ -267,7 +287,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     if (this.getQuads(direction) != ((BlockStateModelPart) obj).getQuads(direction))
                         return false;
                 }
-                return particleIcon().equals(((BlockStateModelPart) obj).particleIcon()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
+                return particleMaterial().equals(((BlockStateModelPart) obj).particleMaterial()) && useAmbientOcclusion() == ((BlockStateModelPart) obj).useAmbientOcclusion();
             }
         };
         partToTransformedPart.put(pair, part);
@@ -289,7 +309,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             // Use computeIfAbsent for atomic check-and-put operation
             BakedQuad resultQuad = quadToTransformedQuad.computeIfAbsent(quadKey, key -> {
-                if (quad.sprite().contents().name().equals(spriteData.getId())) {
+                if (quad.materialInfo().sprite().contents().name().equals(spriteData.getId())) {
                     // Same sprite, return original quad
                     return quad;
                 } else {
@@ -298,7 +318,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
                     long[] newUVs = new long[4];
                     long[] ogUVs = {quad.packedUV0(), quad.packedUV1(), quad.packedUV2(), quad.packedUV3()};
-                    TextureAtlasSprite originalSprite = quad.sprite();
+                    TextureAtlasSprite originalSprite = quad.materialInfo().sprite();
                     for (int i = 0; i < 4; i++) {
                         UVPair unpacked = unpackUV(ogUVs[i]);
 
@@ -310,7 +330,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     }
 
                     return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
-                            newUVs[0], newUVs[1], newUVs[2], newUVs[3], quad.tintIndex(), quad.direction(), quad.sprite(), quad.shade(), quad.lightEmission());
+                            newUVs[0], newUVs[1], newUVs[2], newUVs[3], quad.direction(), BakedQuad.MaterialInfo.of(new Material.Baked(quad.materialInfo().sprite(), false), quad.materialInfo().sprite().transparency(), quad.materialInfo().tintIndex(), quad.materialInfo().shade(), quad.materialInfo().lightEmission()));
                 }
             });
 
@@ -343,10 +363,10 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(ModelData data) {
+    public Material.Baked particleMaterial(@NotNull ModelData data) {
         if (data != null && data.has(STATE) && data.get(STATE) != null && getVariant(data.get(STATE)) != null)
-            return getSpriteList(data.get(STATE)).get(0);
-        return super.particleIcon(data);
+            return new Material.Baked(getSpriteList(data.get(STATE)).get(0), false);
+        return super.particleMaterial(data);
     }
 
     @Override
@@ -370,8 +390,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public TextureAtlasSprite particleIcon() {
-        return getTemplateBakedModels().get(0).particleIcon();
+    public Material.Baked particleMaterial() {
+        return getTemplateBakedModels().getFirst().particleMaterial();
+    }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        return getTemplateBakedModels().getFirst().materialFlags();
     }
 
     public static class SpriteData {

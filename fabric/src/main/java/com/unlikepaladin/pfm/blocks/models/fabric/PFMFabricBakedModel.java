@@ -5,14 +5,20 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.fabric.PFMBakedModelParticleExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadAtlas;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.client.renderer.v1.model.FabricBlockStateModel;
+import net.fabricmc.fabric.api.client.renderer.v1.sprite.FabricMaterialBaker;
+import net.fabricmc.fabric.api.client.renderer.v1.sprite.FabricTextureAtlas;
+import net.fabricmc.fabric.api.client.renderer.v1.sprite.SpriteFinder;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.AtlasManager;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
@@ -35,7 +41,9 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
 
     public void pushTextureTransform(QuadEmitter context, TextureAtlasSprite sprite) {
         context.pushTransform(quad -> {
-            TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS)).find(quad);
+            AtlasManager atlasManager = Minecraft.getInstance().getAtlasManager();
+            FabricTextureAtlas textureAtlas = atlasManager.getAtlasOrThrow(AtlasIds.BLOCKS);
+            TextureAtlasSprite originalSprite = textureAtlas.spriteFinder().find(quad);
             if (originalSprite.contents().name() != sprite.contents().name()) {
                 for (int index = 0; index < 4; index++) {
                     float frameU = ModelHelper.getFrameFromU(originalSprite, quad.u(index));
@@ -52,7 +60,9 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement, Identifier atlasId) {
         context.pushTransform(quad -> {
             if (replacement != null && toReplace != null ){
-                TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(atlasId)).find(quad, 0);
+                AtlasManager atlasManager = Minecraft.getInstance().getAtlasManager();
+                FabricTextureAtlas textureAtlas = atlasManager.getAtlasOrThrow(AtlasIds.BLOCKS);
+                TextureAtlasSprite originalSprite = textureAtlas.spriteFinder().find(quad);
                 Identifier keyId = originalSprite.contents().name();
                 int textureIndex = IntStream.range(0, toReplace.size())
                         .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
@@ -79,15 +89,14 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     }
 
     @Override
-    public TextureAtlasSprite particleIcon() {
-        return getTemplateBakedModels().get(0).particleIcon();
+    public Material.Baked particleMaterial() {
+        return getTemplateBakedModels().get(0).particleMaterial();
     }
 
     @Override
-    public TextureAtlasSprite particleSprite(BlockAndTintGetter blockView, BlockPos pos, BlockState state) {
-        return pfm$getParticle(state);
+    public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
+        return new Material.Baked(pfm$getParticle(state), false);
     }
-
     @Override
     public void setBlockStateProperty(BlockState state) {
         this.blockState = state;
@@ -110,12 +119,17 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
 
 
     public void emitModelQuads(QuadEmitter emitter, BlockStateModel model, RandomSource random) {
-        List<BlockStateModelPart> parts = model.collectParts(random);
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        model.collectParts(random, parts);
         int partCount = parts.size();
-
         for(int i = 0; i < partCount; ++i) {
             parts.get(i).emitQuads(emitter, null);
         }
+    }
+
+    @Override
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        return getTemplateBakedModels().getFirst().materialFlags();
     }
 
     abstract public void emitItemQuads(QuadEmitter context, RandomSource randomSupplier);

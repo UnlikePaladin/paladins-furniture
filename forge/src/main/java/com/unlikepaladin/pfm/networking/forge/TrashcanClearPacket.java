@@ -30,7 +30,7 @@ public class TrashcanClearPacket {
                     trashcanBlockEntity.clearContent();
                 }
                 else {
-                    player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.sendOverlayMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"));
                 }
             });
         });

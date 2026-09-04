@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
-import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
@@ -10,23 +9,18 @@ import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
 import com.unlikepaladin.pfm.client.model.FurnitureTintSource;
 import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
-import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
-import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
-import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.fabric.NetworkRegistryFabric;
 import com.unlikepaladin.pfm.runtime.fabric.TextureReloadQueueImpl;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialBlockRendererRegistry;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltInBlockModelsCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.item.ItemModels;
@@ -50,10 +44,10 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ColorRegistryFabric.registerAll();
         ClientPacketRegistry.registerClientPackets();
         registerModels();
-
+        BuiltInBlockModelsCallback.EVENT.register(PaladinFurnitureModClientFabric::registerBuiltinBlocks);
         TextureReloadQueueImpl.registerTextureReload();
         PFMSpriteRegistry.registerAdditionalSprites();
-        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
                 InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_U, // The keycode of the key
@@ -70,14 +64,17 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);
     }
 
+    private static void registerBuiltinBlocks(BuiltInBlockModels.Builder builder) {
+        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
+            if (block instanceof DyeableFurnitureBlock)
+                builder.put(BuiltInBlockModels.special(new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor())), block);
+        }
+    }
+
     public static void registerModels() {
         ItemModels.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_model"), PFMItemModel.Unbaked.CODEC);
         SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
         ItemTintSources.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
-        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-            if (block instanceof DyeableFurnitureBlock)
-                SpecialBlockRendererRegistry.register(block, new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));
-        }
     }
 
 }

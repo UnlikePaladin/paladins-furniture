@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PlateBlockImpl {
     public static void eatSandwich(ItemStack stack, Level world, Player player) {
-        player.displayClientMessage(Component.literal("You just ate a Sandwich in NeoForge?"), false);
+        player.sendOverlayMessage(Component.literal("You just ate a Sandwich in NeoForge?"));
     }
 
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {

@@ -7,20 +7,20 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -82,7 +82,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
         oakSprite.add(wood);
         return oakSprite;
     }
@@ -92,7 +92,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
         List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
@@ -101,7 +101,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
 
     @Override
     public TextureAtlasSprite pfm$getParticle(BlockState state) {
-        return getTemplateBakedModels().get(4).particleIcon();
+        return getTemplateBakedModels().get(4).particleMaterial().sprite();
     }
 
     @Override

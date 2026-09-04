@@ -15,10 +15,10 @@ import java.util.Map;
 public class BlockColorsAccessor implements BlockColorsExtension {
 
     @Shadow
-    private final Map<Block, List<BlockTintSource>> blockColors = new HashMap<>();
+    private final Map<Block, List<BlockTintSource>> sources = new HashMap<>();
 
     @Override
     public Map<Block, List<BlockTintSource>> getColorMap() {
-        return blockColors;
+        return sources;
     }
 }

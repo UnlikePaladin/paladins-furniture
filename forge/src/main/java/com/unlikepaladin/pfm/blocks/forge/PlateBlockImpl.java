@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 
 public class PlateBlockImpl {
     public static void eatSandwich(ItemStack stack, Level world, Player player) {
-        player.displayClientMessage(Component.nullToEmpty("You just ate a Sandwich in Forge?"), false);
+        player.sendOverlayMessage(Component.nullToEmpty("You just ate a Sandwich in Forge?"));
     }
 
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {

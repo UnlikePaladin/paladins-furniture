@@ -6,6 +6,7 @@
   "client": [
     "BlockColorsAccessor",
     "BlockStateModelUnbakedMixinFabricAPI",
+    "BuiltInBlockModelsMixinFabricAPI",
     "PFMBakedModelManagerMixin",
     "PFMModelBakerBakedModelsMixin",
     "PFMModelBakerMixin"
@@ -13,8 +14,6 @@
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",
     "PFMHeatableBlockEntityMixin",
-    "PFMLootItemAccessor",
-    "PFMLootPool$BuilderMixin",
     "PFMSaveLoaderMixin",
     "PFMSimpleReloadableResourceManagerMixin"
   ],

@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-
+/*
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-/*
+
 public class FurnitureRecipeHandler implements StandardRecipeHandler<WorkbenchScreenHandler> {
 
     @Override

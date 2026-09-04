@@ -83,6 +83,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelDispatcher;
 
 public class PFMBlockstateModelProvider extends PFMProvider {
 
@@ -102,7 +103,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         Consumer<BlockModelDefinitionGenerator> blockStateSupplierConsumer = blockStateSupplier -> {
             Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.block());
-            JsonElement element = BlockModelDefinition.CODEC.encodeStart(JsonOps.INSTANCE, blockStateSupplier.create()).getOrThrow();
+            JsonElement element = BlockStateModelDispatcher.CODEC.encodeStart(JsonOps.INSTANCE, blockStateSupplier.create()).getOrThrow();
             String jsonContent = PFMDataGenerator.GSON.toJson(element);
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };

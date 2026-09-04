@@ -11,8 +11,7 @@ import net.minecraft.world.level.Level;
 
 public class PlateBlockImpl {
     public static void eatSandwich(ItemStack stack, Level world, Player player) {
-        SandwichBlockItem item = (SandwichBlockItem)stack.getItem();
-        item.finishUsingItem(stack, world, player);
+
     }
 
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {

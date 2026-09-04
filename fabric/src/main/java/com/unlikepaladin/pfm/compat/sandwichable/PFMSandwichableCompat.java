@@ -52,12 +52,4 @@ public class PFMSandwichableCompat {
             }
         }*/
     }
-
-    public static boolean isMetal(ItemStack stack) {
-        return stack.is(Sandwichable.METAL_ITEMS);
-    }
-
-    public static boolean isSandwich(ItemStack stack) {
-        return stack.getItem().equals(BlocksRegistry.SANDWICH.asItem());
-    }
 }

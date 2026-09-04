@@ -10,6 +10,8 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
@@ -18,11 +20,10 @@ import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,16 +37,16 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(@NotNull ModelData data) {
+    public Material.Baked particleMaterial(@NotNull ModelData data) {
         if (!data.has(STATE) || data.get(STATE) == null) {
-            return super.particleIcon(data);
+            return super.particleMaterial(data);
         }
         BlockState state = data.get(STATE);
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
-            return generateTextureIfNeeded(variant);
+            return new Material.Baked(generateTextureIfNeeded(variant), false);
         }
-        return super.particleIcon(data);
+        return super.particleMaterial(data);
     }
 
     @Override
@@ -60,10 +61,10 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         return super.getModelData(world, pos, state, tileData);
     }
 
-    static Material herringboneTextureId = new Material(TextureAtlas.LOCATION_BLOCKS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
+    static SpriteId herringboneTextureId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
-    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData data, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData data) {
         BlockState state = data.get(STATE);
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
@@ -78,9 +79,9 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
 
     private TextureAtlasSprite generateTextureIfNeeded(VariantBase<?> variant) {
         Identifier finalId = Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-        Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, finalId);
+        SpriteId mainTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, finalId);
         if (!((PFMSpriteContentExtensions)(ModelHelper.getSprite(mainTexture)).contents()).pfm$isInitialized()) {
-            Material baseTextureSpriteId = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY));
+            SpriteId baseTextureSpriteId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY));
             ModelHelper.generateTexture(ModelHelper.getSprite(herringboneTextureId), ModelHelper.getSprite(baseTextureSpriteId), 7, finalId);
         }
         return ModelHelper.getSprite(mainTexture);
@@ -89,7 +90,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random) {
         Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).sprite().contents()).pfm$isInitialized()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).materialInfo().sprite().contents()).pfm$isInitialized()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(face, random);

@@ -17,9 +17,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     private static final Identifier texture = Identifier.fromNamespaceAndPath("cookingforblockheads", "textures/gui/oven.png");
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, Inventory playerInventory, Component displayName) {
-        super(container, playerInventory, displayName);
-        this.imageWidth += 22;
-        this.imageHeight = 193;
+        super(container, playerInventory, displayName, 198, 193);
         this.titleLabelX += 22;
         this.inventoryLabelX += 22;
         this.inventoryLabelY = this.imageHeight - 94;
@@ -28,7 +26,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     @Override
     public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float partialTicks) {
         super.extractRenderState(context, mouseX, mouseY, partialTicks);
-        this.renderTooltip(context, mouseX, mouseY);
+        this.extractTooltip(context, mouseX, mouseY);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         if (tileEntity.hasPowerUpgrade() && mouseX >= this.leftPos + this.imageWidth - 25 && mouseY >= this.topPos + 22 && mouseX < this.leftPos + this.imageWidth - 25 + 35 + 18 && mouseY < this.topPos + 22 + 72) {
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
@@ -57,7 +55,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
     }
 
     @Override
-    protected void extractBackground(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float partialTicks) {
+    public void extractBackground(GuiGraphicsExtractor drawContext, int mouseX, int mouseY, float partialTicks) {
         drawContext.blit(RenderPipelines.GUI_TEXTURED, texture, this.leftPos + 22, this.topPos, 0.0F, 0.0F, this.imageWidth - 22, this.imageHeight, 256, 256);
         drawContext.blit(RenderPipelines.GUI_TEXTURED, texture, this.leftPos, this.topPos + 10, 176.0F, 30.0F, 25, 87, 256, 256);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();

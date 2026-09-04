@@ -6,9 +6,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class PFMToasterBlockImpl {
     public static boolean isSandwich(ItemStack stack) {
-        if (PaladinFurnitureMod.getModList().contains("sandwichable")) {
-            return PFMSandwichableCompat.isSandwich(stack);
-        }
         return false;
     }
 }

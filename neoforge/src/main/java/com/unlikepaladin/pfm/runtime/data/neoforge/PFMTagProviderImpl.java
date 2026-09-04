@@ -78,7 +78,7 @@ public class PFMTagProviderImpl {
 
         @Override
         public TagAppender<ResourceKey<T>, T> replace(boolean bl) {
-            tagBuilder.replace(bl);
+            tagBuilder.setReplace(bl);
             return this;
         }
 

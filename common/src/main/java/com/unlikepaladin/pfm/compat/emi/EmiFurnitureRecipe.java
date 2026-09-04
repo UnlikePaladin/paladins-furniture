@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-
+/*
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.*;
 import java.util.stream.Collectors;
-/*
+
 public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
 
     private final FurnitureRecipe recipe;

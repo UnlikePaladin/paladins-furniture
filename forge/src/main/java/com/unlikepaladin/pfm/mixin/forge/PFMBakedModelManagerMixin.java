@@ -28,8 +28,7 @@ import java.util.concurrent.Executor;
 @Mixin(ModelManager.class)
 public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerExtensions {
     @Shadow
-    public abstract BlockStateModel getMissingBlockStateModel();
-
+    private ModelBakery.MissingModels missingModels;
     @Unique
     @Nullable
     private Map<Identifier, BlockStateModel> pfm$extraModels;
@@ -57,8 +56,8 @@ public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerE
     @Override
     public BlockStateModel pfm_getModel(Identifier id) {
         if (pfm$extraModels == null) {
-            return getMissingBlockStateModel();
+            return missingModels.block();
         }
-        return pfm$extraModels.getOrDefault(id, getMissingBlockStateModel());
+        return pfm$extraModels.getOrDefault(id, missingModels.block());
     }
 }

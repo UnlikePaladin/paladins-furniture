@@ -37,7 +37,7 @@ public class ClientOverlaySetter {
             ((PFMMinecraftClientAcccessor)client).getFrameCapturer().upload();
             ((PFMMinecraftClientAcccessor)client).getFrameCapturer().capture(client.getMainRenderTarget());
         }
-        client.getWindow().updateDisplay(((PFMMinecraftClientAcccessor)client).getFrameCapturer());
+        RenderSystem.flipFrame(((PFMMinecraftClientAcccessor)client).getFrameCapturer());
         ((DeltaTracker.Timer)client.getDeltaTracker()).updatePauseState(client.isPaused());
         ((DeltaTracker.Timer)client.getDeltaTracker()).updateFrozenState(!shouldTick(client));
 

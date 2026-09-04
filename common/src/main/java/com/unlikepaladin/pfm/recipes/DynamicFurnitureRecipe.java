@@ -20,6 +20,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,7 +58,8 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             DataComponentMap.Builder builder = DataComponentMap.builder();
 
             if (!componentChanges.isEmpty() && componentChanges.entrySet().stream().anyMatch(dataComponentTypeOptionalEntry -> dataComponentTypeOptionalEntry.getKey() == PFMComponents.COLOR_COMPONENT)) {
-                optionalOutput = PaladinFurnitureMod.furnitureEntryMap.get(getOutputBlockClass()).getEntryFromVariantAndColor(variant, componentChanges.get(PFMComponents.COLOR_COMPONENT).get());
+                DyeColor color = componentChanges.get(DataComponentMap.EMPTY, PFMComponents.COLOR_COMPONENT);
+                optionalOutput = PaladinFurnitureMod.furnitureEntryMap.get(getOutputBlockClass()).getEntryFromVariantAndColor(variant, color);
                 if (optionalOutput.get().asItem().components().get(PFMComponents.COLOR_COMPONENT) == null) {
                     componentChanges = componentChanges.forget(dataComponentType -> dataComponentType == PFMComponents.COLOR_COMPONENT);
                     PatchedDataComponentMap.fromPatch(optionalOutput.get().asItem().components(), componentChanges);

@@ -14,7 +14,7 @@ public class PaladinFurnitureModImpl {
     }
 
     public static List<String> getModList() {
-        return ModList.get().getMods().stream().map(IModInfo::getModId).filter(s -> !s.contains("generated_")).sorted().collect(Collectors.toList());
+        return ModList.getMods().stream().map(IModInfo::getModId).filter(s -> !s.contains("generated_")).sorted().collect(Collectors.toList());
     }
 
     public static PaladinFurnitureMod.Loader getLoader() {
@@ -23,7 +23,7 @@ public class PaladinFurnitureModImpl {
 
     public static Map<String, String> getVersionMap() {
         Map<String, String> map = new LinkedHashMap<>();
-        ModList.get().getMods().stream().sorted(Comparator.comparing(IModInfo::getModId)).filter(modContainer -> !modContainer.getModId().contains("generated_")).forEach(iModInfo -> map.put(iModInfo.getModId(), iModInfo.getVersion().toString()));
+        ModList.getMods().stream().sorted(Comparator.comparing(IModInfo::getModId)).filter(modContainer -> !modContainer.getModId().contains("generated_")).forEach(iModInfo -> map.put(iModInfo.getModId(), iModInfo.getVersion().toString()));
         return map;
     }
 }

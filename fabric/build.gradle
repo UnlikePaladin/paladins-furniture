@@ -117,13 +117,6 @@ if (rootProject.rei_compatibility == "true"){
         }
     }
 }
-if (rootProject.emi_compatibility == "true"){
-    dependencies {
-        runtimeOnly("dev.emi:emi-fabric:${emi_version}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
 
 if (rootProject.patchouli_compatibility == "true") {
     dependencies {

@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-
+/*
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -14,7 +14,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
 import java.util.List;
-/*
 
 public class EmiFreezingRecipe implements EmiRecipe {
    private final Identifier id;

@@ -25,16 +25,12 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.util.InclusiveRange;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.CreateSpecialBlockRendererEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.eventbus.api.listener.Priority;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -70,16 +66,15 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         RegisterEvent.getBus(modBusGroup).addListener(PFMComponentsImpl::registerComponents);
         if (isClient) {
             ItemModelRegistry.registerItemModelTypes();
-            var blockColorsBus = RegisterColorHandlersEvent.Block.getBus(modBusGroup);
+            var blockColorsBus = RegisterColorHandlersEvent.Block.BUS;
             blockColorsBus.addListener(Priority.LOW, ColorRegistryForge::registerBlockColors);
-            CreateSpecialBlockRendererEvent.BUS.addListener(ItemModelRegistry::registerSpecialModelRenderers);
             PaladinFurnitureModClientForge.registerCustomModels();
         }
         NetworkRegistryForge.registerPackets();
         LateBlockRegistryForge.addDynamicBlockRegistration(loadContext);
         RegisterEvent.getBus(modBusGroup).addListener(ItemGroupRegistryForge::registerItemGroups);
-        BuildCreativeModeTabContentsEvent.getBus(modBusGroup).addListener(ItemGroupRegistryForge::addToVanillaItemGroups);
-        AddPackFindersEvent.getBus(modBusGroup).addListener(PaladinFurnitureModForge::generateResources);
+        BuildCreativeModeTabContentsEvent.BUS.addListener(ItemGroupRegistryForge::addToVanillaItemGroups);
+        AddPackFindersEvent.BUS.addListener(PaladinFurnitureModForge::generateResources);
     }
 
     public static void generateResources(AddPackFindersEvent event) {

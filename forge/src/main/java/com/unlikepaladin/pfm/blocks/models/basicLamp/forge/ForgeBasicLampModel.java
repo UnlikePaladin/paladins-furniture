@@ -10,20 +10,23 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +71,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
         oakSprite.add(wood);
         return oakSprite;
     }
@@ -78,7 +81,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
         List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
@@ -86,7 +89,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockStateModelPart> dest, ModelData extraData) {
         BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BlockStateModelPart> quads = new ArrayList<>();
@@ -113,11 +116,11 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(@NotNull ModelData data) {
+    public Material.Baked particleMaterial(@NotNull ModelData data) {
         if (data != null && data.has(VARIANT)) {
-            return getVariantStrippedLogSprite(data.get(VARIANT)).get(0);
+            return new Material.Baked(getVariantStrippedLogSprite(data.get(VARIANT)).get(0), false);
         }
-        return super.particleIcon(data);
+        return super.particleMaterial(data);
     }
 
     @Override

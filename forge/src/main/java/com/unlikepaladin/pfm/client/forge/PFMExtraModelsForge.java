@@ -1,7 +1,12 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
@@ -40,7 +45,7 @@ public class PFMExtraModelsForge {
                 return new SingleVariant(new SimpleModelWrapper(
                         baked.bakeTopGeometry(textures, baker, settings),
                         baked.getTopAmbientOcclusion(),
-                        baked.resolveParticleSprite(textures, baker)
+                        baked.resolveParticleMaterial(textures, baker)
                 ));
             });
         }

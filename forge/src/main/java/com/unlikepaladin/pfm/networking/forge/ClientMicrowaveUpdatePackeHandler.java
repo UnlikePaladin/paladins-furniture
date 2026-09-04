@@ -22,7 +22,7 @@ public class ClientMicrowaveUpdatePackeHandler {
             }
         }
         else {
-            Objects.requireNonNull(ctx.getSender()).displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
+            Objects.requireNonNull(ctx.getSender()).sendOverlayMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"));
         }
     }
 }

@@ -1,27 +1,26 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Axis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,22 +117,23 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
     private void submitBlockPart(OfficeChairEntityRenderState mobEntity, PoseStack matrixStack, SubmitNodeCollector orderedRenderCommandQueue, RenderType damagedLayer, BlockStateModel model, float red, float green, float blue) {
         List<BlockStateModelPart> blockStateModelParts = new ArrayList<>();
         model.collectParts(RandomSource.create(), blockStateModelParts);
-        orderedRenderCommandQueue.submitBlockModel(matrixStack, RenderTypes.cutoutMovingBlock(), blockStateModelParts, new int[0], mobEntity.lightCoords,
+
+        int colorInt = ARGB.color((int) (red * 255.0f), (int) (green * 255.0f), (int) (blue * 255.0f));
+        int[] tintLayers = new int[]{ colorInt };
+
+        orderedRenderCommandQueue.submitBlockModel(
+                matrixStack,
+                RenderTypes.cutoutMovingBlock(),
+                blockStateModelParts,
+                tintLayers,
+                mobEntity.lightCoords,
                 OverlayTexture.NO_OVERLAY,
-                mobEntity.outlineColor);
+                mobEntity.outlineColor
+        );
+
         if (mobEntity.invulnerableTime > 0) {
-            orderedRenderCommandQueue.submitCustomGeometry(matrixStack, damagedLayer, (matricesEntry, vertexConsumer) -> {
-                ModelBlockRenderer.renderModel(
-                        matricesEntry,
-                        new SheetedDecalTextureGenerator(vertexConsumer, matricesEntry, 1.0f),
-                        model,
-                        red,
-                        green,
-                        blue,
-                        mobEntity.lightCoords,
-                        OverlayTexture.NO_OVERLAY
-                );
-            });
+            int damageStage = (int) Math.min(9, Math.max(mobEntity.maxHealth - mobEntity.health, 0));
+            orderedRenderCommandQueue.submitBreakingBlockModel(matrixStack, model, 42L, damageStage);
         }
 
         matrixStack.popPose();

@@ -1,13 +1,14 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.networking.MicrowaveUpdatePayload;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,7 +21,7 @@ import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
-public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements ExtendedScreenHandlerFactory<MicrowaveScreenHandler.MicrowaveData> {
+public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements ExtendedMenuProvider<MicrowaveScreenHandler.MicrowaveData> {
     public MicrowaveBlockEntityImpl(BlockPos pos, BlockState state) {
         super(pos, state);
     }

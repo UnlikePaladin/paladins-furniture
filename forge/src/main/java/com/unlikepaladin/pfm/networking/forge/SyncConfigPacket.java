@@ -7,7 +7,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ForgePacketHandler;
 
 import java.util.Collection;
@@ -21,7 +20,7 @@ public class SyncConfigPacket {
     }
 
     public static void handle(ForgePacketHandler forgePacketHandler, SyncConfigPacket msg, CustomPayloadEvent.Context ctx) {
-        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSyncConfigPacketHandler.handlePacket(msg, ctx)));
+        ctx.enqueueWork(() ->  ClientSyncConfigPacketHandler.handlePacket(msg, ctx));
         ctx.setPacketHandled(true);
     }
 

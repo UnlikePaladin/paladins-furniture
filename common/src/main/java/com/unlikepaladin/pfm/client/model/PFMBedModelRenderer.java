@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.world.item.DyeColor;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -38,7 +39,7 @@ public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
     }
 
     @Environment(EnvType.CLIENT)
-    public record Unbaked(DyeColor color) implements SpecialModelRenderer.Unbaked {
+    public record Unbaked(DyeColor color) implements NoDataSpecialModelRenderer.Unbaked {
         public static final MapCodec<PFMBedModelRenderer.Unbaked> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(DyeColor.CODEC.fieldOf("texture").forGetter(PFMBedModelRenderer.Unbaked::color)).apply(instance, PFMBedModelRenderer.Unbaked::new)
         );
@@ -49,8 +50,7 @@ public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
         }
 
         @Override
-        public SpecialModelRenderer<?> bake(BakingContext entityModels) {
-            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), Sheets.createBedSprite(color));
-        }
+        public @Nullable SpecialModelRenderer<Void> bake(BakingContext context) {
+            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(context), Sheets.createBedSprite(color));        }
     }
 }

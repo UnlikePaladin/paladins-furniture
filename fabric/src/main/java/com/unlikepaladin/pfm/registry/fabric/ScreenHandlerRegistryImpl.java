@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.TriFunc;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -29,7 +29,7 @@ public class ScreenHandlerRegistryImpl {
         if (pac == null)
             return Registry.register(BuiltInRegistries.MENU, id, new MenuType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_FLAGS));
 
-        return Registry.register(BuiltInRegistries.MENU, id, new ExtendedScreenHandlerType<>(factory::apply, pac));
+        return Registry.register(BuiltInRegistries.MENU, id, new ExtendedMenuType<>(factory::apply, pac));
     }
 
     public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, Inventory, T> factory) {

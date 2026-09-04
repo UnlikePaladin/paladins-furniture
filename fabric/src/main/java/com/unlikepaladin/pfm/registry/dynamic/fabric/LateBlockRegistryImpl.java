@@ -7,9 +7,9 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
+import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.*;
@@ -37,7 +37,7 @@ public class LateBlockRegistryImpl {
         registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().setId(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockDescriptionPrefix()), group);
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
-            FuelRegistryEvents.BUILD.register((builder, context) -> {
+            FuelValueEvents.BUILD.register((builder, context) -> {
                 builder.add(block, 300);
             });
 
@@ -51,7 +51,7 @@ public class LateBlockRegistryImpl {
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
         if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
+            CreativeModeTabEvents.modifyOutputEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                     if (!variant.isEnabled(entries.getEnabledFeatures())) continue;
@@ -66,7 +66,7 @@ public class LateBlockRegistryImpl {
                 entries.acceptAll(stacks);
             } );
         } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
+            CreativeModeTabEvents.modifyOutputEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(item);
@@ -76,7 +76,7 @@ public class LateBlockRegistryImpl {
                 entries.acceptAll(stacks);
             } );
         } else {
-            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> entries.accept(item));
+            CreativeModeTabEvents.modifyOutputEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> entries.accept(item));
         }
     }
 

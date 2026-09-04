@@ -34,7 +34,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
             Component text = null;
             try {
                 text = Component.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
-                user.displayClientMessage(text,false);
+                user.sendOverlayMessage(text);
             } catch (URISyntaxException e) {
             }
         }

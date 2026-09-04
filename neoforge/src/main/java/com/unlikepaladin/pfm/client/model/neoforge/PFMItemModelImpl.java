@@ -42,8 +42,8 @@ public class PFMItemModelImpl {
             layerRenderState.setExtents(() -> CuboidItemModelWrapper.computeExtents(quads));
             layerRenderState.prepareQuadList().addAll(quads);
         } else {
-            List<BlockStateModelPart> parts;
-            parts = model.collectParts(random);
+            List<BlockStateModelPart> parts = new ArrayList<>();
+            model.collectParts(random, parts);
             List<BakedQuad> quads = new ArrayList<>();
             for (Direction direction : Direction.values()) {
                 quads.addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());

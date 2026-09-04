@@ -62,7 +62,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
                     WorkbenchScreenHandler.this.output.awardUsedRecipes(player, List.of());
                     WorkbenchScreenHandler.this.populateResult(player);
                     context.execute((world, pos) -> {
-                        long l = world.getDayTime();
+                        long l = world.getGameTime();
                         if (WorkbenchScreenHandler.this.lastTakeTime != l) {
                             world.playSound(null, pos, SoundEvents.UI_STONECUTTER_TAKE_RESULT, SoundSource.BLOCKS, 1.0f, 1.0f);
                             WorkbenchScreenHandler.this.lastTakeTime = l;

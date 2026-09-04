@@ -30,10 +30,10 @@ public class ToiletUsePacket {
             ctx.enqueueWork(() -> {
                 if (world.hasChunkAt(blockPos)) {
                     world.setBlockAndUpdate(blockPos, world.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
-                    world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                    world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, world.getRandom().nextFloat() * 0.1f + 0.9f);
                 }
                 else {
-                    player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.sendOverlayMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"));
                 }
             });
         });

@@ -36,21 +36,21 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmCo
             }
 
             @Override
-            public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+            public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint, boolean greedy) {
                 IngredientToken result = applyIceUnit(ingredient::test);
                 if (result != null)
                     return result;
 
-                return super.findIngredient(ingredient, ingredientTokens, cacheHint);
+                return super.findIngredient(ingredient, ingredientTokens, cacheHint, greedy);
             }
 
             @Override
-            public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+            public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint, boolean greedy) {
                 IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                 if (result != null)
                     return result;
 
-                return super.findIngredient(itemStack, ingredientTokens, cacheHint);
+                return super.findIngredient(itemStack, ingredientTokens, cacheHint, greedy);
             }
 
             private @Nullable IngredientToken applyIceUnit(Function<ItemStack, Boolean> predicate) {

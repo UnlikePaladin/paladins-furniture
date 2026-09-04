@@ -12,8 +12,6 @@
     "MappedRegistryAccessor",
     "PFMCFBModBlockEntitiesMixin",
     "PFMHeatableBlockEntityMixin",
-    "PFMLootItemAccessor",
-    "PFMLootPool$BuilderMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin"
   ],

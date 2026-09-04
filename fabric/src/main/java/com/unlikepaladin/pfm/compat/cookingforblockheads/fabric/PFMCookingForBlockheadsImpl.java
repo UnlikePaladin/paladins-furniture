@@ -44,7 +44,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public static void registerPackets() {
-        PayloadTypeRegistry.playS2C().register(ClientStoveResultsPacket.TYPE, ClientStoveResultsPacket.STREAM_CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ClientStoveResultsPacket.TYPE, ClientStoveResultsPacket.STREAM_CODEC);
     }
 
     @Override

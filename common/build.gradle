@@ -47,9 +47,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
-    compileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
     testCompileOnly fileTree(dir: "$rootProject.projectDir/libs", include: '*.jar')
-
 }
 
 publishing {

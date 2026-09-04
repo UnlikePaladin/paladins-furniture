@@ -21,10 +21,6 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity {
         PFMSandwichableCompat.toastSandwich(pfmToasterBlockEntity);
     }
 
-    public static boolean isMetal(ItemStack stack) {
-        return PFMSandwichableCompat.isMetal(stack);
-    }
-
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

@@ -5,8 +5,8 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlo
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -24,7 +24,7 @@ public class EntityRenderRegistryImpl {
     }
 
     public static void registerModelLayer(ModelLayerLocation entityType, LayerDefinition texturedModelData) {
-        EntityModelLayerRegistry.registerModelLayer(entityType, () -> texturedModelData);
+        ModelLayerRegistry.registerModelLayer(entityType, () -> texturedModelData);
     }
 
     public static BlockEntityRendererProvider getStoveBlockEntityRenderer() {

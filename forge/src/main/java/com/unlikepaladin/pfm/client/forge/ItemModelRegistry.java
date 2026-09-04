@@ -6,15 +6,12 @@ import com.unlikepaladin.pfm.client.model.FurnitureTintSource;
 import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.resources.Identifier;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.CreateSpecialBlockRendererEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 public class ItemModelRegistry {
     public static void registerItemModelTypes() {
@@ -24,12 +21,11 @@ public class ItemModelRegistry {
     }
 
 
-    public static void registerSpecialModelRenderers(CreateSpecialBlockRendererEvent event) {
+    public static void registerSpecialModelRenderers(BuiltInBlockModels.Builder builder) {
         for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
             if (block instanceof DyeableFurnitureBlock)
-                event.register(block, new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));
+                builder.put(BuiltInBlockModels.special(new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor())), block);
         }
     }
-
 
 }

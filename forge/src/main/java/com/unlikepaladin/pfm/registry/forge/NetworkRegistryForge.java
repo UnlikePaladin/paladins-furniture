@@ -14,7 +14,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.event.network.GatherLoginConfigurationTasksEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.*;
 import net.minecraftforge.network.config.SimpleConfigurationTask;
@@ -36,7 +35,7 @@ public class NetworkRegistryForge {
         PFM_CHANNEL.messageBuilder(ToiletUsePacket.class, NetworkDirection.PLAY_TO_SERVER).encoder(ToiletUsePacket::encode).decoder(ToiletUsePacket::decode).consumerNetworkThread(CONTEXT, ToiletUsePacket::handle).add();
         PFM_CHANNEL.messageBuilder(TrashcanClearPacket.class, NetworkDirection.PLAY_TO_SERVER).encoder(TrashcanClearPacket::encode).decoder(TrashcanClearPacket::decode).consumerNetworkThread(CONTEXT, TrashcanClearPacket::handle).add();
         PFM_CHANNEL.messageBuilder(SyncConfigPacket.class, NetworkDirection.CONFIGURATION_TO_CLIENT).encoder(SyncConfigPacket::encode).decoder(SyncConfigPacket::decode).consumerNetworkThread(CONTEXT, SyncConfigPacket::handle).add();
-        PFM_CHANNEL.messageBuilder(SyncRecipesPayload.class, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncRecipesPayload::write).decoder(SyncRecipesPayload::new).consumerNetworkThread(CONTEXT, (forgePacketHandler, syncRecipesPayload, context) -> {context.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> syncRecipesPayload::handle)); context.setPacketHandled(true);}).add();
+        PFM_CHANNEL.messageBuilder(SyncRecipesPayload.class, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncRecipesPayload::write).decoder(SyncRecipesPayload::new).consumerNetworkThread(CONTEXT, (forgePacketHandler, syncRecipesPayload, context) -> {context.enqueueWork(syncRecipesPayload::handle); context.setPacketHandled(true);}).add();
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             PFMCookingForBlockheadsImpl.registerPackets(PFM_CHANNEL, CONTEXT);
         }

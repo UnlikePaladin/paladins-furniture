@@ -12,16 +12,17 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
@@ -72,7 +73,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/stripped_oak_log")));
         oakSprite.add(wood);
         return oakSprite;
     }
@@ -82,7 +83,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        TextureAtlasSprite wood = ModelHelper.getSprite(new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
+        TextureAtlasSprite wood = ModelHelper.getSprite(new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)));
         List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
@@ -90,16 +91,16 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(BlockAndTintGetter world, BlockPos pos, BlockState state) {
+    public Material.Baked particleMaterial(BlockAndTintGetter world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof BasicLampBlock) {
             WoodVariant variant = WoodVariantRegistry.OAK;
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof LampBlockEntity) {
                 variant = ((LampBlockEntity) entity).getVariant();
             }
-            return getVariantStrippedLogSprite(variant).getFirst();
+            return new Material.Baked(getVariantStrippedLogSprite(variant).getFirst(), false);
         }
-        return super.particleIcon(world, pos, state);
+        return super.particleMaterial(world, pos, state);
     }
 
     @Override

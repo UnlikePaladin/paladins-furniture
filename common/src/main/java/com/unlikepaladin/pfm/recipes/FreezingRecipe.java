@@ -10,8 +10,8 @@ import net.minecraft.resources.Identifier;
 
 public class FreezingRecipe extends AbstractCookingRecipe {
 
-    public FreezingRecipe(String group, CookingBookCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
-        super(new CommonInfo(false), new CookingBookInfo(category, group), input, ItemStackTemplate.fromNonEmptyStack(output), experience, cookTime);
+    public FreezingRecipe(CommonInfo commonInfo, CookingBookInfo bookInfo, Ingredient ingredient, ItemStackTemplate result, float experience, int cookingTime) {
+        super(commonInfo, bookInfo, ingredient, result, experience, cookingTime);
     }
 
     @Override

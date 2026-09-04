@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -45,8 +46,8 @@ public class PFMItemModelImpl {
 
             ((PFMFabricBakedModel) model1).emitItemQuads(layerRenderState.emitter(), random);
         } else {
-            List<BlockStateModelPart> parts;
-            parts = model.collectParts(random);
+            List<BlockStateModelPart> parts = new ArrayList<>();
+            model.collectParts(random, parts);
             for (Direction direction : Direction.values()) {
                 layerRenderState.prepareQuadList().addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());
             }

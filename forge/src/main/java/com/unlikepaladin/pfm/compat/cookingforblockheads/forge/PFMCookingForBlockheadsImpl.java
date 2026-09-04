@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ForgePacketHandler;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.SimpleChannel;
@@ -54,9 +53,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 .decoder(ClientStoveResultsPacket.STREAM_CODEC::decode)
                 .consumerNetworkThread(context, (forgePacketHandler, payload, contextPayload) -> {
                     contextPayload.enqueueWork(() -> {
-                        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-                            ClientStoveResultsPacket.handle(Minecraft.getInstance().player, payload);
-                        });
+                        ClientStoveResultsPacket.handle(Minecraft.getInstance().player, payload);
                         contextPayload.setPacketHandled(true);
                     });
                 })

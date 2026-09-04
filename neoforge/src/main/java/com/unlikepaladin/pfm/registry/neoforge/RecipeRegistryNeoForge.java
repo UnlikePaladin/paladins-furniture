@@ -1,19 +1,14 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
-import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
-import com.unlikepaladin.pfm.recipes.neoforge.FurnitureSerializerNeoForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 
@@ -23,7 +18,7 @@ public class RecipeRegistryNeoForge {
     public static void registerRecipeSerializers(RegisterEvent event) {
         event.register(BuiltInRegistries.RECIPE_SERIALIZER.key(), recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new AbstractCookingRecipe.Serializer<>(FreezingRecipe::new, 200)
+                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new RecipeSerializer<>(AbstractCookingRecipe.cookingMapCodec(FreezingRecipe::new, 200), AbstractCookingRecipe.cookingStreamCodec(FreezingRecipe::new))
             );
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new RecipeSerializer<>(SimpleFurnitureRecipe.Serializer.CODEC, SimpleFurnitureRecipe.Serializer.PACKET_CODEC)

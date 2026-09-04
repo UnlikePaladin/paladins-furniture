@@ -10,7 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.network.CustomPayloadEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.ForgePacketHandler;
 
 public class MicrowaveUpdatePacket {
@@ -26,7 +25,7 @@ public class MicrowaveUpdatePacket {
     public static void handle(ForgePacketHandler forgePacketHandler, MicrowaveUpdatePacket msg, CustomPayloadEvent.Context ctx) {
         ctx.enqueueWork(() ->
                 // Make sure it's only executed on the physical client
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientMicrowaveUpdatePackeHandler.handlePacket(msg, ctx))
+                ClientMicrowaveUpdatePackeHandler.handlePacket(msg, ctx)
         );
         ctx.setPacketHandled(true);
     }
