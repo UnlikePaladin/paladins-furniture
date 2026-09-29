@@ -1,22 +1,18 @@
 package com.unlikepaladin.pfm.runtime;
 
-import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.FramerateLimitTracker;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.client.PFMClientExtension;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
-import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 
 public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
-        if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
-            Minecraft client = Minecraft.getInstance();
-            PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
-            client.setOverlay(overlay);
-        }
+        Minecraft client = Minecraft.getInstance();
+        PFMGeneratingOverlay.registerTextures(client.getTextureManager());
+        PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
+        client.setOverlay(overlay);
     }
 
     public static void updateScreen() {
@@ -24,22 +20,10 @@ public class ClientOverlaySetter {
 
         ((PFMClientExtension) client).invoke$runTasks();
 
-        RenderSystem.executePendingTasks();
+        ((PFMClientExtension) client).invoke$renderFrame(shouldTick(client));
 
-        RenderTarget framebuffer = client.getMainRenderTarget();
-        RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(framebuffer.getColorTexture(), 0, framebuffer.getDepthTexture(), 1.0);
-
-        client.gameRenderer.render(client.getDeltaTracker(), shouldTick(client));
-        if (!client.getWindow().isMinimized())
-            client.getMainRenderTarget().blitToScreen();
-
-        if (((PFMMinecraftClientAcccessor)client).getFrameCapturer() != null) {
-            ((PFMMinecraftClientAcccessor)client).getFrameCapturer().upload();
-            ((PFMMinecraftClientAcccessor)client).getFrameCapturer().capture(client.getMainRenderTarget());
-        }
-        RenderSystem.flipFrame(((PFMMinecraftClientAcccessor)client).getFrameCapturer());
-        ((DeltaTracker.Timer)client.getDeltaTracker()).updatePauseState(client.isPaused());
-        ((DeltaTracker.Timer)client.getDeltaTracker()).updateFrozenState(!shouldTick(client));
+        ((DeltaTracker.Timer) client.getDeltaTracker()).updatePauseState(client.isPaused());
+        ((DeltaTracker.Timer) client.getDeltaTracker()).updateFrozenState(!shouldTick(client));
 
         client.getTextureManager().tick();
     }

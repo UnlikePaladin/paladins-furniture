@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class PFMMinecraftClientMixin extends ReentrantBlockableEventLoop<Runnable> implements PFMClientExtension {
     @Shadow @Final private TextureManager textureManager;
 
+    @Shadow protected abstract void renderFrame(boolean advanceGameTime);
+
     protected PFMMinecraftClientMixin() {
         super("Client", true);
     }
@@ -19,5 +21,10 @@ public abstract class PFMMinecraftClientMixin extends ReentrantBlockableEventLoo
     @Override
     public void invoke$runTasks() {
         this.runAllTasks();
+    }
+
+    @Override
+    public void invoke$renderFrame(boolean advanceGameTime) {
+        this.renderFrame(advanceGameTime);
     }
 }

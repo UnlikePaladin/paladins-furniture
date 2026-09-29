@@ -6,7 +6,6 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
-    "PFMGlStateManagerMixin",
     "PFMInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
     "PFMPointOfInterestTypesAccessor",
