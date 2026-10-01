@@ -11,6 +11,8 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
+loom.getNeoForge().convertAccessWideners(tasks.named('shadowJar'), 'pfm.accesswidener')
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -137,7 +139,7 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = null
+    archiveClassifier = "neoforge-mc${rootProject.minecraft_version}"
 }
 
 jar {

@@ -62,7 +62,7 @@ jobs:
 
           loaders: forge
 
-          files: forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+          files: forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|raw|transformProduction*)).jar
 
       - name: Publish (CurseForge/Modrinth) - Fabric
         uses: Kir-Antipov/mc-publish@v3.3
@@ -81,7 +81,7 @@ jobs:
           loaders: fabric
           dependencies: fabric-api | depends | *
 
-          files: fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+          files: fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|raw|transformProduction*)).jar
 
       - name: Publish (CurseForge/Modrinth) - NeoForge
         if: ${{ hashFiles('neoforge/build/libs') != '' }}
@@ -101,7 +101,7 @@ jobs:
           loaders: neoforge
           dependencies: fabric-api | depends | *
 
-          files: neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+          files: neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|raw|transformProduction*)).jar
 
       - name: Publish (GitHub) - All Loaders
         uses: Kir-Antipov/mc-publish@v3.3
@@ -120,6 +120,6 @@ jobs:
             neoforge
 
           files: |
-            fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
-            forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
-            neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+            fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|raw|javadoc|transformProduction*)).jar
+            forge/build/libs/!(*-@(dev|sources|all|dev-shadow|raw|javadoc|transformProduction*)).jar
+            neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|raw|javadoc|transformProduction*)).jar

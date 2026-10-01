@@ -242,7 +242,7 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = null
+    archiveClassifier = "fabric-mc${rootProject.minecraft_version}"
 }
 
 jar {
