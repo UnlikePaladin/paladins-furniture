@@ -11,14 +11,14 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
     forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "pfm-common.mixins.json"
         mixinConfig "pfm.mixins.json"
 
     }
 }
+
+loom.getForge().convertAccessWideners(tasks.named('shadowJar'), 'pfm.accesswidener')
 
 configurations {
     common
@@ -159,7 +159,7 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    archiveClassifier = null
+    archiveClassifier = "minecraftforge-mc${rootProject.minecraft_version}"
 }
 
 jar {
