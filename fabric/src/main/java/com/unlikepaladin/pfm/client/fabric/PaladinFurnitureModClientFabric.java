@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
 import com.unlikepaladin.pfm.client.model.FurnitureTintSource;
-import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
@@ -65,15 +64,11 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     }
 
     private static void registerBuiltinBlocks(BuiltInBlockModels.Builder builder) {
-        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-            if (block instanceof DyeableFurnitureBlock)
-                builder.put(BuiltInBlockModels.special(new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor())), block);
-        }
+
     }
 
     public static void registerModels() {
         ItemModels.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_model"), PFMItemModel.Unbaked.CODEC);
-        SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
         ItemTintSources.ID_MAPPER.put(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
     }
 

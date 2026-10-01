@@ -45,7 +45,7 @@ public record MicrowaveUpdatePayload(BlockPos pos, Boolean isActive) implements 
         if (player.level().hasChunkAt(pos)) {
             client.execute(() -> {
                 MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) player.level().getBlockEntity(pos);
-                if (Objects.nonNull(client.screen) && client.screen instanceof MicrowaveScreen currentScreen)  {
+                if (Objects.nonNull(client.gui.screen()) && client.gui.screen() instanceof MicrowaveScreen currentScreen)  {
                     currentScreen.getMenu().setActive(blockEntity, isActive);}
             });
         }

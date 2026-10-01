@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.SimpleModelWrapper;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.world.item.DyeColor;

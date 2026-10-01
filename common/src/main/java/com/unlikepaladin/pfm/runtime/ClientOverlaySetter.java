@@ -11,8 +11,8 @@ public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
         Minecraft client = Minecraft.getInstance();
         PFMGeneratingOverlay.registerTextures(client.getTextureManager());
-        PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
-        client.setOverlay(overlay);
+        PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.gui.overlay(), resourceProgress, client, true);
+        client.gui.setOverlay(overlay);
     }
 
     public static void updateScreen() {

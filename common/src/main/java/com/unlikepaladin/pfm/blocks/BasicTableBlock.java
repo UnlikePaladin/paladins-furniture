@@ -34,7 +34,7 @@ public class BasicTableBlock extends Block {
     private static final List<FurnitureBlock> WOOD_BASIC_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_BASIC_TABLES = new ArrayList<>();
     public BasicTableBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.bed.fabric;
 
+import com.google.common.collect.Streams;
 import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
@@ -18,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.util.RandomSource;
@@ -40,9 +42,10 @@ public class FabricBedModel extends PFMFabricBakedModel implements BedInterface 
             boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state, isClassic);
             int classicOffset = isClassic ? 12 : 0;
             BedPart part = state.getValue(BedBlock.PART);
-            List<TextureAtlasSprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = new ArrayList<>(getSpriteList(state));
             pushTextureTransform(context, ModelHelper.getOakBedSprites(), spriteList);
             if (part == BedPart.HEAD) {
+                getTemplateBakedModels().get((classicOffset+1)).emitQuads(context, cullTest);
                 getTemplateBakedModels().get((classicOffset+3)).emitQuads(context, cullTest);
                 if (!right){
                     getTemplateBakedModels().get((classicOffset+6)).emitQuads(context, cullTest);
@@ -54,6 +57,7 @@ public class FabricBedModel extends PFMFabricBakedModel implements BedInterface 
                     getTemplateBakedModels().get((classicOffset+10)).emitQuads(context, cullTest);
                 }
             } else {
+                getTemplateBakedModels().get((classicOffset)).emitQuads(context, cullTest);
                 getTemplateBakedModels().get((classicOffset+2)).emitQuads(context, cullTest);
                 if (!right){
                     getTemplateBakedModels().get((classicOffset+4)).emitQuads(context, cullTest);

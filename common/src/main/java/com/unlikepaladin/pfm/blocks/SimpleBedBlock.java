@@ -1,17 +1,14 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.utilities.PFMShapeUtil;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttributes;
@@ -43,7 +41,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     private final DyeColor color;
     public SimpleBedBlock(DyeColor color, Properties settings) {
-        super(color, settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(color, settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
         if(this.getClass().isAssignableFrom(SimpleBedBlock.class)){
             String bedColor = color.getName();
@@ -87,7 +85,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             if (world.getBlockState(blockPos).is(this)) {
                 world.removeBlock(blockPos, false);
             }
-            world.explode(null, world.damageSources().badRespawnPointExplosion(blockPos.getCenter()), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Level.ExplosionInteraction.BLOCK);
+            world.explode(null, world.damageSources().badRespawnPointExplosion(Vec3.atCenterOf(blockPos)), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Level.ExplosionInteraction.BLOCK);
             return InteractionResult.SUCCESS;
         }
         if (state.getValue(OCCUPIED)) {
@@ -216,12 +214,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     public DyeColor getPFMColor() {
         return color;
     }
-
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new PFMBedBlockEntity(pos, state, this.color);
-    }
-
+    
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));

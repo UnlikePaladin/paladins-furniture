@@ -40,7 +40,7 @@ public class PFMConfigScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent input) {
         if (input.input() == 256 && !optionListWidget.hasChanges.isEmpty()) {
-            client.setScreen(new ConfirmScreen(t -> {
+            client.gui.setScreen(new ConfirmScreen(t -> {
                 if (t){
                     this.optionListWidget.save();
                     try {
@@ -50,7 +50,7 @@ public class PFMConfigScreen extends Screen {
                         throw new RuntimeException(e);
                     }
                 }
-                Minecraft.getInstance().setScreen(parent);
+                Minecraft.getInstance().gui.setScreen(parent);
             }, Component.translatable("gui.pfm.changesMightNotBeSaved").setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), Component.translatable("gui.pfm.saveChanges")));
             return true;
         }
@@ -60,7 +60,7 @@ public class PFMConfigScreen extends Screen {
     @Override
     public void onClose() {
         this.optionListWidget.save();
-        Minecraft.getInstance().setScreen(parent);
+        Minecraft.getInstance().gui.setScreen(parent);
         try {
             PaladinFurnitureMod.getPFMConfig().save();
         } catch (IOException e) {
@@ -86,7 +86,7 @@ public class PFMConfigScreen extends Screen {
         }).bounds(this.width/2 - 155, this.height -29, 150, 20).build());
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             this.optionListWidget.save();
-            this.client.setScreen(this.parent);
+            this.client.gui.setScreen(this.parent);
             try {
                 PaladinFurnitureMod.getPFMConfig().save();
             } catch (IOException e) {

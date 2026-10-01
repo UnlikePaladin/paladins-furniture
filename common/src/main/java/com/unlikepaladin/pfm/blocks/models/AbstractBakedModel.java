@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
@@ -23,7 +24,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.RandomSource;
 
 import java.util.*;
@@ -134,9 +134,8 @@ public abstract class AbstractBakedModel implements BlockStateModel {
         if (state.getBlock() instanceof SimpleBedBlock) {
             DyeColor color = ModelHelper.getColor(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
             SpriteId mainTexture = new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PLANKS));
-            SpriteId spriteIdentifier = Sheets.getBedSprite(color);
             list.add(ModelHelper.getSprite(mainTexture));
-            list.add(ModelHelper.getSprite(spriteIdentifier));
+            list.addAll(ModelHelper.getBedSprites(color).stream().map(ModelHelper::getSprite).toList());
         }  else if (state.getBlock() instanceof LogStoolBlock) {
             SpriteId mainTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG));
             SpriteId secondTexture = stripped ? new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG_TOP)) : new SpriteId(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.LOG_TOP));

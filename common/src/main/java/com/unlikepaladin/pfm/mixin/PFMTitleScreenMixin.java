@@ -54,7 +54,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
             url = "https://modrinth.com/mod/indium/versions?g=" + SharedConstants.getCurrentVersion().name();
             if (!Version.compareVersions(PFMFileUtil.getVersion("sodium").get(), "0.6")) {
 
-            Minecraft.getInstance().setScreen(new ConfirmScreen(
+            Minecraft.getInstance().gui.setScreen(new ConfirmScreen(
                     (boolean accepted) -> {
                         if (accepted) {
                             try {
@@ -74,7 +74,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
         } else if (PFMFileUtil.isModLoaded("connectormod")&& !PaladinFurnitureMod.getPFMConfig().disableSinytraWarning()) {
             reason = "pfm.compat.issue.reason.connectorMod";
 
-            Minecraft.getInstance().setScreen(new ConfirmScreen(
+            Minecraft.getInstance().gui.setScreen(new ConfirmScreen(
                     (boolean accepted) -> {
                         if (accepted) {
                             try {
@@ -83,7 +83,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
                                 throw new IllegalStateException(e);
                             }
                         } else {
-                            Minecraft.getInstance().setScreen(this);
+                            Minecraft.getInstance().gui.setScreen(this);
                         }
                     },
                     Component.translatable("pfm.compat.issue.title").withStyle(ChatFormatting.YELLOW),

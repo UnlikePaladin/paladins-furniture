@@ -123,7 +123,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
 
         @Override
         public void extractContent(GuiGraphicsExtractor context, int mouseX, int mouseY, boolean hovered, float a) {
-            context.text(PFMOptionListWidget.this.minecraft.font, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.minecraft.screen.width / 2 - this.textWidth / 2), getY() + defaultEntryHeight - (PFMOptionListWidget.this).minecraft.font.lineHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
+            context.text(PFMOptionListWidget.this.minecraft.font, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.minecraft.gui.screen().width / 2 - this.textWidth / 2), getY() + defaultEntryHeight - (PFMOptionListWidget.this).minecraft.font.lineHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
         }
 
         public boolean changeFocus(boolean lookForwards) {

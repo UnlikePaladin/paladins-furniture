@@ -17,7 +17,7 @@ public class ClientMicrowaveUpdatePackeHandler {
         Level world = Minecraft.getInstance().level;
         if (world.hasChunkAt(blockPos)) {
             MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) world.getBlockEntity(blockPos);
-            if (Objects.nonNull(Minecraft.getInstance().screen) && Minecraft.getInstance().screen instanceof MicrowaveScreen microwaveScreen)  {
+            if (Objects.nonNull(Minecraft.getInstance().gui.screen()) && Minecraft.getInstance().gui.screen() instanceof MicrowaveScreen microwaveScreen)  {
                 microwaveScreen.getMenu().setActive(blockEntity, active);
             }
         }

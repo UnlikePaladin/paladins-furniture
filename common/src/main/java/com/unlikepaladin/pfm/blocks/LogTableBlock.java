@@ -34,7 +34,7 @@ public class LogTableBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
     public static final MapCodec<LogTableBlock> CODEC = simpleCodec(LogTableBlock::new);
     public LogTableBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

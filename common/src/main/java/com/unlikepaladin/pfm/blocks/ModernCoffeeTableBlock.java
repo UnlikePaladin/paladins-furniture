@@ -35,7 +35,7 @@ public class ModernCoffeeTableBlock extends Block {
     private final BlockState baseBlockState;
 
     public ModernCoffeeTableBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

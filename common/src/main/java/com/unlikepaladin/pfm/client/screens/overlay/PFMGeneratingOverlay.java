@@ -68,7 +68,7 @@ public class PFMGeneratingOverlay extends Overlay {
             this.reloadStartTime = l;
         }
 
-        this.minecraft.gameRenderer.getGameRenderState().guiRenderState.clearColorOverride = PFM_ORANGE;
+        ARGB.setVector4fFromARGB32(this.minecraft.gameRenderer.gameRenderState().guiRenderState.clearColorOverride, PFM_ORANGE);
 
         float timeProgress = this.reloadCompleteTime > -1L ? (float)(l - this.reloadCompleteTime) / 1000.0f : -1.0f;
 
@@ -127,7 +127,7 @@ public class PFMGeneratingOverlay extends Overlay {
             this.renderProgressBar(context, width / 2 - barWidth, barHeight - 5, width / 2 + barWidth, barHeight + 5, 1.0f - Mth.clamp(timeProgress, 0.0f, 1.0f));
         }
         if (timeProgress >= 2.0f || (progress >= 1.0f && !PFMGenerator.areAssetsRunning() && !PFMGenerator.isDataRunning())) {
-            this.minecraft.setOverlay(parent);
+            this.minecraft.gui.setOverlay(parent);
         }
     }
 

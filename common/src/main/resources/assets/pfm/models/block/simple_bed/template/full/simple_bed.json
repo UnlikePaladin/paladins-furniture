@@ -1,8 +1,16 @@
 {
+	"format_version": "26.3",
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"0": "block/oak_planks",
-		"particle": "#0"
+		"1": "block/red_bed_foot_east",
+		"2": "block/red_bed_foot_south",
+		"3": "block/red_bed_foot_up",
+		"4": "block/red_bed_foot_west",
+		"5": "block/red_bed_head_east",
+		"6": "block/red_bed_head_up",
+		"7": "block/red_bed_head_west",
+		"particle": "block/oak_planks"
 	},
 	"elements": [
 		{
@@ -90,6 +98,49 @@
 				"up": {"uv": [0, 4, 16, 7], "rotation": 90, "texture": "#0", "tintindex": 0},
 				"down": {"uv": [0, 0, 3, 16], "texture": "#0", "tintindex": 0}
 			}
+		},
+		{
+			"from": [0, 5, 0],
+			"to": [16, 9, 13],
+			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 7, 13, 11], "texture": "#1"},
+				"south": {"uv": [0, 7, 16, 11], "texture": "#2"},
+				"west": {"uv": [0, 7, 13, 11], "texture": "#4"},
+				"up": {"uv": [0, 3, 16, 16], "rotation": 180, "texture": "#3"}
+			}
+		},
+		{
+			"from": [16, 5, 11],
+			"to": [32, 9, 16],
+			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [24, 8, 8]},
+			"faces": {
+				"east": {"uv": [3, 7, 8, 11], "texture": "#5"},
+				"west": {"uv": [8, 7, 13, 11], "texture": "#7"},
+				"up": {"uv": [0, 8, 16, 13], "texture": "#6"}
+			}
+		},
+		{
+			"from": [17, 9, 3],
+			"to": [31, 10, 11],
+			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [24, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 2, 14, 1], "texture": "#missing"},
+				"east": {"uv": [14, 1, 13, 8], "rotation": 90, "texture": "#6"},
+				"south": {"uv": [2, 8, 14, 7], "texture": "#6"},
+				"west": {"uv": [14, 8, 13, 1], "rotation": 90, "texture": "#6"},
+				"up": {"uv": [2, 1, 14, 8], "texture": "#6"}
+			}
+		},
+		{
+			"from": [16, 5, 3],
+			"to": [32, 9, 11],
+			"rotation": {"x": 0, "y": -90, "z": 0, "origin": [24, 8, 8]},
+			"faces": {
+				"east": {"uv": [8, 7, 16, 11], "texture": "#5"},
+				"west": {"uv": [0, 7, 8, 11], "texture": "#7"},
+				"up": {"uv": [0, 0, 16, 8], "texture": "#6"}
+			}
 		}
 	],
 	"display": {
@@ -134,14 +185,24 @@
 		{
 			"name": "group",
 			"origin": [0, 0, 0],
+			"scope": 0,
 			"color": 0,
 			"children": [0, 1, 2, 3]
 		},
 		{
 			"name": "group",
 			"origin": [0, 0, 0],
+			"scope": 0,
 			"color": 0,
 			"children": [4, 5, 6, 7]
+		},
+		8,
+		{
+			"name": "group",
+			"origin": [0, 0, 0],
+			"scope": 0,
+			"color": 0,
+			"children": [9, 10, 11]
 		}
 	]
 }

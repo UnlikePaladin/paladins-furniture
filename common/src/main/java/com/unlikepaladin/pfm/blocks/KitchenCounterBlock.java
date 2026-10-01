@@ -32,7 +32,7 @@ public class KitchenCounterBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenCounterBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

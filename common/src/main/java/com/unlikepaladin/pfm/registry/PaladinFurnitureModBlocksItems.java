@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -66,9 +66,9 @@ public class PaladinFurnitureModBlocksItems {
     public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Properties().stacksTo(16).setId(LateBlockRegistry.getItemRegistryKey("dye_kit_cyan")), DyeColor.CYAN);
     public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Properties().stacksTo(16).setId(LateBlockRegistry.getItemRegistryKey("dye_kit_gray")), DyeColor.GRAY);
 
-    public static final Block RAW_CONCRETE = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).sound(SoundType.STONE).setId(LateBlockRegistry.getBlockRegistryKey("raw_concrete")));
-    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE_POWDER).sound(SoundType.SAND).setId(LateBlockRegistry.getBlockRegistryKey("raw_concrete_powder")));
-    public static final Block LEATHER_BLOCK = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).sound(SoundType.WOOL).mapColor(MapColor.COLOR_ORANGE).setId(LateBlockRegistry.getBlockRegistryKey("leather_block")));
+    public static final Block RAW_CONCRETE = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.gray()).sound(SoundType.STONE).setId(LateBlockRegistry.getBlockRegistryKey("raw_concrete")));
+    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE_POWDER.gray()).sound(SoundType.SAND).setId(LateBlockRegistry.getBlockRegistryKey("raw_concrete_powder")));
+    public static final Block LEATHER_BLOCK = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WOOL.white()).sound(SoundType.WOOL).mapColor(MapColor.COLOR_ORANGE).setId(LateBlockRegistry.getBlockRegistryKey("leather_block")));
 
     public static final Block IRON_CHAIN = new ChainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.METAL).setId(LateBlockRegistry.getBlockRegistryKey("iron_chain")));
     public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_GRAY).setId(LateBlockRegistry.getBlockRegistryKey("gray_modern_pendant")));
@@ -76,7 +76,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final PendantBlock GLASS_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.QUARTZ).setId(LateBlockRegistry.getBlockRegistryKey("glass_modern_pendant")));
     public static final SimpleLightBlock SIMPLE_LIGHT = new SimpleLightBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_LIGHT_GRAY).setId(LateBlockRegistry.getBlockRegistryKey("simple_light")));
 
-    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE).sound(SoundType.STONE).noOcclusion().mapColor(MapColor.SNOW).setId(LateBlockRegistry.getBlockRegistryKey("light_switch")));
+    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.white()).sound(SoundType.STONE).noOcclusion().mapColor(MapColor.SNOW).setId(LateBlockRegistry.getBlockRegistryKey("light_switch")));
     public static Item LIGHT_SWITCH_ITEM;
     public static Item FURNITURE_BOOK;
     public static final Block BASIC_LAMP = new BasicLampBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).lightLevel(createLightLevelFromLitBlockState(15)).setId(LateBlockRegistry.getBlockRegistryKey("basic_lamp")));
@@ -88,8 +88,8 @@ public class PaladinFurnitureModBlocksItems {
     public static final KitchenStovetopBlock KITCHEN_STOVETOP = new KitchenStovetopBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).setId(LateBlockRegistry.getBlockRegistryKey("kitchen_stovetop")));
 
     public static final WorkingTableBlock WORKING_TABLE = new WorkingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).sound(SoundType.WOOD).setId(LateBlockRegistry.getBlockRegistryKey("working_table")));
-    public static final PlateBlock BASIC_PLATE = new PlateBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("basic_plate")));
-    public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("basic_cutlery")));
+    public static final PlateBlock BASIC_PLATE = new PlateBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.white()).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("basic_plate")));
+    public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.gray()).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("basic_cutlery")));
 
     public static final BasicToiletBlock BASIC_TOILET = new BasicToiletBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("basic_toilet")));
     public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).noOcclusion().setId(LateBlockRegistry.getBlockRegistryKey("wall_toilet_paper")));

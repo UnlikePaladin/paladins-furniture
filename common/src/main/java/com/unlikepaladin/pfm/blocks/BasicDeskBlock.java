@@ -32,7 +32,7 @@ public class BasicDeskBlock extends Block {
     private final BlockState baseBlockState;
     public final FurnitureBlock deskBlock;
     public BasicDeskBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any());
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

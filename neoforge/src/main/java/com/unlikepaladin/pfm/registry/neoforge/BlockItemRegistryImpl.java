@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;

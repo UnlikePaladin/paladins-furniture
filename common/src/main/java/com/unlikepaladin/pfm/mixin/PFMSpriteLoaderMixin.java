@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

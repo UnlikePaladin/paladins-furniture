@@ -32,7 +32,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
 public class PFMCookingForBlockHeadsCompat {
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).setId(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.gray()).setId(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
     public static TriFunc<Integer, Inventory, StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();

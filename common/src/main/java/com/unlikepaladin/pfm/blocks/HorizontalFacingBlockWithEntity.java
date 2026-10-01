@@ -16,7 +16,7 @@ public abstract class HorizontalFacingBlockWithEntity extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING;
 
     protected HorizontalFacingBlockWithEntity(BlockBehaviour.Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
     }
 
     public BlockState rotate(BlockState state, Rotation rotation) {

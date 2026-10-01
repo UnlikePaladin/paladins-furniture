@@ -16,7 +16,7 @@ public class PFMTagProviderImpl {
         return new ObjectBuilder<T>(builder, t -> registry.getResourceKey(t).get(), modID);
     }
 
-    public static class ObjectBuilder<T> implements PFMTag<T>, TagAppender<ResourceKey<T>, T> {
+    public static class ObjectBuilder<T> implements PFMTag<T>, TagAppender<T> {
         private final Function<T, ResourceKey<T>> valueToKey;
         private final TagBuilder tagBuilder;
         ObjectBuilder(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
@@ -42,25 +42,25 @@ public class PFMTagProviderImpl {
         }
 
         @Override
-        public TagAppender<ResourceKey<T>, T> add(ResourceKey<T> value) {
+        public TagAppender<T> add(ResourceKey<T> value) {
             tagBuilder.addElement(value.identifier());
             return this;
         }
 
         @Override
-        public TagAppender<ResourceKey<T>, T> addOptional(ResourceKey<T> value) {
+        public TagAppender<T> addOptional(ResourceKey<T> value) {
             tagBuilder.addOptionalElement(value.identifier());
             return this;
         }
 
         @Override
-        public TagAppender<ResourceKey<T>, T> addTag(TagKey tag) {
+        public TagAppender<T> addTag(TagKey tag) {
             this.tagBuilder.addTag(tag.location());
             return this;
         }
 
         @Override
-        public TagAppender<ResourceKey<T>, T> addOptionalTag(TagKey tag) {
+        public TagAppender<T> addOptionalTag(TagKey tag) {
             this.tagBuilder.addOptionalTag(tag.location());
             return this;
         }

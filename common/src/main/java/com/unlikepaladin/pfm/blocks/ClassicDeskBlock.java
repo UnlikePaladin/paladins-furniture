@@ -37,7 +37,7 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     private final BlockState baseBlockState;
     public final FurnitureBlock deskBlock;
     public ClassicDeskBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any());
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

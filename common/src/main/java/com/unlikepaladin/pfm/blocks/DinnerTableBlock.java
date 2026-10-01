@@ -37,7 +37,7 @@ public class DinnerTableBlock extends HorizontalDirectionalBlock  {
     public static final MapCodec<DinnerTableBlock> CODEC = simpleCodec(DinnerTableBlock::new);
 
     public DinnerTableBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

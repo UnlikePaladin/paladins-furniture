@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
@@ -64,7 +65,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
         ItemStack itemStack = blockEntity.getItemInPlate();
         state.itemRenderState = new ItemStackRenderState();
         itemModelManager.updateForTopItem(state.itemRenderState, itemStack, ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
-        state.lightAbove = LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above());
+        state.lightAbove = blockEntity.getLevel() != null ? LightCoordsUtil.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 15728880;
         state.itemId = BuiltInRegistries.ITEM.getKey(itemStack.getItem());
     }
 

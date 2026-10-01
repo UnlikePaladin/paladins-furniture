@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import net.minecraft.util.RandomSource;
 
@@ -58,8 +59,10 @@ public class ModelHelper {
     public static List<TextureAtlasSprite> getOakBedSprites() {
         if (OAK_SPRITES_BED_TO_REPLACE == null) {
             SpriteId planksId = new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("minecraft:block/oak_planks"));
-            SpriteId bedId = Sheets.getBedSprite(DyeColor.RED);
-            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(getSprite(planksId), getSprite(bedId));
+            List<SpriteId> bedIds = getBedSprites(DyeColor.RED);
+            OAK_SPRITES_BED_TO_REPLACE = Stream.concat(Stream.of(planksId), bedIds.stream())
+                    .map(ModelHelper::getSprite)
+                    .toList();
         }
         return OAK_SPRITES_BED_TO_REPLACE;
     }
@@ -73,6 +76,19 @@ public class ModelHelper {
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }
 
+    public static List<SpriteId> getBedSprites(DyeColor color) {
+        return List.of(
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_head_up")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_head_west")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_head_east")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_foot_up")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_foot_west")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_foot_east")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse("block/" + color.getName() +  "_bed_foot_south")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse( "block/bed_head_north")),
+                new SpriteId(TextureAtlas.LOCATION_BLOCKS, Identifier.parse( "block/bed_down"))
+        );
+    }
     public static Set<Identifier> GENERATED_TEXTURE_IDS = new HashSet<>();
 
     public static boolean containsIdentifier(Identifier[] modelIds, Identifier comparison) {
@@ -346,7 +362,7 @@ public class ModelHelper {
         if (block != Blocks.AIR) {
             return block;
         }
-        return Blocks.WHITE_WOOL;
+        return Blocks.WOOL.white();
     }
 
     public static Identifier getTextureId(Block block) {

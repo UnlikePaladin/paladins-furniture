@@ -18,10 +18,10 @@ import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
@@ -42,7 +42,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -247,7 +247,7 @@ public class PFMRecipeProvider extends PFMProvider {
         KitchenStovetopBlock[] stovetopBlocks = KitchenStovetopBlock.streamKitchenStovetop().toList().toArray(new KitchenStovetopBlock[0]);
         for (KitchenStovetopBlock stove : stovetopBlocks) {
             if (!generatedRecipes.contains(getId(stove))) {
-                offerStovetopRecipe(stove, Ingredient.of(Items.IRON_INGOT), Ingredient.of(Blocks.GRAY_CONCRETE), exporter);
+                offerStovetopRecipe(stove, Ingredient.of(Items.IRON_INGOT), Ingredient.of(Blocks.CONCRETE.gray()), exporter);
                 generatedRecipes.add(getId(stove));
             }
         }
@@ -267,20 +267,20 @@ public class PFMRecipeProvider extends PFMProvider {
         }
         PaladinFurnitureMod.furnitureEntryMap.get(PendantBlock.class).getAllBlocks().forEach((block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                Block hang = Blocks.LIGHT_GRAY_CONCRETE;
+                Block hang = Blocks.CONCRETE.lightGray();
                 Block base;
                 if (block == PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT)
-                    base = Blocks.WHITE_STAINED_GLASS;
+                    base = Blocks.STAINED_GLASS.white();
                 else if (block == PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT)
-                    base = Blocks.WHITE_CONCRETE;
+                    base = Blocks.CONCRETE.white();
                 else
-                    base = Blocks.GRAY_CONCRETE;
+                    base = Blocks.CONCRETE.gray();
                 offerPendantRecipe(block.asItem(), Ingredient.of(base), Ingredient.of(hang), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
         if (!generatedRecipes.contains(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM, 6).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM, 6).input(Blocks.CONCRETE.white(), 6).input(Blocks.CONCRETE.lightGray(), 2).input(Items.REDSTONE).save(exporter, Identifier.fromNamespaceAndPath("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
             generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
@@ -566,7 +566,7 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public static void offerFridgeRecipe(ItemLike output, Ingredient legMaterial, Ingredient storage, RecipeOutput exporter) {
         if (output.asItem().toString().contains("xbox")) {
-            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 6).input(storage, 1).input(Ingredient.of(Items.REDSTONE)).input(Ingredient.of(Items.WHITE_CONCRETE)).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+            SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 6).input(storage, 1).input(Ingredient.of(Items.REDSTONE)).input(Ingredient.of(Items.CONCRETE.white())).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
         }
         else {
             SimpleFurnitureRecipeJsonFactory.create(output, 1).group("kitchen").unlockedBy("has_" + getItemPath(legMaterial), conditionsFromIngredient(legMaterial)).input(legMaterial, 7).input(storage).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
@@ -629,7 +629,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerShowerTowelRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,4).input(Ingredient.of(Items.LIGHT_GRAY_CONCRETE), 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,4).input(Ingredient.of(Items.CONCRETE.lightGray()), 2).save(exporter, Identifier.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     public static void offerMirrorRecipe(ItemLike output, Ingredient base, RecipeOutput exporter) {

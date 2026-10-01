@@ -43,7 +43,6 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
-import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.client.model.PFMModelVariantExtension;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
@@ -54,12 +53,10 @@ import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.block.dispatch.multipart.CombinedCondition;
 import net.minecraft.client.renderer.block.dispatch.multipart.Condition;
@@ -205,14 +202,6 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void register(List<Item> items) {
             Set<Item> processed = new HashSet<>();
-            for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-                if (block instanceof DyeableFurnitureBlock && !processed.contains(block.asItem())) {
-                    registerFurnitureModel(block.asItem(), new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));
-                    processed.add(block.asItem());
-                }
-            }
-
-
             for (Item item : items) {
                 if (!processed.contains(item)) {
                     if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof CustomItemBlockState itemBlockState) {
@@ -466,7 +455,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             Identifier counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
             if (variantBase.identifier.getPath().equals("granite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_GRANITE);
-                counterBase = ModelHelper.getTextureId(Blocks.WHITE_TERRACOTTA);
+                counterBase = ModelHelper.getTextureId(Blocks.DYED_TERRACOTTA.white());
             } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
                 Identifier temp = counterBase;
                 counterBase = counterTop;

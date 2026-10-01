@@ -133,7 +133,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
 
         if (mobEntity.invulnerableTime > 0) {
             int damageStage = (int) Math.min(9, Math.max(mobEntity.maxHealth - mobEntity.health, 0));
-            orderedRenderCommandQueue.submitBreakingBlockModel(matrixStack, model, 42L, damageStage);
+            orderedRenderCommandQueue.submitBreakingBlockModel(matrixStack, blockStateModelParts, damageStage);
         }
 
         matrixStack.popPose();

@@ -1,7 +1,11 @@
 {
+	"format_version": "1.21.11",
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"1": "entity/bed/red",
+		"3": "block/red_bed_foot_east",
+		"4": "block/red_bed_foot_south",
+		"5": "block/red_bed_foot_up",
+		"6": "block/red_bed_foot_west",
 		"particle": "block/oak_planks"
 	},
 	"elements": [
@@ -10,10 +14,10 @@
 			"to": [16, 9, 13],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
-				"east": {"uv": [5.5, 7.75, 6.5, 11], "rotation": 90, "texture": "#1"},
-				"south": {"uv": [5.5, 7, 9.5, 6], "texture": "#1"},
-				"west": {"uv": [0.5, 7.75, 1.5, 11], "rotation": 270, "texture": "#1"},
-				"up": {"uv": [1.5, 7.75, 5.5, 11], "rotation": 180, "texture": "#1"}
+				"east": {"uv": [0, 7, 13, 11], "texture": "#3"},
+				"south": {"uv": [0, 7, 16, 11], "texture": "#4"},
+				"west": {"uv": [0, 7, 13, 11], "texture": "#6"},
+				"up": {"uv": [0, 3, 16, 16], "rotation": 180, "texture": "#5"}
 			}
 		}
 	],
@@ -59,6 +63,7 @@
 		{
 			"name": "group",
 			"origin": [0, 0, 0],
+			"scope": 0,
 			"color": 0,
 			"children": [0]
 		}

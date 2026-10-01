@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.client.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.client.model.FurnitureTintSource;
-import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +22,7 @@ public class ItemModelRegistry {
 
     @SubscribeEvent
     public static void registerSpecialModelRenderer(RegisterSpecialModelRendererEvent event) {
-        event.register(Identifier.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
+
     }
 
     @SubscribeEvent

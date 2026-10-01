@@ -9,7 +9,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

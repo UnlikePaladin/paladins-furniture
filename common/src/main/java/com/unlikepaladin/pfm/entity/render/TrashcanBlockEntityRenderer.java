@@ -4,6 +4,7 @@ import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -113,7 +114,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
             state.itemRenderStates.add(itemState);
             state.items.add(blockEntity.getItem(i).getItem());
         }
-        state.lightAbove = LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above());
+        state.lightAbove = blockEntity.getLevel() != null ? LightCoordsUtil.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 15728880;
     }
 
     public static class TrashcanBlockEntityRenderState extends BlockEntityRenderState {

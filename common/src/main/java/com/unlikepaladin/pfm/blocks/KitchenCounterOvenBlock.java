@@ -41,7 +41,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
 
     public KitchenCounterOvenBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
             WOOD_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }

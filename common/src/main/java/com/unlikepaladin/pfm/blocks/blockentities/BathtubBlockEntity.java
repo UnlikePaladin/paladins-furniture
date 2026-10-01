@@ -11,16 +11,16 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class BathtubBlockEntity extends BedBlockEntity {
+public class BathtubBlockEntity extends BlockEntity {
     public BathtubBlockEntity(BlockPos worldPosition, BlockState state) {
-        super(worldPosition, state, DyeColor.WHITE);
+        super(BlockEntities.BATHTUB_BLOCK_ENTITY, worldPosition, state);
     }
 
     @Override

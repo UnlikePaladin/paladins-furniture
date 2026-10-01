@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public class PFMCrackParticle$ItemFactoryMixin {
     @ModifyReturnValue(method = "createParticle(Lnet/minecraft/core/particles/ItemParticleOption;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/util/RandomSource;)Lnet/minecraft/client/particle/Particle;", at = @At("RETURN"))
     public Particle modifyParticle(Particle original, ItemParticleOption itemStackParticleEffect, ClientLevel clientWorld, double d, double e, double f, double g, double h, double i) {
-        if (itemStackParticleEffect.getItem().item() instanceof BlockItem) {
-            BlockState defaultState = ((BlockItem)itemStackParticleEffect.getItem().item()).getBlock().defaultBlockState();
+        if (itemStackParticleEffect.getItem().item().value() instanceof BlockItem) {
+            BlockState defaultState = ((BlockItem)itemStackParticleEffect.getItem().item().value()).getBlock().defaultBlockState();
             BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(defaultState);
             if (model instanceof PFMBakedModelParticleExtension) {
                 ((PFMSpriteBillBoardParticleMixin)original).pfm$setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(clientWorld, BlockPos.containing(d, e, f), defaultState));

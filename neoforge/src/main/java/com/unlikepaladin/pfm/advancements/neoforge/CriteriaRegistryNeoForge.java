@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.advancements.neoforge;
 
 import com.unlikepaladin.pfm.advancements.GiveGuideBookCriterion;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;

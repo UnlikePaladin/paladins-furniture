@@ -28,7 +28,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.locale.Language;
 import net.minecraft.util.Unit;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 

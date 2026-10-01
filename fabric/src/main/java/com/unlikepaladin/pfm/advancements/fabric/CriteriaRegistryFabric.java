@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.advancements.fabric;
 
 import com.unlikepaladin.pfm.advancements.GiveGuideBookCriterion;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 
 public class CriteriaRegistryFabric {
     public static void registerCriteria() {

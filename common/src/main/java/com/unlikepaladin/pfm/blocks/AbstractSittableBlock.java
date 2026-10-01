@@ -42,7 +42,7 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock i
     public static Map<Class<? extends Block>, MapCodec<AbstractSittableBlock>> CODECS = new HashMap<>();
 
     public AbstractSittableBlock(Properties settings) {
-        super(settings.lightLevel((state) -> {return 0;}).emissiveRendering((blockstate, b, c) -> {return false;}));
+        super(settings.lightLevel((state) -> {return 0;}).emissiveRendering((blockstate) -> {return false;}));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));

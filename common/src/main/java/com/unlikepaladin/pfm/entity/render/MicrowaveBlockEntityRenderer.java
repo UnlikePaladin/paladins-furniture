@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.entity.render;
 
 import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -83,7 +84,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         state.state0 = new ItemStackRenderState();
         this.itemModelManager.updateForTopItem(state.state0, itemStack, ItemDisplayContext.GROUND, blockEntity.getLevel(), null, 0);
         state.recipePropertySet = blockEntity.getLevel().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
-        state.lightAbove = LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above());
+        state.lightAbove = blockEntity.getLevel() != null ? LightCoordsUtil.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 15728880;
         state.facing = blockEntity.getFacing();
         state.isActive = blockEntity.isActive;
         state.itemStack = itemStack;

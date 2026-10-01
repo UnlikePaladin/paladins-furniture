@@ -131,7 +131,7 @@ public final class TextureReloadQueue {
 
         Minecraft.getInstance().execute(
                 () -> {
-                    Minecraft.getInstance().levelRenderer.allChanged();
+                    Minecraft.getInstance().levelExtractor.allChanged();
                     List<Identifier> variants = new ArrayList<>();
 
                     WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));

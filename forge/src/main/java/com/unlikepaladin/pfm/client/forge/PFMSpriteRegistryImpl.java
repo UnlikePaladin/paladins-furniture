@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.util.Tuple;
+import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.Identifier;
 

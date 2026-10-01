@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
-    public static ExtraStoolVariant GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.GRAY_CONCRETE, Blocks.STRIPPED_DARK_OAK_LOG, "gray_dark_oak");
-    public static ExtraStoolVariant WHITE = new ExtraStoolVariant(Blocks.WHITE_CONCRETE, Blocks.LIGHT_GRAY_CONCRETE, "white");
-    public static ExtraStoolVariant GRAY = new ExtraStoolVariant(null, Blocks.LIGHT_GRAY_CONCRETE, "gray");
-    public static ExtraStoolVariant LIGHT_GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.LIGHT_GRAY_CONCRETE, Blocks.STRIPPED_DARK_OAK_LOG, "light_gray_dark_oak");
+    public static ExtraStoolVariant GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.CONCRETE.gray(), Blocks.STRIPPED_DARK_OAK_LOG, "gray_dark_oak");
+    public static ExtraStoolVariant WHITE = new ExtraStoolVariant(Blocks.CONCRETE.white(), Blocks.CONCRETE.lightGray(), "white");
+    public static ExtraStoolVariant GRAY = new ExtraStoolVariant(null, Blocks.CONCRETE.lightGray(), "gray");
+    public static ExtraStoolVariant LIGHT_GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.CONCRETE.lightGray(), Blocks.STRIPPED_DARK_OAK_LOG, "light_gray_dark_oak");
 
     private final String name;
     private final Block baseBlock;

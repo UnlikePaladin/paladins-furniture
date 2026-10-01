@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
-    public static ExtraCounterVariant DARK_CONCRETE = new ExtraCounterVariant(Blocks.GRAY_CONCRETE, Blocks.WHITE_CONCRETE, "dark_concrete");
-    public static ExtraCounterVariant CONCRETE = new ExtraCounterVariant(Blocks.WHITE_CONCRETE, null, "concrete");
-    public static ExtraCounterVariant SMOOTH_STONE = new ExtraCounterVariant(Blocks.WHITE_CONCRETE, Blocks.SMOOTH_STONE,"smooth_stone");
+    public static ExtraCounterVariant DARK_CONCRETE = new ExtraCounterVariant(Blocks.CONCRETE.gray(), Blocks.CONCRETE.white(), "dark_concrete");
+    public static ExtraCounterVariant CONCRETE = new ExtraCounterVariant(Blocks.CONCRETE.white(), null, "concrete");
+    public static ExtraCounterVariant SMOOTH_STONE = new ExtraCounterVariant(Blocks.CONCRETE.white(), Blocks.SMOOTH_STONE,"smooth_stone");
     public static ExtraCounterVariant DEEPSLATE_TILE = new ExtraCounterVariant(Blocks.QUARTZ_BLOCK, Blocks.DEEPSLATE_TILES,"deepslate_tile");
-    public static ExtraCounterVariant GRANITE_TERRACOTTA = new ExtraCounterVariant(Blocks.WHITE_TERRACOTTA, Blocks.POLISHED_GRANITE,"granite_terracotta");
+    public static ExtraCounterVariant GRANITE_TERRACOTTA = new ExtraCounterVariant(Blocks.DYED_TERRACOTTA.white(), Blocks.POLISHED_GRANITE,"granite_terracotta");
     public static ExtraCounterVariant ANDESITE_OAK = new ExtraCounterVariant(Blocks.STRIPPED_OAK_LOG, Blocks.POLISHED_ANDESITE,"andesite_oak");
     public static ExtraCounterVariant DEEPSLATE_DARK_OAK = new ExtraCounterVariant(Blocks.DARK_OAK_PLANKS, Blocks.POLISHED_DEEPSLATE,"deepslate_dark_oak");
     public static ExtraCounterVariant BLACKSTONE_CRIMSON = new ExtraCounterVariant(Blocks.CRIMSON_PLANKS, Blocks.POLISHED_BLACKSTONE,"blackstone_crimson");

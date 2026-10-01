@@ -332,23 +332,6 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return new UVPair(Float.intBitsToFloat(ix), Float.intBitsToFloat(iy));
     }
 
-    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
-    public static int findVertexElement(VertexFormatElement.Type type, int index) {
-        Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
-        if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
-            return ELEMENT_INTEGER_MAP.get(pairToFind);
-
-        int id = 0;
-        for (VertexFormatElement element1 : DefaultVertexFormat.BLOCK.getElements())
-        {
-            if (element1.type() == type && element1.index() == index)
-                break;
-            id++;
-        }
-        ELEMENT_INTEGER_MAP.put(pairToFind, id);
-        return id;
-    }
-
     @Override
     public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
         if (state != null && getVariant(state) != null)

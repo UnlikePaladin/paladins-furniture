@@ -45,7 +45,7 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private final BlockState baseBlockState;
     protected FurnitureBlock deskCabinetBlock;
     public BasicDeskCabinetBlock(Properties settings) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(OPEN, false));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();

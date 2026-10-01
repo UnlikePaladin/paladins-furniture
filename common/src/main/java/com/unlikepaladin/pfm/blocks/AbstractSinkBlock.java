@@ -48,7 +48,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     final Biome.Precipitation precipitation;
 
     public AbstractSinkBlock(BlockBehaviour.Properties settings, Biome.Precipitation precipitation, CauldronInteraction.Dispatcher behaviorMap) {
-        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false), behaviorMap);
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false), behaviorMap);
         this.behaviorMap = behaviorMap;
         this.precipitation = precipitation;
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(LEVEL_4, 0));

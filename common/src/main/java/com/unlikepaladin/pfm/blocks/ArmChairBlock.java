@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.entity.Entity;
@@ -60,9 +61,9 @@ public class ArmChairBlock extends AbstractSittableBlock {
     }
 
     @Override
-    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final double fallDistance) {
         if (entity.isSuppressingBounce()) {
-            super.updateEntityMovementAfterFallOn(blockGetter, entity);
+            super.fallOn(level, state, pos, entity, fallDistance * (double)0.5F);
         } else {
             this.bounceEntity(entity);
         }

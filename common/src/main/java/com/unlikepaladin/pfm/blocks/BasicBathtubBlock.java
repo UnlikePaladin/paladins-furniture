@@ -17,10 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -63,13 +60,13 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 
-public class BasicBathtubBlock extends BedBlock {
+public class BasicBathtubBlock extends BedBlock implements EntityBlock {
     public static final IntegerProperty LEVEL_8 = IntegerProperty.create("level", 0, 8);
     private final CauldronInteraction.Dispatcher behaviorMap;
     private final Biome.Precipitation precipitation;
     private static final List<BasicBathtubBlock> basicBathtubBlocks = new ArrayList<>();
     public BasicBathtubBlock(BlockBehaviour.Properties settings, CauldronInteraction.Dispatcher map, Biome.Precipitation precipitation) {
-        super(DyeColor.WHITE, settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        super(DyeColor.WHITE, settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         this.registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(LEVEL_8, 0).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
         this.behaviorMap = map;
         this.precipitation = precipitation;
@@ -113,7 +110,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+    public void fallOn(final Level level, final BlockState state, final BlockPos pos, final Entity entity, final double fallDistance) {
         entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0, 0.0, 1.0));
     }
 
