@@ -12,4 +12,6 @@ public interface PFMBakedModelGetQuadsExtension {
     List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random);
 
     List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random);
+
+    BakedItemData getBakedItemData(RandomSource random);
 }

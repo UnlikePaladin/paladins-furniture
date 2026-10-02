@@ -18,7 +18,7 @@ public class RecipeRegistryNeoForge {
     public static void registerRecipeSerializers(RegisterEvent event) {
         event.register(BuiltInRegistries.RECIPE_SERIALIZER.key(), recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new RecipeSerializer<>(AbstractCookingRecipe.cookingMapCodec(FreezingRecipe::new), AbstractCookingRecipe.cookingStreamCodec(FreezingRecipe::new))
+                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new RecipeSerializer<>(FreezingRecipe.cookingMapCodec(200), AbstractCookingRecipe.cookingStreamCodec(FreezingRecipe::new))
             );
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new RecipeSerializer<>(SimpleFurnitureRecipe.Serializer.CODEC, SimpleFurnitureRecipe.Serializer.PACKET_CODEC)

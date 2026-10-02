@@ -12,8 +12,6 @@ accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> 
 accessible field net/minecraft/client/renderer/item/ItemModels ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
 accessible field net/minecraft/client/renderer/special/SpecialModelRenderers ID_MAPPER Lnet/minecraft/util/ExtraCodecs$LateBoundIdMapper;
 
-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
-accessible field net/minecraft/client/renderer/RenderPipelines GUI_TEXTURED_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible class net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl
 
 accessible field net/minecraft/client/resources/model/sprite/AtlasManager KNOWN_ATLASES Ljava/util/List;

@@ -3,5 +3,6 @@
   "ingredient": "minecraft:potion",
   "result": {
     "id": "minecraft:snowball"
-  }
+  },
+  "cookingtime": 200
 }

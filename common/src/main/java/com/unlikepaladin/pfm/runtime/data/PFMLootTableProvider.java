@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
@@ -12,7 +13,11 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.EmptyTagLookupWrapper;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.level.ItemLike;
@@ -56,16 +61,14 @@ public class PFMLootTableProvider extends PFMProvider {
 
         Path path = getParent().getOutput();
         Set<Identifier> identifiers = new HashSet<>();
+        HolderLookup.Provider lookup = EmptyTagLookupWrapper.wrap(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+        RegistryOps<JsonElement> ops = lookup.createSerializationContext(JsonOps.INSTANCE);
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (!identifiers.add(identifier)) {
                 throw new IllegalStateException("Duplicate loot table " + identifier);
             } else {
                 Path path2 = getResultItem(path, identifier);
-                String string = PFMDataGenerator.GSON.toJson(LootTable.DIRECT_CODEC.encodeStart(JsonOps.INSTANCE, builder.build()).getOrThrow((error) -> {
-                    getParent().getLogger().warn("Failed to parse Loot table: {}", error);
-                    return null;
-                }));
-                enqueueJsonWrite(getWriteQueue(), path2, string);
+                enqueueJsonWrite(getWriteQueue(), path2, LootTable.DIRECT_CODEC.encodeStart(ops, builder.build()).getOrThrow(IllegalStateException::new));
             }
         }));
 

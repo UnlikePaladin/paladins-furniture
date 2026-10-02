@@ -1,23 +1,17 @@
 package com.unlikepaladin.pfm.client.model.neoforge;
 
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
+import com.unlikepaladin.pfm.client.model.BakedItemData;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.registry.TriFunc;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.item.CuboidItemModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import net.minecraft.client.resources.model.geometry.ItemQuads;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,31 +21,17 @@ public class PFMItemModelImpl {
     }
 
     public static void emitItemModelQuads(ItemStackRenderState.LayerRenderState layerRenderState, BlockStateModel model, ItemDisplayContext context, RandomSource random) {
-        if (model instanceof PFMNeoForgeBakedModel) {
-            if (((PFMNeoForgeBakedModel) model).getItemDisplaySettings() != null)
-                ((PFMNeoForgeBakedModel) model).getItemDisplaySettings().applyToLayer(layerRenderState, context);
+        if (model instanceof PFMNeoForgeBakedModel pfmModel) {
+            if (pfmModel.getItemDisplaySettings() != null)
+                pfmModel.getItemDisplaySettings().applyToLayer(layerRenderState, context);
 
-            List<BakedQuad> quads = new ArrayList<>();
-            long seed = 42L;
-            for (Direction direction : Direction.values()) {
-                random.setSeed(seed);
-                quads.addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(direction, random));
-            }
-
-            random.setSeed(seed);
-            quads.addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(null, random));
-            layerRenderState.setExtents(() -> CuboidItemModelWrapper.computeExtents(quads));
-            layerRenderState.setQuads(ItemQuads.split(quads));
+            BakedItemData data = pfmModel.getBakedItemData(random);
+            layerRenderState.setExtents(data.extents());
+            layerRenderState.setQuads(data.itemQuads());
         } else {
-            List<BlockStateModelPart> parts = new ArrayList<>();
-            model.collectParts(random, parts);
-            List<BakedQuad> quads = new ArrayList<>();
-            for (Direction direction : Direction.values()) {
-                quads.addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());
-            }
-            quads.addAll(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList());
-            layerRenderState.setExtents(() -> CuboidItemModelWrapper.computeExtents(quads));
-            layerRenderState.setQuads(ItemQuads.split(quads));
+            BakedItemData data = BakedItemData.getFallbackItemData(model, random);
+            layerRenderState.setExtents(data.extents());
+            layerRenderState.setQuads(data.itemQuads());
         }
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.client.model.BakedItemData;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -33,16 +34,39 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    protected Map<Pair<BlockState, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    protected Map<Pair<Pair<BlockState, VariantBase<?>>, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    protected Map<Pair<BlockState, VariantBase<?>>, BakedItemData> itemDataCache = new HashMap<>();
+
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random) {
-        Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);
+        Pair<Pair<BlockState, VariantBase<?>>, Direction> directionPair = new Pair<>(new Pair<>(blockState, variant), face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);
 
         List<BakedQuad> quads = getQuads(face, random);
         cache.put(directionPair, quads);
         return quads;
+    }
+
+    @Override
+    public BakedItemData getBakedItemData(RandomSource random) {
+        Pair<BlockState, VariantBase<?>> key = new Pair<>(blockState, variant);
+        BakedItemData cached = itemDataCache.get(key);
+        if (cached != null)
+            return cached;
+
+        List<BakedQuad> quads = new ArrayList<>();
+        long seed = 42L;
+        for (Direction direction : Direction.values()) {
+            random.setSeed(seed);
+            quads.addAll(getQuadsCached(direction, random));
+        }
+        random.setSeed(seed);
+        quads.addAll(getQuadsCached(null, random));
+
+        cached = BakedItemData.of(quads);
+        itemDataCache.put(key, cached);
+        return cached;
     }
 
     public PFMForgeBakedModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockStateModelPart> templateBakedModels) {

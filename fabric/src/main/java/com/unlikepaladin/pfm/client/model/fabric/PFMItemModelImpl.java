@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.model.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
+import com.unlikepaladin.pfm.client.model.BakedItemData;
 import com.unlikepaladin.pfm.mixin.fabric.PFMWrapperBlockstateModelAccessor;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
@@ -8,14 +9,10 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
-import net.minecraft.client.resources.model.geometry.ItemQuads;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -41,18 +38,15 @@ public class PFMItemModelImpl {
         }
         BlockStateModel model1 = current instanceof BlockStateModel bsm ? bsm : model;
 
-        if (model1 instanceof PFMFabricBakedModel) {
-            if (((PFMFabricBakedModel) model1).getItemDisplaySettings() != null)
-                ((PFMFabricBakedModel) model1).getItemDisplaySettings().applyToLayer(layerRenderState, context);
+        if (model1 instanceof PFMFabricBakedModel fabricModel) {
+            if (fabricModel.getItemDisplaySettings() != null)
+                fabricModel.getItemDisplaySettings().applyToLayer(layerRenderState, context);
 
-            ((PFMFabricBakedModel) model1).emitItemQuads(layerRenderState.emitter(), random);
+            fabricModel.emitItemQuads(layerRenderState.emitter(), random);
         } else {
-            List<BlockStateModelPart> parts = new ArrayList<>();
-            model.collectParts(random, parts);
-            for (Direction direction : Direction.values()) {
-                layerRenderState.setQuads(ItemQuads.split(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList()));
-            }
-            layerRenderState.setQuads(ItemQuads.split(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList()));
+            BakedItemData data = BakedItemData.getFallbackItemData(model, random);
+            layerRenderState.setExtents(data.extents());
+            layerRenderState.setQuads(data.itemQuads());
         }
     }
 }

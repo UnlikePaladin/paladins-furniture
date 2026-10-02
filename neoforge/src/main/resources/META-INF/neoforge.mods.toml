@@ -12,7 +12,8 @@ description = '''
 A Brand-New Furniture mod for Modern Minecraft where things are functional!
 '''
 itemIcon = "pfm:oak_chair"
-logoFile = "icon.png"
+iconFile = "icon.png"
+bannerFile = "pfm_background.png"
 credits = "Translators: lzyzl6, MIHONO, WrenXing"
 
 [[dependencies.pfm]]

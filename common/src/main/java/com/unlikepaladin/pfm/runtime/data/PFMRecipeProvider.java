@@ -22,9 +22,12 @@ import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BootstrapRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.EmptyTagLookupWrapper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.RegistryOps;
@@ -57,8 +60,9 @@ public class PFMRecipeProvider extends PFMProvider {
 
     // Create a registry wrapper lookup without dynamic entries such as biomes as they don't exist yet
     private static HolderLookup.Provider createWrapperLookup() {
-        RegistrySetBuilder builder = new RegistrySetBuilder();
-        return builder.build(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+        HolderLookup.Provider staticLookup = EmptyTagLookupWrapper.wrap(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+        BootstrapRegistry<Recipe<?>> recipeRegistry = new BootstrapRegistry<>(Registries.RECIPE, Lifecycle.stable());
+        return HolderLookup.Provider.create(Stream.concat(staticLookup.listRegistries(), Stream.of(recipeRegistry)));
     }
 
     @Override

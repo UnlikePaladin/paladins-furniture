@@ -3,4 +3,5 @@
   "ingredient": "minecraft:water_bucket",
   "result": {
     "id": "minecraft:ice"
-  }}
+  },
+  "cookingtime": 200}

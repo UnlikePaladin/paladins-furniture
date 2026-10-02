@@ -3,5 +3,6 @@
   "ingredient": "minecraft:lava_bucket",
   "result": {
     "id": "minecraft:obsidian"
-  }
+  },
+  "cookingtime": 200
 }
