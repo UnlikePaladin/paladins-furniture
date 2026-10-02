@@ -44,17 +44,11 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private static final List<LightSwitchBlock> LIGHT_SWITCHES = new ArrayList<>();
-    public static final MapCodec<LightSwitchBlock> CODEC = simpleCodec(LightSwitchBlock::new);
 
     public LightSwitchBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
         LIGHT_SWITCHES.add(this);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<LightSwitchBlock> streamlightSwitches() {

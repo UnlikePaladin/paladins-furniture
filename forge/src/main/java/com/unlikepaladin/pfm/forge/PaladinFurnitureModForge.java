@@ -15,10 +15,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.Version;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackSelectionConfig;
-import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.*;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
@@ -39,6 +36,7 @@ import net.minecraftforge.registries.RegisterEvent;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 
 @Mod(PaladinFurnitureMod.MOD_ID)
@@ -81,8 +79,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo info) {
+                private PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -90,8 +87,13 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-                    return this.openPrimary(info);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             event.addRepositorySource(profileAdder -> {
@@ -100,8 +102,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo info) {
+                private PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -109,8 +110,13 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-                    return this.openPrimary(info);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             event.addRepositorySource(profileAdder -> {

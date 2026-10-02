@@ -13,7 +13,7 @@ import net.minecraft.core.Registry;
 
 public class RecipeRegistryFabric {
     public static void registerRecipes() {
-        RecipeTypes.FREEZING_RECIPE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.FREEZING_ID, new RecipeSerializer<>(AbstractCookingRecipe.cookingMapCodec(FreezingRecipe::new, 200), AbstractCookingRecipe.cookingStreamCodec(FreezingRecipe::new)));
+        RecipeTypes.FREEZING_RECIPE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.FREEZING_ID, new RecipeSerializer<>(AbstractCookingRecipe.cookingMapCodec(FreezingRecipe::new), AbstractCookingRecipe.cookingStreamCodec(FreezingRecipe::new)));
         RecipeTypes.FREEZING_RECIPE = Registry.register(BuiltInRegistries.RECIPE_TYPE, RecipeTypes.FREEZING_ID,  new RecipeType<FreezingRecipe>() {
             @Override
             public String toString() {return RecipeTypes.FREEZING_ID.getPath();}

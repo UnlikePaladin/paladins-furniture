@@ -20,18 +20,12 @@ import java.util.stream.Stream;
 
 public class HerringbonePlankBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> PLANKS = new ArrayList<>();
-    public static final MapCodec<HerringbonePlankBlock> CODEC = simpleCodec(HerringbonePlankBlock::new);
 
     public HerringbonePlankBlock(Properties settings) {
         super(settings);
         if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
             PLANKS.add(new FurnitureBlock(this, "herringbone_planks"));
         }
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamPlanks() {

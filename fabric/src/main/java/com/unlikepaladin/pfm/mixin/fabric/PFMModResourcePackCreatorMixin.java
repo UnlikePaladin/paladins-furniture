@@ -31,6 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
+import net.minecraft.server.packs.PackMetadataResources;
 
 @Mixin(ModResourcePackCreator.class)
 public class PFMModResourcePackCreatorMixin {
@@ -45,8 +47,7 @@ public class PFMModResourcePackCreatorMixin {
             AbstractBakedModel.reloading = true;
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo info) {
+                private PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -54,16 +55,20 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-                    return openPrimary(info);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             consumer.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-asset-resources", Component.literal("PFM Assets"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, PackType.CLIENT_RESOURCES, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
         } else if (type == PackType.SERVER_DATA) {
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo name) {
+                private PackResources openPrimary(PackLocationInfo name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -71,8 +76,13 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo name, Pack.Metadata metadata) {
-                    return this.openPrimary(name);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             consumer.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-data-resources", Component.literal("PFM Data"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, PackType.SERVER_DATA, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));

@@ -52,7 +52,6 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
-    public static final MapCodec<MicrowaveBlock> CODEC = simpleCodec(MicrowaveBlock::new);
 
     public MicrowaveBlock(Properties settings) {
         super(settings);
@@ -60,11 +59,6 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         MICROWAVES.add(new FurnitureBlock(this, "microwave"));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamMicrowaves() {

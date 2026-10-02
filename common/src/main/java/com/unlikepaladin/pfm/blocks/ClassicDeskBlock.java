@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     private final Block baseBlock;
 
-    public static final MapCodec<ClassicDeskBlock> CODEC = simpleCodec(ClassicDeskBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESKS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -56,12 +55,6 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     public static Stream<FurnitureBlock> streamStoneClassicDesks() {
         return STONE_CLASSIC_DESKS.stream();
     }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
-
     @Override
     public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;

@@ -123,11 +123,6 @@ public class ClassicCoffeeTableBlock extends Block {
     public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
-
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return CODEC;
-    }
 }
 
 

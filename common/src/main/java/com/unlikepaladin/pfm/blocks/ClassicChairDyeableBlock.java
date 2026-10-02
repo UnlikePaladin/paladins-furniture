@@ -22,7 +22,6 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     private final DyeColor color;
     private static final List<FurnitureBlock> WOOD_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
-    public static MapCodec<ClassicChairDyeableBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), propertiesCodec()).apply(instance, ClassicChairDyeableBlock::new));;;
 
     public ClassicChairDyeableBlock(DyeColor color, Properties settings) {
         super(settings);
@@ -53,10 +52,6 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
         return this.color;
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 }
 
 

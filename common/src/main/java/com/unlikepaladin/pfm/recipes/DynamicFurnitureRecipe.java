@@ -16,7 +16,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.PatchedDataComponentMap;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -54,8 +56,8 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             DataComponentPatch componentChanges = furnitureOutput.components != null ? furnitureOutput.components : DataComponentPatch.EMPTY;
             DataComponentMap.Builder builder = DataComponentMap.builder();
 
-            if (!componentChanges.isEmpty() && componentChanges.entrySet().stream().anyMatch(dataComponentTypeOptionalEntry -> dataComponentTypeOptionalEntry.getKey() == PFMComponents.COLOR_COMPONENT)) {
-                DyeColor color = componentChanges.get(DataComponentMap.EMPTY, PFMComponents.COLOR_COMPONENT);
+            DyeColor color = componentChanges.get(DataComponentMap.EMPTY, PFMComponents.COLOR_COMPONENT);
+            if (color != null) {
                 optionalOutput = PaladinFurnitureMod.furnitureEntryMap.get(getOutputBlockClass()).getEntryFromVariantAndColor(variant, color);
                 if (optionalOutput.get().asItem().components().get(PFMComponents.COLOR_COMPONENT) == null) {
                     componentChanges = componentChanges.forget(dataComponentType -> dataComponentType == PFMComponents.COLOR_COMPONENT);
@@ -449,15 +451,20 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             this.variantChildren = variantChildren;
         }
 
+        private static final StreamCodec<RegistryFriendlyByteBuf, List<Ingredient>> INGREDIENTS_CODEC =
+                ByteBufCodecs.collection(ArrayList::new, Ingredient.CONTENTS_STREAM_CODEC);
+        private static final StreamCodec<ByteBuf, Map<String, Integer>> VARIANT_CHILDREN_CODEC =
+                ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.INT);
+
         public static FurnitureIngredients read(RegistryFriendlyByteBuf buf) {
-            List<Ingredient> vanillaIngredients = buf.readCollection(Lists::newArrayListWithCapacity, buf1 -> Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
-            Map<String, Integer> variantChildren = buf.readMap((FriendlyByteBuf::readUtf), (FriendlyByteBuf::readInt));
+            List<Ingredient> vanillaIngredients = INGREDIENTS_CODEC.decode(buf);
+            Map<String, Integer> variantChildren = VARIANT_CHILDREN_CODEC.decode(buf);
             return new FurnitureIngredients(vanillaIngredients, variantChildren);
         }
 
         public static void write(RegistryFriendlyByteBuf buf, FurnitureIngredients ingredients) {
-            buf.writeCollection(ingredients.vanillaIngredients, ((packetByteBuf, ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.encode((RegistryFriendlyByteBuf) packetByteBuf, ingredient)));
-            buf.writeMap(ingredients.variantChildren, FriendlyByteBuf::writeUtf, FriendlyByteBuf::writeInt);
+            INGREDIENTS_CODEC.encode(buf, ingredients.vanillaIngredients);
+            VARIANT_CHILDREN_CODEC.encode(buf, ingredients.variantChildren);
         }
 
         @Override
@@ -494,9 +501,12 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             return PACKET_CODEC;
         }
 
+        private static final StreamCodec<ByteBuf, List<Identifier>> VARIANTS_CODEC =
+                ByteBufCodecs.collection(ArrayList::new, Identifier.STREAM_CODEC);
+
         public static DynamicFurnitureRecipe read(RegistryFriendlyByteBuf buf) {
             String group = buf.readUtf();
-            List<Identifier> supportedVariants = buf.readList(FriendlyByteBuf::readIdentifier);
+            List<Identifier> supportedVariants = VARIANTS_CODEC.decode(buf);
             FurnitureIngredients ingredients = FurnitureIngredients.read(buf);
             FurnitureOutput output = FurnitureOutput.read(buf);
             return new DynamicFurnitureRecipe(group, output, supportedVariants, ingredients);
@@ -504,7 +514,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
         public static void write(RegistryFriendlyByteBuf buf, DynamicFurnitureRecipe recipe) {
             buf.writeUtf(recipe.group);
-            buf.writeCollection(recipe.supportedVariants, FriendlyByteBuf::writeIdentifier);
+            VARIANTS_CODEC.encode(buf, recipe.supportedVariants);
             FurnitureIngredients.write(buf, recipe.ingredients);
             FurnitureOutput.write(buf, recipe.furnitureOutput);
         }

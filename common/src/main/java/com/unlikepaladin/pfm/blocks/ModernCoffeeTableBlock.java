@@ -138,10 +138,6 @@ public class ModernCoffeeTableBlock extends Block {
         return false;
     }
 
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return CODEC;
-    }
 }
 
 

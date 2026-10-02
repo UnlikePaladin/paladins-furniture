@@ -33,17 +33,12 @@ import java.util.stream.Stream;
 public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
     protected static final BooleanProperty WALL = BooleanProperty.create("wall");
     private static final List<FurnitureBlock> TOILET_PAPER = new ArrayList<>();
-    public static final MapCodec<WallToiletPaperBlock> CODEC = simpleCodec(WallToiletPaperBlock::new);
+
     public WallToiletPaperBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WALL, false));
         TOILET_PAPER.add(new FurnitureBlock(this, "toilet_paper"));
 
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamToiletPaperBlocks() {

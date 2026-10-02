@@ -59,12 +59,6 @@ public class KitchenCabinetBlock extends HorizontalDirectionalBlock implements E
         }
     }
 
-    public static final MapCodec<KitchenCabinetBlock> CODEC = simpleCodec(KitchenCabinetBlock::new);
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
-
     public static Stream<FurnitureBlock> streamWoodCabinets() {
         return WOOD_CABINETS.stream();
     }

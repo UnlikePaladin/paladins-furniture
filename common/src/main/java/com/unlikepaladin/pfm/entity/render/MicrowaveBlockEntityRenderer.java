@@ -61,9 +61,9 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
                 default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
             matrices.translate(x, y ,z);
-            matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+            matrices.rotate(Axis.YP.rotationDegrees(-facing.toYRot()));
             if (state.isActive && state.recipePropertySet.test(state.itemStack)) {
-                matrices.mulPose(Axis.YP.rotationDegrees((state.rotationFactor)));
+                matrices.rotate(Axis.YP.rotationDegrees((state.rotationFactor)));
             }
             matrices.scale(0.5f, 0.5f, 0.5f);
             state.state0.submit(matrices, queue, state.lightAbove, OverlayTexture.NO_OVERLAY, 0);

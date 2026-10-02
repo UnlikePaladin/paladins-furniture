@@ -3,12 +3,11 @@ package com.unlikepaladin.pfm.advancements;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -24,20 +23,11 @@ public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBook
         return Conditions.CODEC;
     }
 
-    public static class Conditions
-            implements SimpleCriterionTrigger.SimpleInstance {
-        public static final Codec<GiveGuideBookCriterion.Conditions> CODEC = RecordCodecBuilder.create((instance) -> {
-            return instance.group(EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(GiveGuideBookCriterion.Conditions::player)).apply(instance, GiveGuideBookCriterion.Conditions::new);
-        });
-        private final Optional<ContextAwarePredicate> player;
-
-        public Conditions(Optional<ContextAwarePredicate> playerPredicate) {
-            this.player = playerPredicate;
-        }
-
-        @Override
-        public Optional<ContextAwarePredicate> player() {
-            return player;
-        }
+    public record Conditions(Optional<Holder<LootItemCondition>> player) implements SimpleCriterionTrigger.SimpleInstance {
+        public static final Codec<GiveGuideBookCriterion.Conditions> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(GiveGuideBookCriterion.Conditions::player)
+            ).apply(instance, GiveGuideBookCriterion.Conditions::new)
+        );
     }
 }

@@ -89,7 +89,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;
-                matrices.mulPose(Axis.XP.rotationDegrees(rot));
+                matrices.rotate(Axis.XP.rotationDegrees(rot));
                 matrices.scale(0.8f, 0.8f, 0.8f);
                 state.itemRenderStates.get(i).submit(matrices, queue, state.lightAbove, OverlayTexture.NO_OVERLAY, 0);
                 matrices.popPose();

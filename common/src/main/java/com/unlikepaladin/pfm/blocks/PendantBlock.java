@@ -36,7 +36,6 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private static final List<PendantBlock> PENDANTS = new ArrayList<>();
-    public static final MapCodec<PendantBlock> CODEC = simpleCodec(PendantBlock::new);
 
     public PendantBlock(Properties settings) {
         super(settings);
@@ -44,11 +43,6 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         PENDANTS.add(this);
-    }
-
-    @Override
-    protected MapCodec<? extends PowerableBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<PendantBlock> streamPendantLights() {

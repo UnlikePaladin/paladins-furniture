@@ -4,12 +4,15 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.FuelValues;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,12 +39,7 @@ public class BlockItemRegistryImpl {
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
-            registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))) {
-                @Override
-                public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType, FuelValues fuelValues) {
-                    return 300;
-                }
-            }, group);
+            registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().component(DataComponents.COOKING_FUEL, new CookingFuel(new ResolvableInt.Constant(300), new ResolvableFloat.Constant(1.0F))).useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))), group);
         }
         registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))), group);
     }

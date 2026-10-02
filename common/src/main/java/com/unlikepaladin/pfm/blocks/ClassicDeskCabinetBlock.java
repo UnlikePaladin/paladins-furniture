@@ -46,8 +46,6 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private final Block baseBlock;
     public static BooleanProperty OPEN = BlockStateProperties.OPEN;
 
-
-    public static final MapCodec<ClassicDeskCabinetBlock> CODEC = simpleCodec(ClassicDeskCabinetBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -64,12 +62,6 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         else if (this.getClass().isAssignableFrom(ClassicDeskCabinetBlock.class)){
             STONE_CLASSIC_DESK_CABINETS.add(deskCabinetBlock);
         }
-    }
-
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodClassicDeskCabinets() {

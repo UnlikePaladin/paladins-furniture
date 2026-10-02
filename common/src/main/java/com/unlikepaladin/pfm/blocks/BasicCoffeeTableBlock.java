@@ -260,11 +260,6 @@ public class BasicCoffeeTableBlock extends Block {
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(Direction.get(Direction.AxisDirection.NEGATIVE, state.getValue(AXIS))));
     }
-
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return CODEC;
-    }
 }
 
 

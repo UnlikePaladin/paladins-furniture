@@ -1,7 +1,5 @@
 package com.unlikepaladin.pfm.blocks.models.neoforge;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
@@ -317,7 +315,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
                     }
 
                     return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
-                        newUVs[0], newUVs[1], newUVs[2], newUVs[3], quad.direction(), BakedQuad.MaterialInfo.of(new Material.Baked(quad.materialInfo().sprite(), false), quad.materialInfo().sprite().transparency(), quad.materialInfo().tintIndex(), quad.materialInfo().shade(), quad.materialInfo().lightEmission(), quad.materialInfo().ambientOcclusion()));
+                        newUVs[0], newUVs[1], newUVs[2], newUVs[3], quad.direction(), BakedQuad.MaterialInfo.of(new Material.Baked(quad.materialInfo().sprite(), false), quad.materialInfo().sprite().transparency(), quad.materialInfo().tintIndex(), quad.materialInfo().shadeDirectionOverride(), quad.materialInfo().lightEmission(), quad.materialInfo().ambientOcclusion()));
                 }
             });
 

@@ -32,7 +32,6 @@ public class LogTableBlock extends HorizontalDirectionalBlock {
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_LOG_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
-    public static final MapCodec<LogTableBlock> CODEC = simpleCodec(LogTableBlock::new);
     public LogTableBlock(Properties settings) {
         super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
@@ -44,11 +43,6 @@ public class LogTableBlock extends HorizontalDirectionalBlock {
         else if (this.getClass().isAssignableFrom(LogTableBlock.class)){
             STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "natural_table"));
         }
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodLogTables() {

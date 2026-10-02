@@ -22,10 +22,7 @@ import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -47,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Stream;
 
 // TODO : Remake EMI screen to work with the new recipe system
 
@@ -77,6 +75,16 @@ public class PFMRecipeProvider extends PFMProvider {
 
         generateRecipes(new RecipeOutput() {
             @Override
+            public <S> HolderGetter<S> lookup(ResourceKey<? extends Registry<? extends S>> key) {
+                return lookup.lookupOrThrow(key);
+            }
+
+            @Override
+            public <S> Stream<Holder.Reference<S>> listContextElements(ResourceKey<? extends Registry<? extends S>> key) {
+                return lookup.lookupOrThrow(key).listElements();
+            }
+
+            @Override
             public void accept(ResourceKey<Recipe<?>> recipeId, Recipe<?> recipe, @Nullable AdvancementHolder advancementEntry) {
                 if (!set.add(recipeId)) {
                     getParent().getLogger().error("Duplicate recipe " + recipeId);
@@ -87,7 +95,7 @@ public class PFMRecipeProvider extends PFMProvider {
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
                 Path recipePath = path.resolve("data/" + recipeId.identifier().getNamespace() + "/recipe/" + recipeId.identifier().getPath() + ".json");
-                enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
+                enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.DIRECT_CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
                 if (advancementEntry != null) {
                     Path advancementPath = path.resolve("data/" + recipeId.identifier().getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
                 }
@@ -96,11 +104,6 @@ public class PFMRecipeProvider extends PFMProvider {
             @Override
             public Advancement.Builder advancement() {
                 return Advancement.Builder.recipeAdvancement().parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT);
-            }
-
-            @Override
-            public void includeRootAdvancement() {
-
             }
         });
 

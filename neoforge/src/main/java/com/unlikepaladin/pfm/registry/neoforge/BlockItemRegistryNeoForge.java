@@ -13,16 +13,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.items.wrapper.ForwardingItemHandler;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 import java.util.*;

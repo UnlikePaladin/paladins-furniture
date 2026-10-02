@@ -47,10 +47,10 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
                 case EAST -> matrices.translate(0.35, 0.08, 0.5);
             }
             int rot = 90;
-            matrices.mulPose(Axis.YP.rotationDegrees(g));
-            matrices.mulPose(Axis.XP.rotationDegrees(rot));
+            matrices.rotate(Axis.YP.rotationDegrees(g));
+            matrices.rotate(Axis.XP.rotationDegrees(rot));
             if (state.itemId.toString().equals("sandwichable:sandwich")) {
-                matrices.mulPose(Axis.XP.rotationDegrees(270.0f));
+                matrices.rotate(Axis.XP.rotationDegrees(270.0f));
                 matrices.translate(0.0, 0.11, 0.05);
             }
             state.itemRenderState.submit(matrices, queue, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);

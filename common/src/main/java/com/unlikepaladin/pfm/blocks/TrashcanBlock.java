@@ -30,15 +30,9 @@ import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 public class TrashcanBlock extends BaseEntityBlock {
-    public static final MapCodec<TrashcanBlock> CODEC = simpleCodec(TrashcanBlock::new);
     public TrashcanBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.defaultBlockState().setValue(OPEN, false));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     protected static final BooleanProperty OPEN = BlockStateProperties.OPEN;

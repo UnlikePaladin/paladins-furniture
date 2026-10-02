@@ -25,7 +25,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttributes;
@@ -35,6 +34,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, PFMBuiltinItemRendererExtension {
@@ -79,22 +80,18 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             return InteractionResult.CONSUME;
         }
         BedRule bedRule = world.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
-        if (bedRule.explodes()) {
-            world.removeBlock(pos, false);
-            BlockPos blockPos = pos.relative(state.getValue(FACING).getOpposite());
-            if (world.getBlockState(blockPos).is(this)) {
-                world.removeBlock(blockPos, false);
-            }
-            world.explode(null, world.damageSources().badRespawnPointExplosion(Vec3.atCenterOf(blockPos)), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Level.ExplosionInteraction.BLOCK);
-            return InteractionResult.SUCCESS;
-        }
-        if (state.getValue(OCCUPIED)) {
+        if (bedRule.destroyOnUse()) {
+            Optional<Component> errorMsg = bedRule.errorMessage();
+            Objects.requireNonNull(player);
+            errorMsg.ifPresent(player::sendOverlayMessage);
+            return this.destroyOnUse(state, world, pos, player);
+        } if (state.getValue(OCCUPIED)) {
             if (!this.isFree(world, pos)) {
                 player.sendOverlayMessage(Component.translatable("block.minecraft.bed.occupied"));
             }
             return InteractionResult.SUCCESS;
         }
-        player.startSleepInBed(pos).ifLeft(reason -> {
+        player.startSleepInBed(this, state, bedRule, pos).ifLeft(reason -> {
             if (reason.message() != null) {
                 player.sendOverlayMessage(reason.message());
             }
@@ -131,7 +128,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
             world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(blockState));
         }
-        this.spawnDestroyParticles(world, player, pos, state);
+        this.spawnDestroyParticles(world, pos, state);
         if (world instanceof ServerLevel serverWorld && state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(serverWorld, player, false);
         }

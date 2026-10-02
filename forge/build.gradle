@@ -130,7 +130,7 @@ if (rootProject.cookingfor_blockheads_compatibility_forge == "true") {
     dependencies {
         implementation "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
         implementation "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
-        api("net.blay09.mods:kuma-api-forge:$rootProject.kuma_version")
+        api("net.blay09.mods:kuma-api-forge:$rootProject.kuma_version_forge")
     }
 } else {
     dependencies {

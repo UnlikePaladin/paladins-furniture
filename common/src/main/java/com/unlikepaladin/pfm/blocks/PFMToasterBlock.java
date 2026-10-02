@@ -35,14 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty ON = BooleanProperty.create("on");
-    public static final MapCodec<PFMToasterBlock> CODEC = simpleCodec(PFMToasterBlock::new);
     public PFMToasterBlock(Properties settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Override

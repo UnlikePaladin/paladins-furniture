@@ -66,12 +66,6 @@ public class FridgeBlock extends HorizontalFacingBlockWithEntity {
         stateManager.add(OPEN);
     }
 
-    // Todo: Also implement this codec properly
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
-    }
-
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;

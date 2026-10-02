@@ -9,6 +9,7 @@ import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.crafting.RecipePropertySet;
@@ -94,7 +95,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
 
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
-                if (this.tileEntity.isItemFuel(slotStack)) {
+                if (slotStack.has(DataComponents.COOKING_FUEL)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -145,7 +146,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     }
 
     public boolean isFuel(ItemStack itemStack) {
-        return OvenBlockEntity.isItemFuel(this.tileEntity.getLevel(), itemStack);
+        return itemStack.has(DataComponents.COOKING_FUEL);
     }
 
     public void setResultItems(NonNullList<ItemStack> itemStacks) {

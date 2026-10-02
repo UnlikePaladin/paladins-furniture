@@ -27,9 +27,11 @@ import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.ConditionUserBuilder;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -83,7 +85,7 @@ public class PFMLootTableProvider extends PFMProvider {
         return LootTable.lootTable()
                 .withPool(
                         LootPool.lootPool()
-                                .setBonusRolls(ConstantValue.exactly(1.0F))
+                                .setBonusRolls(ContextFloatProviders.exactly(1.0F))
                                 .add(
                                         LootItem.lootTableItem(drop)
                                                 .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY).include(PFMComponents.VARIANT_COMPONENT).include(PFMComponents.COLOR_COMPONENT))
@@ -128,7 +130,7 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public LootTable.Builder drops(ItemLike drop) {
-            return LootTable.lootTable().withPool(this.addSurvivesExplosionCondition(drop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(drop))));
+            return LootTable.lootTable().withPool(this.addSurvivesExplosionCondition(drop, LootPool.lootPool().setRolls(ContextIntProviders.exactly(1)).add(LootItem.lootTableItem(drop))));
         }
 
         public void addDrop(Block block) {
@@ -141,7 +143,23 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public <T extends Comparable<T> & StringRepresentable> LootTable.Builder dropsWithProperty(Block drop, Property<T> property, T value) {
-            return LootTable.lootTable().withPool(this.addSurvivesExplosionCondition(drop, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(drop).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(drop).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(property, value))))));
+            return LootTable.lootTable().withPool(
+                this.addSurvivesExplosionCondition(
+                    drop,
+                    LootPool.lootPool()
+                        .setRolls(ContextIntProviders.exactly(1))
+                        .add(
+                            LootItem.lootTableItem(drop)
+                                .when(
+                                    MatchBlock.blockMatches(
+                                        BuiltInRegistries.BLOCK,
+                                        drop,
+                                        StatePropertiesPredicate.Builder.properties().hasProperty(property, value)
+                                    )
+                                )
+                        )
+                )
+            );
         }
 
         protected <T extends ConditionUserBuilder<T>> T addSurvivesExplosionCondition(ItemLike drop, ConditionUserBuilder<T> builder) {

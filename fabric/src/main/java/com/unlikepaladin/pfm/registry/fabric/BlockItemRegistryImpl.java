@@ -5,12 +5,14 @@ import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import com.unlikepaladin.pfm.utilities.Tuple;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraft.world.item.BlockItem;
@@ -18,6 +20,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.resources.Identifier;
 import net.minecraft.core.Registry;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 
 import java.util.LinkedHashSet;
 import java.util.function.Supplier;
@@ -39,8 +43,12 @@ public class BlockItemRegistryImpl {
         registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().setId(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockDescriptionPrefix()), group);
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
-            FuelValueEvents.BUILD.register((builder, context) -> {
-                builder.add(block, 300);
+            DefaultItemComponentEvents.MODIFY.register((modifyContext) -> {
+                modifyContext.modify(block.asItem(), builder -> {
+                    builder.set(DataComponents.COOKING_FUEL,
+                            new CookingFuel(new ResolvableInt.Constant(300), new ResolvableFloat.Constant(1)));
+                });
+
             });
         }
     }

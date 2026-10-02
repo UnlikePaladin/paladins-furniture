@@ -29,17 +29,11 @@ import java.util.stream.Stream;
 
 public class CutleryBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
-    public static final MapCodec<CutleryBlock> CODEC = simpleCodec(CutleryBlock::new);
 
     public CutleryBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         CUTLERY.add(new FurnitureBlock(this, "cutlery"));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamCutlery() {

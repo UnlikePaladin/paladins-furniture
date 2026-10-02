@@ -56,7 +56,7 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                     rot = 180;
             }
 
-                matrices.mulPose(Axis.YP.rotationDegrees((float)rot));
+                matrices.rotate(Axis.YP.rotationDegrees((float)rot));
                 matrices.scale(0.8f,0.8f,0.8f);
                 matrices.translate(0.0D, 0.0D, -0.55D);
                 matrices.translate(0.0D, 0.0D, 0.41D);

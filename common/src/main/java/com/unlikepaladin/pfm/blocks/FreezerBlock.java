@@ -78,12 +78,6 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
         stateManager.add(OPEN);
     }
 
-    // Todo: Figure out how i can implement this properly, supplier to a block is kinda weird, it is ok to return null in 1.20.4 for now
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return null;
-    }
-
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;

@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -49,9 +50,9 @@ public class PFMItemModelImpl {
             List<BlockStateModelPart> parts = new ArrayList<>();
             model.collectParts(random, parts);
             for (Direction direction : Direction.values()) {
-                layerRenderState.prepareQuadList().addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());
+                layerRenderState.setQuads(ItemQuads.split(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList()));
             }
-            layerRenderState.prepareQuadList().addAll(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList());
+            layerRenderState.setQuads(ItemQuads.split(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList()));
         }
     }
 }

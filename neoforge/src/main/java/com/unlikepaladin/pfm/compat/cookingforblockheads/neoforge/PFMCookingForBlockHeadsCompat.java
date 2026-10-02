@@ -17,6 +17,7 @@ import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.InteractionResult;
@@ -123,7 +124,7 @@ public class PFMCookingForBlockHeadsCompat {
                     player.setItemInHand(hand, heldItem);
 
                     return InteractionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && oven.isItemFuel(heldItem)) {
+                } else if (!heldItem.isEmpty() && heldItem.has(DataComponents.COOKING_FUEL)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
                     return InteractionResult.SUCCESS;

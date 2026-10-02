@@ -117,7 +117,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
         if (emptyCriterion) {
             criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
-        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
+        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(exporter.lookup(Registries.RECIPE).getOrThrow(recipeKey))).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
         exporter.accept(recipeKey, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeKey.identifier().withPrefix("recipes/furniture/")));
     }
@@ -128,7 +128,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
         }
         Recipe<?> recipe =  new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group, stack, this.inputs);
         ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, recipeId);
-        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
+        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(exporter.lookup(Registries.RECIPE).getOrThrow(recipeKey))).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
         exporter.accept(recipeKey, recipe, advancement$builder.build(recipeKey.identifier().withPrefix("recipes/furniture/")));
     }

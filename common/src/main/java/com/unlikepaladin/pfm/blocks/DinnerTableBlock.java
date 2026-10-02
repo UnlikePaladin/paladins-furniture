@@ -34,7 +34,6 @@ public class DinnerTableBlock extends HorizontalDirectionalBlock  {
 
     private static final List<FurnitureBlock> WOOD_DINNER_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
-    public static final MapCodec<DinnerTableBlock> CODEC = simpleCodec(DinnerTableBlock::new);
 
     public DinnerTableBlock(Properties settings) {
         super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate) -> false));
@@ -47,11 +46,6 @@ public class DinnerTableBlock extends HorizontalDirectionalBlock  {
         else if (this.getClass().isAssignableFrom(DinnerTableBlock.class)){
             STONE_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodDinnerTables() {

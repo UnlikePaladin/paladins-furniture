@@ -53,15 +53,6 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
         this.precipitation = precipitation;
         this.registerDefaultState(this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(LEVEL_4, 0));
 
-        if (CODEC == null) {
-            CODEC = RecordCodecBuilder.mapCodec((instance) -> {
-                return instance.group(Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter((block) -> {
-                    return block.precipitation;
-                }), CauldronInteractions.CODEC.fieldOf("interactions").forGetter((block) -> {
-                    return block.behaviorMap;
-                }), propertiesCodec()).apply(instance, (precipitation1, cauldronBehaviorMap, settings1) -> getSinkConstructor().apply(settings1, precipitation1, cauldronBehaviorMap));
-            });
-        }
     }
 
     @Override
@@ -234,13 +225,6 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    public static MapCodec<AbstractSinkBlock> CODEC = null;
-
-    @Override
-    protected MapCodec<? extends AbstractCauldronBlock> codec() {
-        return CODEC;
     }
 
     public abstract Function3<Properties, Biome.Precipitation, CauldronInteraction.Dispatcher, AbstractSinkBlock> getSinkConstructor();

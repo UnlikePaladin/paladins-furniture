@@ -33,15 +33,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class InnerTrashcanBlock extends BaseEntityBlock {
-    public static final MapCodec<InnerTrashcanBlock> CODEC = simpleCodec(InnerTrashcanBlock::new);
+
     public InnerTrashcanBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;

@@ -35,12 +35,6 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
         super(settings);
     }
 
-    public static final MapCodec<BasicShowerHeadBlock> CODEC = simpleCodec(BasicShowerHeadBlock::new);
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {

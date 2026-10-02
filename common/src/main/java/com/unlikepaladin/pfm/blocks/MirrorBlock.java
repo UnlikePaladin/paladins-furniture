@@ -27,16 +27,10 @@ import java.util.stream.Stream;
 public class MirrorBlock extends HorizontalDirectionalBlock {
 
     protected static List<FurnitureBlock> mirrorBlockList = new ArrayList<>();
-    public static final MapCodec<MirrorBlock> CODEC = simpleCodec(MirrorBlock::new);
 
     public MirrorBlock(BlockBehaviour.Properties settings) {
         super(settings);
         mirrorBlockList.add(new FurnitureBlock(this, "mirror"));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamMirrorBlocks() {

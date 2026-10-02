@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.networking.forge;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import net.minecraft.network.FriendlyByteBuf;
 
@@ -25,12 +24,11 @@ public class SyncConfigPacket {
     }
 
     public static void encode(SyncConfigPacket packet, FriendlyByteBuf buffer) {
-        Collection<AbstractConfigOption> configOptions = packet.configOptions.values();
-        buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
+        AbstractConfigOption.COLLECTION_STREAM_CODEC.encode(buffer, packet.configOptions.values());
     }
 
     public static SyncConfigPacket decode(FriendlyByteBuf buffer) {
-        Collection<AbstractConfigOption> configOptions = buffer.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+        Collection<AbstractConfigOption> configOptions = AbstractConfigOption.COLLECTION_STREAM_CODEC.decode(buffer);
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
             map.put(((TranslatableContents)abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);

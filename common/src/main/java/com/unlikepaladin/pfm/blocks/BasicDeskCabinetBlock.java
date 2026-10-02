@@ -58,12 +58,6 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         }
     }
 
-    public static final MapCodec<BasicDeskCabinetBlock> CODEC = simpleCodec(BasicDeskCabinetBlock::new);
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     public static Stream<FurnitureBlock> streamWoodBasicDeskCabinets() {
         return WOOD_BASIC_DESK_CABINETS.stream();
     }

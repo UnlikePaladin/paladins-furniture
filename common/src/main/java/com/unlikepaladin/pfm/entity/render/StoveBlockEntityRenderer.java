@@ -58,9 +58,9 @@ public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
                     case EAST:
                         matrices.translate(0.5, 1.02, 0.5);
                 }
-                matrices.mulPose(Axis.YP.rotationDegrees(g));
-                matrices.mulPose(Axis.YP.rotationDegrees(rot));
-                matrices.mulPose(Axis.XP.rotationDegrees(90.0f));
+                matrices.rotate(Axis.YP.rotationDegrees(g));
+                matrices.rotate(Axis.YP.rotationDegrees(rot));
+                matrices.rotate(Axis.XP.rotationDegrees(90.0f));
                 matrices.translate(-0.16, -0.16, 0.0);
                 matrices.scale(SCALE, SCALE, SCALE);
                 itemList.get(l).submit(matrices, queue, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);

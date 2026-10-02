@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
@@ -167,16 +168,19 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
             return PACKET_CODEC;
         }
 
+        private static final StreamCodec<RegistryFriendlyByteBuf, NonNullList<Ingredient>> INGREDIENT_LIST_CODEC =
+                ByteBufCodecs.collection(NonNullList::createWithCapacity, Ingredient.CONTENTS_STREAM_CODEC);
+
         public static SimpleFurnitureRecipe read(RegistryFriendlyByteBuf packetByteBuf) {
             String string = packetByteBuf.readUtf();
-            NonNullList<Ingredient> defaultedList = packetByteBuf.readCollection(NonNullList::createWithCapacity, buf1 -> Ingredient.CONTENTS_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf1));
+            NonNullList<Ingredient> defaultedList = INGREDIENT_LIST_CODEC.decode(packetByteBuf);
             ItemStackTemplate itemStack = ItemStackTemplate.STREAM_CODEC.decode(packetByteBuf);
             return new SimpleFurnitureRecipe(string, itemStack, defaultedList);
         }
 
         public static void write(RegistryFriendlyByteBuf packetByteBuf, SimpleFurnitureRecipe simpleFurnitureRecipe) {
             packetByteBuf.writeUtf(simpleFurnitureRecipe.group);
-            packetByteBuf.writeCollection(simpleFurnitureRecipe.input, (buff, ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buff, ingredient));
+            INGREDIENT_LIST_CODEC.encode(packetByteBuf, simpleFurnitureRecipe.input);
             ItemStackTemplate.STREAM_CODEC.encode(packetByteBuf, simpleFurnitureRecipe.output);
         }
     }

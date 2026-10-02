@@ -29,7 +29,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.resources.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class PaladinFurnitureModClientFabric implements ClientModInitializer {
@@ -48,8 +47,8 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         PFMSpriteRegistry.registerAdditionalSprites();
         PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
-                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_U, // The keycode of the key
+                InputConstants.Type.KEYBOARD, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.KEY_U, // The keycode of the key
                 PaladinFurnitureModClient.PFM_CATEGORY // The translation key of the keybinding's category.
         ));
         EntityRenderRegistryFabric.registerRender();

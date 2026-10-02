@@ -79,7 +79,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
             matrixStack.translate(wheelOffset[0], 0, wheelOffset[1]);
 
             // Rotate wheel to face movement direction around its own Y axis
-            matrixStack.mulPose(Axis.YP.rotationDegrees(-wheelYaw));
+            matrixStack.rotate(Axis.YP.rotationDegrees(-wheelYaw));
 
             // Offset for the model first
             matrixStack.translate(-0.45, 0, -0.5);
@@ -87,7 +87,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
             // Move to wheel's center, spin, then move back
             // Assuming wheel center is roughly at (0.5, 0.05, 0.5) in model space
             matrixStack.translate(0.5, 0.08, 0.5);
-            matrixStack.mulPose(Axis.XP.rotationDegrees(wheelSpin));
+            matrixStack.rotate(Axis.XP.rotationDegrees(wheelSpin));
             matrixStack.translate(-0.5, -0.08, -0.5);
 
             submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, wheelModel, 1.0f, 1.0f, 1.0f);
@@ -106,7 +106,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
         }
 
         matrixStack.pushPose();
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - mobEntity.bodyRot));
+        matrixStack.rotate(Axis.YP.rotationDegrees(180.0F - mobEntity.bodyRot));
 
         matrixStack.translate(-0.45, 0, -0.5);
 
@@ -133,7 +133,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
 
         if (mobEntity.invulnerableTime > 0) {
             int damageStage = (int) Math.min(9, Math.max(mobEntity.maxHealth - mobEntity.health, 0));
-            orderedRenderCommandQueue.submitBreakingBlockModel(matrixStack, blockStateModelParts, damageStage);
+            orderedRenderCommandQueue.submitBreakingBlockModel(matrixStack, blockStateModelParts, damageStage, false);
         }
 
         matrixStack.popPose();
@@ -151,7 +151,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
         livingEntityRenderState.health = livingEntity.getHealth();
         livingEntityRenderState.maxHealth = livingEntity.getMaxHealth();
         livingEntityRenderState.velocity = livingEntity.getDeltaMovement();
-        livingEntityRenderState.invulnerableTime = livingEntity.invulnerableTime;
+        livingEntityRenderState.invulnerableTime = livingEntity.getInvulnerableTime();
         livingEntityRenderState.wheelSpinAngle = livingEntity.getWheelSpinAngle();
         livingEntityRenderState.world = livingEntity.level();
         livingEntityRenderState.pos = livingEntity.position();

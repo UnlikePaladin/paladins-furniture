@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -41,7 +42,7 @@ public class PFMItemModelImpl {
             random.setSeed(seed);
             quads.addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(null, random));
             layerRenderState.setExtents(Suppliers.memoize(() -> CuboidItemModelWrapper.computeExtents(quads)));
-            layerRenderState.prepareQuadList().addAll(quads);
+            layerRenderState.setQuads(ItemQuads.split(quads));
         } else {
             List<BlockStateModelPart> parts = new ArrayList<>();
             model.collectParts(random, parts);
@@ -52,7 +53,7 @@ public class PFMItemModelImpl {
             }
             quads.addAll(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList());
             layerRenderState.setExtents(Suppliers.memoize(() -> CuboidItemModelWrapper.computeExtents(quads)));
-            layerRenderState.prepareQuadList().addAll(quads);
+            layerRenderState.setQuads(ItemQuads.split(quads));
         }
     }
 }

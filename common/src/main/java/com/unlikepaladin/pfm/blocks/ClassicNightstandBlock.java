@@ -42,7 +42,6 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity impl
     public static BooleanProperty OPEN = BlockStateProperties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
-    public static final MapCodec<ClassicNightstandBlock> CODEC = simpleCodec(ClassicNightstandBlock::new);
 
     public ClassicNightstandBlock(Properties settings) {
         super(settings);
@@ -53,12 +52,6 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity impl
         else if (this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){
             STONE_NIGHTSTAND.add(new FurnitureBlock(this, "classic_nightstand"));
         }
-    }
-
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodClassicNightstands() {

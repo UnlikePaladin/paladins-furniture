@@ -244,7 +244,7 @@ public class BasicBathtubBlock extends BedBlock implements EntityBlock {
             entity.setNoGravity(true);
             entity.setSilent(true);
             entity.setInvisible(false);
-            entity.setInvulnerable(true);
+            entity.setPermanentlyInvulnerable(true);
             entity.setNoAi(true);
             entity.setYHeadRot(yaw);
             entity.setYBodyRot(yaw);
@@ -359,9 +359,4 @@ public class BasicBathtubBlock extends BedBlock implements EntityBlock {
         }
     }
 
-    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(propertiesCodec(), CauldronInteractions.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
-    @Override
-    public MapCodec<BedBlock> codec() {
-        return (MapCodec<BedBlock>)(Object)CODEC;
-    }
 }

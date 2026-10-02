@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScre
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.platform.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.platform.energy.EnergyStorage;
-import net.blay09.mods.balm.tags.BalmItemTags;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.CombinedContainer;
 import net.blay09.mods.balm.world.SubContainer;
@@ -277,15 +276,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     public ItemStack getSmeltingResult(ItemStack itemStack, ServerLevel level) {
         AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, level);
         return recipe != null ? recipe.result() .create(): ItemStack.EMPTY;
-    }
-
-
-    public boolean isItemFuel(ItemStack itemStack) {
-        if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
-            return itemStack.is(BalmItemTags.COOKING_OIL);
-        } else {
-            return getBurnDuration(itemStack) > 0;
-        }
     }
 
     @Override

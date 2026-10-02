@@ -31,7 +31,6 @@ import java.util.stream.Stream;
 public class ShowerTowelBlock extends HorizontalDirectionalBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SHOWER_TOWELS = new ArrayList<>();
     private final DyeColor color;
-    public static final MapCodec<ShowerTowelBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(towel -> towel.color), propertiesCodec()).apply(instance, ShowerTowelBlock::new));;;
 
     public ShowerTowelBlock(DyeColor color, Properties settings) {
         super(settings);
@@ -104,8 +103,4 @@ public class ShowerTowelBlock extends HorizontalDirectionalBlock implements Dyea
         return 0;
     }
 
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 }

@@ -49,12 +49,6 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         SHOWER_HANDLE_BLOCKS.add(this);
     }
 
-    public static final MapCodec<BasicShowerHandleBlock> CODEC = simpleCodec(BasicShowerHandleBlock::new);
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     public static Stream<BasicShowerHandleBlock> streamShowerHandleBlocks() {
         return SHOWER_HANDLE_BLOCKS.stream();
     }
@@ -173,7 +167,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         if (world.getBlockEntity(pos) != null) {
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(false);
         }
-        this.spawnDestroyParticles(world, player, pos, state);
+        this.spawnDestroyParticles(world, pos, state);
         if (state.is(BlockTags.GUARDED_BY_PIGLINS) && world instanceof ServerLevel serverWorld) {
             PiglinAi.angerNearbyPiglins(serverWorld, player, false);
         }

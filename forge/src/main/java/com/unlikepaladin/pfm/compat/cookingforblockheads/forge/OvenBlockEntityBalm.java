@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.OvenBlockEntityImpl;
-import net.blay09.mods.balm.tags.BalmItemTags;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.balm.world.SubContainer;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.core.BlockPos;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 
 import java.util.*;
 
@@ -68,15 +66,6 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
             }
         }
         return OvenOperation.INSTANCE;
-    }
-
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : level.fuelValues().burnDuration(itemStack);
-        }
     }
 
     @Override

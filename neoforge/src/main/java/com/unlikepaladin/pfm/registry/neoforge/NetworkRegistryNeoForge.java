@@ -62,10 +62,7 @@ public class NetworkRegistryNeoForge {
                 PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayer) event.getEntity());
             }
             //Sync Config
-            RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), event.getEntity().registryAccess());
-            Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
-            buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
-            PacketDistributor.sendToPlayer((ServerPlayer) event.getEntity(), new SyncConfigPayload(buffer));
+            PacketDistributor.sendToPlayer((ServerPlayer) event.getEntity(), new SyncConfigPayload(PaladinFurnitureMod.getPFMConfig().options));
         }
    }
 }

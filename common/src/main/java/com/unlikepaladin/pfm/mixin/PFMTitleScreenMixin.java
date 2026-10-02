@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
@@ -58,7 +59,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
                     (boolean accepted) -> {
                         if (accepted) {
                             try {
-                                Util.getPlatform().openUri(new URI(url));
+                                Blaze3D.openUri(new URI(url));
                             } catch (URISyntaxException e) {
                                 throw new IllegalStateException(e);
                             }
@@ -78,7 +79,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
                     (boolean accepted) -> {
                         if (accepted) {
                             try {
-                                Util.getPlatform().openUri(new URI("https://github.com/Sinytra/ForgifiedFabricAPI/issues/186"));
+                                Blaze3D.openUri(new URI("https://github.com/Sinytra/ForgifiedFabricAPI/issues/186"));
                             } catch (URISyntaxException e) {
                                 throw new IllegalStateException(e);
                             }

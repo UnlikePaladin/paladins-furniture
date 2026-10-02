@@ -57,7 +57,6 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,13 +89,13 @@ public class PaladinFurnitureModClientNeoForge {
     @SubscribeEvent
     public static void registerKeyBinding(RegisterKeyMappingsEvent event) {
         event.registerCategory(PaladinFurnitureModClient.PFM_CATEGORY);
-        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", PaladinFurnitureModClient.PFM_CATEGORY, GLFW.GLFW_KEY_U));
+        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", PaladinFurnitureModClient.PFM_CATEGORY, InputConstants.KEY_U));
     }
 
     public static KeyMapping registerKey(String name, KeyMapping.Category category, int keyCode) {
         return new KeyMapping(
                 name, // The translation key of the keybinding's name
-                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.Type.KEYBOARD, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 keyCode, // The keycode of the key
                 category // The translation key of the keybinding's category.
         );

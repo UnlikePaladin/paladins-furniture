@@ -31,17 +31,11 @@ public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty DRAWER = BooleanProperty.create("drawer");
     private static final List<FurnitureBlock> OVEN_RANGE_HOOD = new ArrayList<>();
-    public static final MapCodec<KitchenRangeHoodBlock> CODEC = simpleCodec(KitchenRangeHoodBlock::new);
 
     public KitchenRangeHoodBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(DOWN, false).setValue(DRAWER, false));
         OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "oven_range_hood"));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamOvenRangeHoods() {

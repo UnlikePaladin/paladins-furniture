@@ -39,7 +39,6 @@ import java.util.function.Function;
 public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock implements CustomItemBlockState {
     private final BlockState baseBlockState;
     private final Block baseBlock;
-    public static Map<Class<? extends Block>, MapCodec<AbstractSittableBlock>> CODECS = new HashMap<>();
 
     public AbstractSittableBlock(Properties settings) {
         super(settings.lightLevel((state) -> {return 0;}).emissiveRendering((blockstate) -> {return false;}));
@@ -48,9 +47,6 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock i
         registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
 
         this.height = 0.7f;
-        if (!CODECS.containsKey(this)) {
-            CODECS.put(this.getClass(), simpleCodec(settings1 -> getChairConstructor().apply(settings1)));
-        }
     }
 
     @Override
@@ -152,7 +148,7 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock i
         chairEntity.setNoGravity(true);
         chairEntity.setSilent(true);
         chairEntity.setInvisible(false);
-        chairEntity.setInvulnerable(true);
+        chairEntity.setPermanentlyInvulnerable(true);
         chairEntity.setNoAi(true);
         chairEntity.setDiscardFriction(true);
         chairEntity.setYHeadRot(yaw);
@@ -203,12 +199,6 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock i
         NoteBlockInstrument instrument = state.instrument();
         SoundType soundGroup = state.getSoundType();
         return soundGroup == SoundType.BAMBOO_WOOD || soundGroup == SoundType.WOOL || soundGroup == SoundType.CHERRY_WOOD || soundGroup == SoundType.WOOD || soundGroup == SoundType.NETHER_WOOD || instrument == NoteBlockInstrument.BASS;
-    }
-
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODECS.get(this.getClass());
     }
 
     public abstract Function<Properties, AbstractSittableBlock> getChairConstructor();

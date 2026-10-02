@@ -34,6 +34,8 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.stream.Stream;
+import net.minecraft.server.packs.PackMetadataResources;
 
 
 @Mod(PaladinFurnitureMod.MOD_ID)
@@ -71,8 +73,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
         if (event.getPackType() == PackType.CLIENT_RESOURCES) {
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.CLIENT_RESOURCES)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo info) {
+                private PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -80,8 +81,13 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-                    return this.openPrimary(info);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             event.addRepositorySource(profileAdder -> {
@@ -90,8 +96,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
         } else if (event.getPackType() == PackType.SERVER_DATA) {
             PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), new InclusiveRange<>(SharedConstants.getCurrentVersion().packVersion(PackType.SERVER_DATA)));
             Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
-                @Override
-                public PackResources openPrimary(PackLocationInfo info) {
+                private PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -99,8 +104,13 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
-                    return this.openPrimary(info);
+                public PackMetadataResources openMetadata(PackLocationInfo packLocationInfo) {
+                    return openPrimary(packLocationInfo);
+                }
+
+                @Override
+                public Stream<PackResources> openResources(PackLocationInfo packLocationInfo, Pack.Metadata metadata) {
+                    return Stream.of(openPrimary(packLocationInfo));
                 }
             };
             event.addRepositorySource(profileAdder -> {

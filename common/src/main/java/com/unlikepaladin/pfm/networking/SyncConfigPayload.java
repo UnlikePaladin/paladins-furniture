@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.networking;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import net.minecraft.network.FriendlyByteBuf;
@@ -31,7 +30,7 @@ public final class SyncConfigPayload implements CustomPacketPayload {
     }
 
     public SyncConfigPayload(FriendlyByteBuf buf) {
-        ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+        Collection<AbstractConfigOption> configOptions = AbstractConfigOption.COLLECTION_STREAM_CODEC.decode(buf);
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
             map.put(((TranslatableContents) abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
@@ -49,7 +48,7 @@ public final class SyncConfigPayload implements CustomPacketPayload {
 
     public void write(FriendlyByteBuf buf) {
         Collection<AbstractConfigOption> configOptions = configOptionMap.values();
-        buf.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
+        AbstractConfigOption.COLLECTION_STREAM_CODEC.encode(buf, configOptions);
     }
 
 

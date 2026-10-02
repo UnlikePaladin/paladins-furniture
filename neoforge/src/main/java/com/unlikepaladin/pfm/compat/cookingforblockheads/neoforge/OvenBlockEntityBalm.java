@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 import com.unlikepaladin.pfm.blocks.blockentities.OvenBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.OvenBlockEntityImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.tags.BalmItemTags;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.balm.world.SubContainer;
@@ -15,11 +14,11 @@ import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -59,14 +58,6 @@ public class OvenBlockEntityBalm extends OvenBlockEntityImpl implements KitchenI
         return recipeType == RecipeType.SMELTING || recipeType == RecipeType.SMOKING || recipeType == RecipeType.CAMPFIRE_COOKING || recipeType == ModRecipes.ovenRecipes.type();
     }
 
-    @Override
-    public int getBurnDuration(ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return 0;
-        } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(BalmItemTags.COOKING_OIL) ? 800 : level.fuelValues().burnDuration(itemStack);
-        }
-    }
 
     @Override
     public KitchenOperation processRecipe(Recipe<?> recipe, List<IngredientToken> ingredientTokens) {

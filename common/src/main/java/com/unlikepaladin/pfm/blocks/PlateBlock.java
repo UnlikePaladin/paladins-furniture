@@ -49,17 +49,11 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty CUTLERY = BooleanProperty.create("cutlery");
 
     private static final List<FurnitureBlock> PLATES = new ArrayList<>();
-    public static final MapCodec<PlateBlock> CODEC = simpleCodec(PlateBlock::new);
 
     public PlateBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(CUTLERY, false));
         PLATES.add(new FurnitureBlock(this, "plate"));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamPlates() {

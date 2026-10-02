@@ -40,16 +40,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class BasicLampBlock extends PowerableBlock implements EntityBlock {
     private static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final MapCodec<BasicLampBlock> CODEC = simpleCodec(BasicLampBlock::new);
 
     public BasicLampBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(LIT, false).setValue(POWERLOCKED, false));
-    }
-
-    @Override
-    protected MapCodec<? extends PowerableBlock> codec() {
-        return CODEC;
     }
 
     @Override

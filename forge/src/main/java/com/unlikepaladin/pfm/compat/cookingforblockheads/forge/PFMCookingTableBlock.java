@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
-import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -31,12 +31,6 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
         super(arg);
     }
 
-    public static final MapCodec<PFMCookingTableBlock> CODEC = simpleCodec(PFMCookingTableBlock::new);
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.HORIZONTAL_FACING);
@@ -50,7 +44,7 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
                 ItemStack noFilterBook = cookingTable.getNoFilterBook();
                 if (!noFilterBook.isEmpty()) {
                     if (!player.getInventory().add(noFilterBook)) {
-                        player.drop(noFilterBook, false);
+                        player.drop(noFilterBook, false, Prediction.PREDICTED);
                     }
 
                     cookingTable.setNoFilterBook(ItemStack.EMPTY);

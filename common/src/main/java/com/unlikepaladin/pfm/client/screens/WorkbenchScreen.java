@@ -26,7 +26,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -103,7 +102,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             }
             return true;
         }
-        if (this.searchBox.isFocused() && this.searchBox.isVisible() && input.input() != GLFW.GLFW_KEY_ESCAPE) {
+        if (this.searchBox.isFocused() && this.searchBox.isVisible() && input.input() != InputConstants.KEY_ESCAPE) {
             return true;
         }
         return super.keyPressed(input);

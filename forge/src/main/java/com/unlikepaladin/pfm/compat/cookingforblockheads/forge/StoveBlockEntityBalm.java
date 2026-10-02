@@ -24,7 +24,6 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -43,18 +42,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -283,14 +278,6 @@ public class StoveBlockEntityBalm extends OvenBlockEntityBalm implements BalmMen
     public ItemStack getSmeltingResult(ItemStack itemStack, ServerLevel level) {
         AbstractCookingRecipe recipe = this.getSmokingRecipe(itemStack, level);
         return recipe != null ? recipe.result().create() : ItemStack.EMPTY;
-    }
-
-    public boolean isItemFuel(ItemStack itemStack) {
-        if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
-            return itemStack.is(BalmItemTags.COOKING_OIL);
-        } else {
-            return getBurnDuration(itemStack) > 0;
-        }
     }
 
     @Override

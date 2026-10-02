@@ -42,17 +42,11 @@ import java.util.stream.Stream;
 public class WorkingTableBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     private static final List<WorkingTableBlock> WORKING_TABLES = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final MapCodec<WorkingTableBlock> CODEC = simpleCodec(WorkingTableBlock::new);
 
     public WorkingTableBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
         WORKING_TABLES.add(this);
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<WorkingTableBlock> streamWorkingTables() {

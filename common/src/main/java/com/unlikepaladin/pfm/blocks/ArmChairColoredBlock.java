@@ -32,7 +32,6 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.create("shape", ArmChairShape.class);
     private static final List<FurnitureBlock> COLORED_ARMCHAIRS = new ArrayList<>();
     private final DyeColor color;
-    public static MapCodec<ArmChairColoredBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), propertiesCodec()).apply(instance, ArmChairColoredBlock::new));
 
     public ArmChairColoredBlock(DyeColor color, Properties settings) {
         super(settings);
@@ -41,11 +40,6 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
                 COLORED_ARMCHAIRS.add(new FurnitureBlock(this, "arm_chair"));
             }
         this.color = color;
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamArmChairColored() {

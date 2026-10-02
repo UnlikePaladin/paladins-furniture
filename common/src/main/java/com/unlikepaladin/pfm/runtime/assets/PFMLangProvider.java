@@ -457,13 +457,13 @@ public class PFMLangProvider extends PFMProvider {
         }
 
         @Override
-        public Map<Identifier, Resource> listResources(String string, Predicate<Identifier> predicate) {
-            return activeManager.listResources(string, predicate);
+        public Map<Identifier, Resource> listResources(String directory, Selector selector) {
+            return activeManager.listResources(directory, selector);
         }
 
         @Override
-        public Map<Identifier, List<Resource>> listResourceStacks(String string, Predicate<Identifier> predicate) {
-            return Map.of();
+        public Map<Identifier, List<Resource>> listResourceStacks(String directory, Selector selector) {
+            return activeManager.listResourceStacks(directory, selector);
         }
 
         @Override

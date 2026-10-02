@@ -45,17 +45,11 @@ import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     private static final List<KitchenStovetopBlock> KITCHEN_STOVETOPS = new ArrayList<>();
-    public static final MapCodec<KitchenStovetopBlock> CODEC = simpleCodec(KitchenStovetopBlock::new);
 
     public KitchenStovetopBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(LIT, true));
         KITCHEN_STOVETOPS.add(this);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     public static Stream<KitchenStovetopBlock> streamKitchenStovetop() {

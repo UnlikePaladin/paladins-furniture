@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.menus.slots.OvenProcessingSlot;
 import com.unlikepaladin.pfm.menus.slots.OvenResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.recipebook.ServerPlaceRecipe;
@@ -206,7 +207,7 @@ public class OvenScreenHandler extends RecipeBookMenu {
     }
 
     public boolean isFuel(ItemStack itemStack) {
-        return level.fuelValues().isFuel(itemStack);
+        return itemStack.has(DataComponents.COOKING_FUEL);
     }
 
     public void removed(Player player) {

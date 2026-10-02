@@ -31,17 +31,11 @@ import java.util.stream.Stream;
 public class SimpleLightBlock extends PowerableBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private static final List<SimpleLightBlock> SIMPLE_LIGHTS = new ArrayList<>();
-    public static final MapCodec<SimpleLightBlock> CODEC = simpleCodec(SimpleLightBlock::new);
 
     public SimpleLightBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(LIT,  false).setValue(POWERLOCKED, false));
         SIMPLE_LIGHTS.add(this);
-    }
-
-    @Override
-    protected MapCodec<? extends PowerableBlock> codec() {
-        return CODEC;
     }
 
     @Override

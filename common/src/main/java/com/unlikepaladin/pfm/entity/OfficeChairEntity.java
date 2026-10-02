@@ -51,7 +51,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     @Override
     public void tick() {
         super.tick();
-        if (isAlive() && invulnerableTime == 0) {
+        if (isAlive() && getInvulnerableTime() == 0) {
             heal(0.1f);
         }
     }

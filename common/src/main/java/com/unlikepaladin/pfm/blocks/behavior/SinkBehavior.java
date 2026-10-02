@@ -6,6 +6,7 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.cauldron.CauldronInteractions;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -78,7 +79,7 @@ public interface SinkBehavior extends CauldronInteraction {
             } else if (player.getInventory().add(itemStack)) {
                 player.inventoryMenu.sendAllDataToRemote();
             } else {
-                player.drop(itemStack, false);
+                player.drop(itemStack, false, Prediction.PREDICTED);
             }
             player.awardStat(Stats.CLEAN_BANNER);
             KitchenSinkBlock.decrementFluidLevel(state, world, pos);

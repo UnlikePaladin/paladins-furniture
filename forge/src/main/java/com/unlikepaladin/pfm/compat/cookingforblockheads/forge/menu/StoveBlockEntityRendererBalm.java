@@ -27,7 +27,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
     @Override
     public void submit(StoveBlockEntityRendererBalmRenderState renderState, PoseStack poseStack, SubmitNodeCollector queue, CameraRenderState cameraState) {
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-renderState.facing.toYRot() + 180.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(-renderState.facing.toYRot() + 180.0F));
         poseStack.translate(-0.5, 0.0, -0.5);
         poseStack.translate(0.0, 0.0, -1.0);
         poseStack.popPose();
@@ -38,7 +38,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
         if (!renderState.firstTool.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(-0.55F, 0.0F, 0.5F);
-            poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+            poseStack.rotate(Axis.XP.rotationDegrees(45.0F));
             renderState.firstTool.submit(poseStack, queue, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
@@ -46,7 +46,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
         if (!renderState.secondTool.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(0.55F, 0.0F, 0.5F);
-            poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+            poseStack.rotate(Axis.XP.rotationDegrees(45.0F));
             renderState.secondTool.submit(poseStack, queue, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
@@ -54,7 +54,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
         if (!renderState.thirdTool.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(-0.55F, 0.0F, -0.5F);
-            poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+            poseStack.rotate(Axis.XP.rotationDegrees(45.0F));
             renderState.thirdTool.submit(poseStack, queue, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
@@ -62,7 +62,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
         if (!renderState.fourthTool.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(0.55F, 0.0F, -0.5F);
-            poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+            poseStack.rotate(Axis.XP.rotationDegrees(45.0F));
             renderState.fourthTool.submit(poseStack, queue, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }

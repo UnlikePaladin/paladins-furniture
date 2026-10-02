@@ -10,10 +10,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 public abstract class AbstractConfigOption<T> implements Comparable<String> {
@@ -88,6 +92,14 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
             }
         }
     }
+
+    public static final StreamCodec<FriendlyByteBuf, AbstractConfigOption> STREAM_CODEC = StreamCodec.of(
+            AbstractConfigOption::writeConfigOption,
+            AbstractConfigOption::readConfigOption
+    );
+
+    public static final StreamCodec<FriendlyByteBuf, Collection<AbstractConfigOption>> COLLECTION_STREAM_CODEC =
+            ByteBufCodecs.collection(ArrayList::new, STREAM_CODEC);
 
     @Override
     public int compareTo(@NotNull String o) {

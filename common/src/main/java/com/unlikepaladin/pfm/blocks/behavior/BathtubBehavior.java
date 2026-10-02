@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -90,7 +91,7 @@ public interface BathtubBehavior extends CauldronInteraction {
             } else if (player.getInventory().add(itemStack)) {
                 player.containerMenu.sendAllDataToRemote();
             } else {
-                player.drop(itemStack, false);
+                player.drop(itemStack, false, Prediction.PREDICTED);
             }
             player.awardStat(Stats.CLEAN_BANNER);
             BasicBathtubBlock.decrementFluidLevel(state, world, pos);

@@ -92,10 +92,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         }
 
         // Sync Config
-        RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), server.registryAccess());
-        Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
-        buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
-        sender.sendPacket(new SyncConfigPayload(buffer));
+        sender.sendPacket(new SyncConfigPayload(PaladinFurnitureMod.getPFMConfig().options));
     }
 //new Identifier(MOD_ID, "dye_kits")
     public static void initializeItemGroup() {
