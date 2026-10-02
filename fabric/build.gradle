@@ -10,6 +10,7 @@ architectury {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
+    loom.injectAccessWidener(tasks.named('shadowJar'))
     runs {
         datagen {
             server()
