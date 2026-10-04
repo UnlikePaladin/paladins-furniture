@@ -49,7 +49,23 @@ public class ShowerTowelBlock extends HorizontalDirectionalBlock implements Dyea
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+        // Same as wall torch logic
+        BlockState state = this.defaultBlockState();
+        LevelReader level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+        Direction[] directions = ctx.getNearestLookingDirections();
+        
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction facing = direction.getOpposite();
+                state = (BlockState)state.setValue(FACING, facing);
+                if (state.canSurvive(level, pos)) {
+                    return state;
+                }
+            }
+        }
+        
+        return null;
     }
 
     @Override
