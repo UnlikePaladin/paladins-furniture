@@ -54,6 +54,7 @@ public class ShowerHandleItem extends BlockItem {
         Block block = state.getBlock();
         if(block instanceof BasicShowerHeadBlock){
             setShowerHeadPosNBT(context.getItemInHand(), pos);
+            return InteractionResult.SUCCESS;
         }
         return super.useOn(context);
     }
