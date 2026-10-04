@@ -57,7 +57,23 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite()).setValue(POWERED, false);
+        // Same as wall torch logic + unpowered
+        BlockState state = this.defaultBlockState();
+        LevelReader level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+        Direction[] directions = ctx.getNearestLookingDirections();
+        
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction facing = direction.getOpposite();
+                state = (BlockState)state.setValue(FACING, facing).setValue(POWERED, false);
+                if (state.canSurvive(level, pos)) {
+                    return state;
+                }
+            }
+        }
+        
+        return null;
     }
 
     @Override

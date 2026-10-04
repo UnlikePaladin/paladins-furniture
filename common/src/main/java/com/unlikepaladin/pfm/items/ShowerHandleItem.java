@@ -56,7 +56,7 @@ public class ShowerHandleItem extends BlockItem {
         if(block instanceof BasicShowerHeadBlock){
             setShowerHeadPosNBT(context.getItemInHand(), pos);
         }
-        return InteractionResult.SUCCESS;
+        return super.useOn(context);
     }
 
     @Override
@@ -64,18 +64,15 @@ public class ShowerHandleItem extends BlockItem {
         BlockPos pos = context.getClickedPos();
         LevelReader world = context.getLevel();
         LongTag showerHeadLong = getShowerHead(context.getItemInHand());
-        Direction playerFacing = context.getHorizontalDirection();
-        Direction placeDirection = context.getNearestLookingDirection();
 
-        boolean canPlace = state.getBlock().canSurvive(state, world, pos) && placeDirection.getAxis().isHorizontal();
+        boolean canPlace = state.getBlock().canSurvive(state, world, pos);
         if (!canPlace) {
             return false;
         }
         if (showerHeadLong != null) {
             BlockPos headPos = BlockPos.of(showerHeadLong.getAsLong());
-            BlockPos placedPos = pos.relative(playerFacing);
 
-            double distance = Math.sqrt(headPos.distSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
+            double distance = Math.sqrt(headPos.distSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true));
             if (distance > 16 && world.isClientSide()){
                 context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.shower_handle_far", headPos.toString()), false);
             }
@@ -84,7 +81,7 @@ public class ShowerHandleItem extends BlockItem {
             } else {
                 setShowerHeadPosNBT(context.getItemInHand(), pos.subtract(headPos));
             }
-            return state.getBlock().canSurvive(state, world, pos) && placeDirection.getAxis().isHorizontal();
+            return state.getBlock().canSurvive(state, world, pos);
         }
         return true;
     }
