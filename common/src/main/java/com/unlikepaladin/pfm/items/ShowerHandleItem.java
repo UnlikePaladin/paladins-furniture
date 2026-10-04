@@ -49,7 +49,6 @@ public class ShowerHandleItem extends BlockItem {
     }
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        super.useOn(context);
         BlockPos pos = context.getClickedPos();
         BlockState state = context.getLevel().getBlockState(context.getClickedPos());
         Block block = state.getBlock();
