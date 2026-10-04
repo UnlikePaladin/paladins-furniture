@@ -37,7 +37,7 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        // Same as wall torch logic + unpowered
+        // Same as wall torch logic
         BlockState state = this.defaultBlockState();
         LevelReader level = ctx.getLevel();
         BlockPos pos = ctx.getClickedPos();
