@@ -190,11 +190,10 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         if (world.getBlockEntity(pos) != null) {
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(false);
         }
-        this.spawnDestroyParticles(world, player, pos, state);
         if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(player, false);
         }
-        world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable
