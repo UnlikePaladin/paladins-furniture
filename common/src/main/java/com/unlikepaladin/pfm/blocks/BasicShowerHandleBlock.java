@@ -57,7 +57,23 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite()).setValue(POWERED, false);
+        // Same as wall torch logic + unpowered
+        BlockState state = this.defaultBlockState();
+        LevelReader level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+        Direction[] directions = ctx.getNearestLookingDirections();
+        
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction facing = direction.getOpposite();
+                state = (BlockState)state.setValue(FACING, facing).setValue(POWERED, false);
+                if (state.canSurvive(level, pos)) {
+                    return state;
+                }
+            }
+        }
+        
+        return null;
     }
 
     @Override
@@ -174,11 +190,10 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         if (world.getBlockEntity(pos) != null) {
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(false);
         }
-        this.spawnDestroyParticles(world, player, pos, state);
         if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(player, false);
         }
-        world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable

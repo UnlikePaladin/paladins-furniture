@@ -37,7 +37,23 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
+        // Same as wall torch logic
+        BlockState state = this.defaultBlockState();
+        LevelReader level = ctx.getLevel();
+        BlockPos pos = ctx.getClickedPos();
+        Direction[] directions = ctx.getNearestLookingDirections();
+        
+        for (Direction direction : directions) {
+            if (direction.getAxis().isHorizontal()) {
+                Direction facing = direction.getOpposite();
+                state = (BlockState)state.setValue(FACING, facing);
+                if (state.canSurvive(level, pos)) {
+                    return state;
+                }
+            }
+        }
+        
+        return null;
     }
 
     @Override
@@ -78,9 +94,9 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (player.getItemInHand(hand).getItem() instanceof ShowerHandleItem)
+        if (player.getItemInHand(hand).getItem() instanceof ShowerHandleItem) {
             return super.use(state, world, pos, player, hand, hit);
-
+        }
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -88,6 +104,7 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
             ShowerHeadBlockEntity showerHeadBlockEntity = (ShowerHeadBlockEntity) world.getBlockEntity(pos);
             showerHeadBlockEntity.setOpen(!showerHeadBlockEntity.isOpen());
             world.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, world, pos, player, hand, hit);
     }

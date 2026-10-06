@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.items;
 
+import com.unlikepaladin.pfm.blocks.LightSwitchBlock;
 import com.unlikepaladin.pfm.blocks.PendantBlock;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
 import net.minecraft.world.level.block.Block;
@@ -81,9 +82,8 @@ public class LightSwitchItem extends BlockItem {
     protected boolean canPlace(BlockPlaceContext context, BlockState state) {
         BlockPos pos = context.getClickedPos();
         LevelReader world = context.getLevel();
-        Direction side = context.getNearestLookingDirection();
         ListTag lights = getLights(context.getItemInHand());
-        boolean canPlace = state.getBlock().canSurvive(state, world, pos) && side.getAxis().isHorizontal();
+        boolean canPlace = state.getBlock().canSurvive(state, world, pos);
 
         if (!canPlace) {
             return false;
