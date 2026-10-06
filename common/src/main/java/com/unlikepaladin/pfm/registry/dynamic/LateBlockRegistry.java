@@ -503,6 +503,7 @@ public class LateBlockRegistry {
         PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new BlockItem.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP));
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicShowerHandleBlock.class, new FurnitureEntry<BasicShowerHandleBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, false, PaladinFurnitureMod.FURNITURE_GROUP));
+            PaladinFurnitureModBlocksItems.BLOCKS.add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE);
             LateBlockRegistry.registerLateItem( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM);
         }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(TrashcanBlock.class, new FurnitureEntry<TrashcanBlock>() {{
