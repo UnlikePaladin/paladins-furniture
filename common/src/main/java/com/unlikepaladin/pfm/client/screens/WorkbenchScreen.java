@@ -50,7 +50,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     private EditBox searchBox;
 
     public WorkbenchScreen(WorkbenchScreenHandler menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, 180, 176);
+        super(menu, inventory, title, 176, 180);
         menu.setContentsChangedListener(this::onInventoryChange);
         this.canCraft = menu.canCraft();
     }
@@ -152,11 +152,6 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
 
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float a) {
-        super.extractRenderState(context, mouseX, mouseY, a);
-        this.extractTooltip(context, mouseX, mouseY);
-    }
 
     @Override
     public void extractBackground(GuiGraphicsExtractor context, int mouseX, int mouseY, float delta) {
@@ -278,7 +273,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
                 return true;
             }
             xOffsetForMouseClick = this.leftPos + 119;
-            yOffsetForMouseClick = this.topPos + 9;
+            yOffsetForMouseClick = this.topPos + 30;
             if (mouseX >= (double)xOffsetForMouseClick && mouseX < (double)(xOffsetForMouseClick + SCROLLBAR_WIDTH) && mouseY >= (double)yOffsetForMouseClick && mouseY < (double)(yOffsetForMouseClick + SCROLLBAR_AREA_HEIGHT)) {
                 this.mouseClicked = true;
             }
