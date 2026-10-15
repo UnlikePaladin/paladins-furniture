@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 public class PFMTags {
     public static Tag.Named<Block> TUCKABLE_BLOCKS = createTag(new ResourceLocation("pfm", "tuckable_blocks"));
     public static Tag.Named<Block> FURNITURE = createTag(new ResourceLocation("pfm", "furniture"));
+    public static Tag.Named<Block> KITCHEN_SINKS = createTag(new ResourceLocation("pfm", "kitchen_sinks"));
 
     @ExpectPlatform
     public static Tag.Named<Block> createTag(ResourceLocation identifier) {

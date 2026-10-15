@@ -254,6 +254,10 @@ public class PFMTagProvider extends PFMProvider {
 
         getOrCreateTagBuilder(PFMTags.FURNITURE)
                 .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
+        
+        getOrCreateTagBuilder(PFMTags.KITCHEN_SINKS)
+                .add(stoneSinks)
+                .add(woodSinks);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
