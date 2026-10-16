@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 public class PFMTags {
     public static TagKey<Block> TUCKABLE_BLOCKS = createTag(Identifier.fromNamespaceAndPath("pfm", "tuckable_blocks"));
     public static TagKey<Block> FURNITURE = createTag(Identifier.fromNamespaceAndPath("pfm", "furniture"));
+    public static TagKey<Block> KITCHEN_SINKS = createTag(Identifier.fromNamespaceAndPath("pfm", "kitchen_sinks"));
 
     @ExpectPlatform
     public static TagKey<Block> createTag(Identifier identifier) {
