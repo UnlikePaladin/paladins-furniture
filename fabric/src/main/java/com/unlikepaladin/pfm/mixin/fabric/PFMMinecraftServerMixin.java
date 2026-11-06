@@ -23,7 +23,7 @@ import java.util.stream.Collector;
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "method_29442", at = @At(value = "RETURN"), cancellable = true, remap = false)
+    @Inject(method = "lambda$reloadResources$0", at = @At(value = "RETURN"), cancellable = true, remap = false)
     private void createReload(CallbackInfoReturnable<ImmutableList<PackResources>> cir) {
         List<PackResources> resourcePacks = new ArrayList<>(cir.getReturnValue());
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
